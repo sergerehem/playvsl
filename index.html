@@ -187,6 +187,20 @@
     }
 
     function unlockFlow(){
+      const formSaved = localStorage.getItem('playvsl_lead_sent') === '1';
+
+      // quem já deixou email uma vez fica sempre desbloqueado
+      if(formSaved){
+        $('rightPanel').classList.remove('hidden');
+        $('heroGrid').classList.remove('locked');
+        $('gateInfo').classList.add('hidden');
+        $('leadStep').classList.add('hidden');
+        $('builderStep').classList.remove('hidden');
+        const c = builderCfg();
+        $('out').textContent = snippet(c);
+        return;
+      }
+
       if(!canUnlock()){
         $('gateInfo').classList.remove('hidden');
         $('gateInfo').innerHTML = '<h2>Desbloqueio</h2><p>Para liberar o configurador, assista à VSL e clique no botão quando ele aparecer.</p>';
@@ -197,19 +211,13 @@
       $('heroGrid').classList.remove('locked');
       $('gateInfo').classList.add('hidden');
       $('leadStep').classList.remove('hidden');
-      const formSaved = localStorage.getItem('playvsl_lead_sent') === '1';
-      if(formSaved){
-        $('leadStep').classList.add('hidden');
-        $('builderStep').classList.remove('hidden');
-        const c = builderCfg();
-        $('out').textContent = snippet(c);
-      }
     }
 
     // estado inicial
     if($('buttonNewTabLabel')) $('buttonNewTabLabel').textContent = $('buttonNewTab')?.checked ? 'Sim' : 'Não';
     renderPreview(baseCfg());
-    if(params.get('unlock') === '1') unlockFlow();
+    const formSavedOnLoad = localStorage.getItem('playvsl_lead_sent') === '1';
+    if(formSavedOnLoad || params.get('unlock') === '1') unlockFlow();
 
     const quickUpdate = ()=>{ if($('out')) $('out').textContent = snippet(builderCfg()); };
     if($('primaryColor')) $('primaryColor').addEventListener('input', quickUpdate);
