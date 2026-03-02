@@ -226,7 +226,8 @@
         buttonUrl:`${location.origin}${location.pathname}?unlock=1`,
         buttonText:'QUERO MEU SNIPPET AGORA - É GRÁTIS',
         buttonShowAtSeconds:10,
-        buttonBg:'#C62116'
+        buttonBg:'#C62116',
+        lang: LANG
       };
     }
 
@@ -239,13 +240,14 @@
         buttonText:$('buttonText').value,
         buttonShowAtSeconds:Number($('buttonShowAtSeconds').value||10),
         buttonNewTab:$('buttonNewTab').checked,
-        buttonBg:$('buttonBg').value
+        buttonBg:$('buttonBg').value,
+        lang: LANG
       };
     }
 
     function snippet(c){
       const closeScript = '</scr' + 'ipt>';
-      return `<div id="playvsl"></div>\n<script src="https://playvsl.digi6.com.br/playvsl.js">${closeScript}\n<script>\n  PlayVSL.init({\n    container:'#playvsl',\n    youtubeUrl:'${c.youtubeUrl}',\n    primaryColor:'${c.primaryColor}',\n    buttonUrl:'${c.buttonUrl}',\n    buttonText:'${c.buttonText.replace(/'/g,"\\'")}',\n    buttonShowAtSeconds:${c.buttonShowAtSeconds},\n    buttonNewTab:${c.buttonNewTab},\n    buttonBg:'${c.buttonBg}'\n  });\n${closeScript}`;
+      return `<div id="playvsl"></div>\n<script src="https://playvsl.digi6.com.br/playvsl.js">${closeScript}\n<script>\n  PlayVSL.init({\n    container:'#playvsl',\n    youtubeUrl:'${c.youtubeUrl}',\n    primaryColor:'${c.primaryColor}',\n    buttonUrl:'${c.buttonUrl}',\n    buttonText:'${c.buttonText.replace(/'/g,"\\'")}',\n    buttonShowAtSeconds:${c.buttonShowAtSeconds},\n    buttonNewTab:${c.buttonNewTab},\n    buttonBg:'${c.buttonBg}',\n    lang:'${c.lang || LANG}'\n  });\n${closeScript}`;
     }
 
     function renderPreview(cfg){
@@ -284,7 +286,7 @@
 
       if(!canUnlock()){
         $('gateInfo').classList.remove('hidden');
-        $('gateInfo').innerHTML = '<h2 id="t_gate_title">Desbloqueio</h2><p>Para liberar o configurador, assista à VSL e clique no botão quando ele aparecer.</p>';
+        $('gateInfo').innerHTML = `<h2 id="t_gate_title">${t('gateTitle')}</h2><p>${t('gateNeed')}</p>`;
         return;
       }
 
@@ -296,8 +298,8 @@
 
     // estado inicial
     if($('buttonText')) $('buttonText').addEventListener('input', ()=> $('buttonText').dataset.touched='1');
-    if($('langPt')) $('langPt').addEventListener('click', ()=>{ LANG='pt'; localStorage.setItem('playvsl_lang', LANG); applyLang(); quickUpdate(); });
-    if($('langEn')) $('langEn').addEventListener('click', ()=>{ LANG='en'; localStorage.setItem('playvsl_lang', LANG); applyLang(); quickUpdate(); });
+    if($('langPt')) $('langPt').addEventListener('click', ()=>{ LANG='pt'; localStorage.setItem('playvsl_lang', LANG); applyLang(); renderPreview(builderCfg()); quickUpdate(); });
+    if($('langEn')) $('langEn').addEventListener('click', ()=>{ LANG='en'; localStorage.setItem('playvsl_lang', LANG); applyLang(); renderPreview(builderCfg()); quickUpdate(); });
     applyLang();
     renderPreview(baseCfg());
     const formSavedOnLoad = localStorage.getItem('playvsl_lead_sent') === '1';
