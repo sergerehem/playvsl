@@ -113,6 +113,27 @@
       if (typeof cfg.fakePlaybackRate !== 'undefined') cfg.teaserPlaybackRate = cfg.fakePlaybackRate;
       if (typeof cfg.realPlaybackRate !== 'undefined') cfg.playbackRate = cfg.realPlaybackRate;
 
+      const lang = String(cfg.lang || document.documentElement.lang || navigator.language || 'pt').toLowerCase().startsWith('en') ? 'en' : 'pt';
+      const i18n = {
+        pt: {
+          audioStarted: 'Seu vídeo já começou',
+          clickToHear: 'Clique para ouvir',
+          resumeAria: 'Continuar vídeo',
+          resumeTitle: 'Você já começou a assistir esse vídeo',
+          resumeWatch: 'Continuar assistindo?',
+          resumeFromStart: 'Assistir do início?'
+        },
+        en: {
+          audioStarted: 'Your video has already started',
+          clickToHear: 'Click to hear',
+          resumeAria: 'Continue video',
+          resumeTitle: 'You already started watching this video',
+          resumeWatch: 'Continue watching?',
+          resumeFromStart: 'Watch from the beginning?'
+        }
+      };
+      const t = i18n[lang];
+
       const host = document.querySelector(cfg.container);
       if(!host) throw new Error('container não encontrado');
       const vid = ytid(cfg.youtubeUrl);
@@ -155,7 +176,7 @@
           <div class="sp-overlay-top"></div><div class="sp-overlay-bottom"></div>
           <div class="sp-poster" id="sp-poster" style="background-image:url('https://img.youtube.com/vi/${vid}/maxresdefault.jpg')"></div>
           <button class="sp-first-audio" id="sp-first-audio">
-            <div class="t1">Seu v\u00EDdeo j\u00E1 come\u00E7ou</div>
+            <div class="t1">${t.audioStarted}</div>
             <div class="ico" aria-hidden="true">
               <svg class="sp-mute-svg" viewBox="7.999 9.062 46.75 32.563" xmlns="http://www.w3.org/2000/svg">
                 <g>
@@ -171,18 +192,18 @@
                 </g>
               </svg>
             </div>
-            <div class="t2">Clique para ouvir</div>
+            <div class="t2">${t.clickToHear}</div>
           </button>
-          <button class="sp-pause-play" id="sp-pause-play" aria-label="Continuar v\u00EDdeo">
+          <button class="sp-pause-play" id="sp-pause-play" aria-label="${t.resumeAria}">
             <svg viewBox="0 0 100 100" aria-hidden="true" class="sp-play-triangle">
               <path d="M34 24 L76 50 L34 76 Z" />
             </svg>
           </button>
           <div class="sp-modal" id="sp-modal"><div class="sp-modal-card">
-            <div class="sp-resume-title">Voc\u00EA j\u00E1 come\u00E7ou a assistir esse v\u00EDdeo</div>
+            <div class="sp-resume-title">${t.resumeTitle}</div>
             <div class="sp-modal-actions">
-              <button class="sp-btn" id="sp-resume"><span class="sp-icon" aria-hidden="true"><svg class="sp-resume-icon" viewBox="0 0 24 24"><path d="M8 6l10 6-10 6z"/></svg></span><span class="option-text">Continuar assistindo?</span></button>
-              <button class="sp-btn" id="sp-restart"><span class="sp-icon" aria-hidden="true"><svg class="sp-restart-icon" viewBox="0 0 5120 5120"><g transform="translate(0,5120) scale(1,-1)"><path d="M2675 4854 c-602 -56 -1065 -264 -1464 -657 -319 -315 -531 -694 -631 -1129 -16 -71 -37 -139 -45 -152 -27 -40 -64 -46 -295 -46 -180 0 -220 -3 -230 -15 -7 -8 -10 -22 -6 -30 7 -18 673 -835 696 -852 8 -7 29 -13 47 -13 31 0 52 24 378 422 190 233 348 434 352 447 3 14 1 26 -8 32 -8 5 -101 9 -207 9 -273 0 -279 5 -228 188 186 660 719 1164 1386 1312 141 31 237 41 405 41 493 0 950 -189 1298 -536 359 -357 548 -812 548 -1315 0 -503 -189 -958 -548 -1315 -332 -331 -758 -515 -1249 -539 -122 -6 -172 -24 -219 -79 -44 -51 -58 -96 -53 -163 7 -77 48 -140 118 -177 l55 -29 140 6 c1105 47 2010 863 2181 1966 25 160 25 500 0 660 -156 1010 -933 1790 -1936 1945 -100 15 -401 27 -485 19z"/></g></svg></span><span class="option-text">Assistir do in\u00EDcio?</span></button>
+              <button class="sp-btn" id="sp-resume"><span class="sp-icon" aria-hidden="true"><svg class="sp-resume-icon" viewBox="0 0 24 24"><path d="M8 6l10 6-10 6z"/></svg></span><span class="option-text">${t.resumeWatch}</span></button>
+              <button class="sp-btn" id="sp-restart"><span class="sp-icon" aria-hidden="true"><svg class="sp-restart-icon" viewBox="0 0 5120 5120"><g transform="translate(0,5120) scale(1,-1)"><path d="M2675 4854 c-602 -56 -1065 -264 -1464 -657 -319 -315 -531 -694 -631 -1129 -16 -71 -37 -139 -45 -152 -27 -40 -64 -46 -295 -46 -180 0 -220 -3 -230 -15 -7 -8 -10 -22 -6 -30 7 -18 673 -835 696 -852 8 -7 29 -13 47 -13 31 0 52 24 378 422 190 233 348 434 352 447 3 14 1 26 -8 32 -8 5 -101 9 -207 9 -273 0 -279 5 -228 188 186 660 719 1164 1386 1312 141 31 237 41 405 41 493 0 950 -189 1298 -536 359 -357 548 -812 548 -1315 0 -503 -189 -958 -548 -1315 -332 -331 -758 -515 -1249 -539 -122 -6 -172 -24 -219 -79 -44 -51 -58 -96 -53 -163 7 -77 48 -140 118 -177 l55 -29 140 6 c1105 47 2010 863 2181 1966 25 160 25 500 0 660 -156 1010 -933 1790 -1936 1945 -100 15 -401 27 -485 19z"/></g></svg></span><span class="option-text">${t.resumeFromStart}</span></button>
             </div>
           </div></div>
           <div class="sp-bar"><div class="sp-bar-fill" id="sp-fill"></div></div>
