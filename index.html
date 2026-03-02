@@ -17,15 +17,15 @@
   <meta name="twitter:description" content="Transforme seu vídeo do YouTube em VSL de alta conversão com teaser inteligente e botão no tempo certo." />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css"/>
   <style>
-    :root{--bg:#f6f8fc;--card:#fff;--line:#d9e1f2;--txt:#0f172a;--muted:#4b5563;--cta:#2563eb}
+    :root{--bg:#f6f8fc;--card:#fff;--line:#d9e1f2;--txt:#0f172a;--muted:#4b5563;--cta:#dc2626}
     *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,Arial,sans-serif}
     .wrap{max-width:1120px;margin:0 auto;padding:24px 16px}
     .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}
     .hero.locked{grid-template-columns:1fr}
     .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 10px 30px rgba(16,24,40,.05)}
     h1{font-size:38px;line-height:1.12;margin:0 0 8px} p{color:var(--muted)}
-    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef3ff;color:#2b4bb4;font-size:12px;border:1px solid #cfe0ff}
-    .accent{color:#1d4ed8}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#fff1f2;color:#b91c1c;font-size:12px;border:1px solid #fecdd3}
+    .accent{color:#dc2626}
     .hidden{display:none}
     label{display:block;font-size:12px;color:#334155;margin:8px 0 4px}
     input,select{width:100%;padding:10px;border-radius:10px;border:1px solid #c9d5ee;background:#fff;color:#111827}
@@ -43,7 +43,7 @@
     .switch input:checked + .slider{background:#2563eb}
     .switch input:checked + .slider:before{transform:translateX(20px)}
     .btn-primary{background:var(--cta);color:#fff}
-    .btn-ghost{background:#eef2ff;color:#1e3a8a;border:1px solid #c7d2fe}
+    .btn-ghost{background:#fff1f2;color:#991b1b;border:1px solid #fecdd3}
     pre{white-space:pre-wrap;word-break:break-word;background:#f8faff;border:1px solid #d4def4;padding:12px;border-radius:10px;min-height:130px}
     @media(max-width:920px){.hero{grid-template-columns:1fr}h1{font-size:32px}.grid{grid-template-columns:1fr}}
   </style>
@@ -80,7 +80,7 @@
             <div>
               <label>Cor primária</label>
               <div class="color-row">
-                <input id="primaryColor" data-coloris value="#FFBE01" title="Cor primária">
+                <input id="primaryColor" data-coloris value="#C62116" title="Cor primária">
               </div>
             </div>
             <div><label>URL do botão</label><input id="buttonUrl" value="https://example.com"></div>
@@ -89,7 +89,7 @@
             <div>
               <label>Cor do botão</label>
               <div class="color-row">
-                <input id="buttonBg" data-coloris value="#2f7df6" title="Cor do botão">
+                <input id="buttonBg" data-coloris value="#C62116" title="Cor do botão">
               </div>
             </div>
             <div>
@@ -141,11 +141,11 @@
       return {
         container:'#playvsl-preview',
         youtubeUrl:'https://youtu.be/wqGiHRWeTR0',
-        primaryColor:'#FFBE01',
+        primaryColor:'#C62116',
         buttonUrl:`${location.origin}${location.pathname}?unlock=1`,
         buttonText:'QUERO MEU SNIPPET AGORA - É GRÁTIS',
         buttonShowAtSeconds:10,
-        buttonBg:'#2563eb'
+        buttonBg:'#C62116'
       };
     }
 
