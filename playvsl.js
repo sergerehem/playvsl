@@ -254,11 +254,23 @@
         state.cta=true;
         save();
       }
-      function teaserProgress(realSec){
-        const d = Math.max(60, cfg.teaserProgressDurationSeconds);
+      function getSmartDuration(realDurationSec){
+        const rd = Number(realDurationSec || 0);
+        if(!rd || rd < 30) return Math.max(90, cfg.teaserProgressDurationSeconds);
+        // aproximação estilo "smart": parece mais curto no início sem ficar absurdo
+        const ratio = rd <= 300 ? 0.62 : rd <= 900 ? 0.56 : 0.5;
+        const derived = rd * ratio;
+        return Math.max(90, Math.min(900, derived));
+      }
+
+      function teaserProgress(realSec, realDurationSec){
+        const d = getSmartDuration(realDurationSec);
         const p = Math.min(1, Math.max(0, realSec / d));
-        const curved = Math.pow(p, cfg.teaserProgressCurve);
-        return Math.min(100, curved*100);
+        // duas fases: acelera no começo e desacelera perto do fim
+        const eased = p < 0.7
+          ? Math.pow(p / 0.7, cfg.teaserProgressCurve) * 0.78
+          : 0.78 + Math.pow((p - 0.7) / 0.3, 1.45) * 0.22;
+        return Math.min(100, Math.max(0, eased * 100));
       }
 
       let player, timer, fitTimer;
@@ -287,7 +299,7 @@
         if(Math.floor(state.engaged || 0) >= Number(cfg.buttonShowAtSeconds) || state.cta) showCTA();
 
         if(cur > state.max) { state.max = cur; save(); }
-        fill.style.width = teaserProgress(state.engaged || 0) + '%';
+        fill.style.width = teaserProgress(state.engaged || 0, dur) + '%';
         timeEl.textContent = `${fmt(cur)} / ${fmt(dur)}`;
       }
 
