@@ -86,7 +86,7 @@
         buttonText:'Quero avançar',
         buttonShowAtSeconds:120, // segundo real do vídeo para liberar botão
         buttonBg:null,
-        buttonRounded:false,
+        buttonRounded:true,
         buttonNewTab:false,
         teaserProgressDurationSeconds:240, // menor = barra anda mais rápido
         teaserProgressCurve:0.58, // <1 acelera mais o começo
@@ -187,7 +187,7 @@
       const btnBg = cfg.buttonBg || cfg.primaryColor;
       host.style.setProperty('--sp-cta-bg', btnBg);
       host.style.setProperty('--sp-cta-text', contrastText(btnBg));
-      host.style.setProperty('--sp-cta-radius', cfg.buttonRounded ? '999px' : '0px');
+      host.style.setProperty('--sp-cta-radius', cfg.buttonRounded ? '999px' : '10px');
 
       host.innerHTML = `
         <div class="sp-shell"><div class="sp-ratio" style="padding-top:${pad}%">

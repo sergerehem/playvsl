@@ -46,7 +46,7 @@
     return {
       container:'#playvsl-preview', youtubeUrl:'https://youtu.be/wqGiHRWeTR0', primaryColor:'#C62116',
       buttonUrl:'https://playvsl.digi6.com.br/', buttonText:App.t('defaultButton'),
-      buttonShowAtSeconds:10, buttonNewTab:true, buttonRounded:false, buttonBg:'#C62116', lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause
+      buttonShowAtSeconds:10, buttonNewTab:true, buttonRounded:true, buttonBg:'#C62116', lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause
     };
   };
 
