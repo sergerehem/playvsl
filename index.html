@@ -103,7 +103,7 @@
             </div>
           </div>
           <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
-            <button id="apply" class="btn btn-primary">Aplicar no preview</button>
+            <button id="apply" class="btn btn-primary">Ver prévia</button>
             <button id="copy" class="btn btn-ghost">Copiar snippet</button>
           </div>
           <pre id="out"></pre>
@@ -150,7 +150,7 @@
         builderTitle: 'Configure e copie seu snippet',
         youtube:'YouTube URL', primary:'Cor primária', buttonUrl:'URL do botão', buttonText:'Texto do botão',
         showSeconds:'Mostrar botão em (s)', buttonColor:'Cor do botão', newTab:'Abrir em nova aba',
-        apply:'Aplicar no preview', copy:'Copiar snippet', yes:'Sim', no:'Não',
+        apply:'Ver prévia', copy:'Copiar snippet', yes:'Sim', no:'Não',
         gateNeed: 'Para liberar o configurador, assista à VSL e clique no botão quando ele aparecer.',
         alertFill: 'Preencha nome e email.',
         alertFail: 'Não foi possível enviar seu cadastro agora. Tente novamente em instantes.',
@@ -172,7 +172,7 @@
         builderTitle: 'Configure and copy your snippet',
         youtube:'YouTube URL', primary:'Primary color', buttonUrl:'Button URL', buttonText:'Button text',
         showSeconds:'Show button at (s)', buttonColor:'Button color', newTab:'Open in new tab',
-        apply:'Apply to preview', copy:'Copy snippet', yes:'Yes', no:'No',
+        apply:'Preview', copy:'Copy snippet', yes:'Yes', no:'No',
         gateNeed: 'To unlock the builder, watch the VSL and click the button when it appears.',
         alertFill: 'Please enter name and email.',
         alertFail: 'Could not submit your signup right now. Please try again shortly.',
@@ -248,6 +248,24 @@
     function snippet(c){
       const closeScript = '</scr' + 'ipt>';
       return `<div id="playvsl"></div>\n<script src="https://playvsl.digi6.com.br/playvsl.js">${closeScript}\n<script>\n  PlayVSL.init({\n    container:'#playvsl',\n    youtubeUrl:'${c.youtubeUrl}',\n    primaryColor:'${c.primaryColor}',\n    buttonUrl:'${c.buttonUrl}',\n    buttonText:'${c.buttonText.replace(/'/g,"\\'")}',\n    buttonShowAtSeconds:${c.buttonShowAtSeconds},\n    buttonNewTab:${c.buttonNewTab},\n    buttonBg:'${c.buttonBg}',\n    lang:'${c.lang || LANG}'\n  });\n${closeScript}`;
+    }
+
+    function extractYouTubeId(input){
+      try{
+        const u = new URL(input);
+        if((u.hostname||'').includes('youtu.be')) return u.pathname.slice(1);
+        if(u.searchParams.get('v')) return u.searchParams.get('v');
+        const m = u.pathname.match(/\/embed\/([^/?#]+)/);
+        if(m) return m[1];
+      }catch(e){}
+      return String(input||'').trim();
+    }
+
+    function resetPreviewState(cfg){
+      try{
+        const vid = extractYouTubeId(cfg.youtubeUrl);
+        if(vid) localStorage.removeItem(`smartvsl_${vid}`);
+      }catch(e){}
     }
 
     function renderPreview(cfg){
@@ -355,6 +373,7 @@
     if($('apply')) $('apply').addEventListener('click', ()=>{
       const c = builderCfg();
       $('out').textContent = snippet(c);
+      resetPreviewState(c);
       renderPreview(c);
     });
 
