@@ -1,6 +1,11 @@
 (function(){
   const SMARTPLAYER_CSS = `.sp-wrap{max-width:980px;margin:24px auto;padding:0 16px;font-family:Inter,Arial,sans-serif;color:#e8edf2}
 .sp-shell{position:relative;background:#000;border-radius:0;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.sp-prehead{background:#fff;color:#111;text-align:center;padding:0 0 14px}
+.sp-prehead-top{background:var(--sp-primary,#c62116);color:var(--sp-contrast,#fff);font-weight:700;padding:10px 12px;font-size:18px;letter-spacing:.4px}
+.sp-prehead-eyebrow{margin:14px 0 6px;font-style:italic;font-weight:700;opacity:.9}
+.sp-prehead-title{margin:0 auto 10px;max-width:900px;font-size:38px;line-height:1.15;font-weight:800;padding:0 12px}
+@media (max-width:900px){.sp-prehead-title{font-size:28px}.sp-prehead-top{font-size:16px}}
 .sp-ratio{position:relative;padding-top:56.25%}
 .sp-player{position:absolute;inset:0;background:#000;overflow:hidden}
 #sp-player-target{position:absolute;inset:0}
@@ -96,6 +101,10 @@
         playbackRate:1.25,
         rememberDays:15,
         askResume:true,
+        preHeaderEnabled:false,
+        preHeaderTopText:'SAÚDE',
+        preHeaderEyebrow:'Doutor Revela:',
+        preHeaderTitle:'Faça isso para aumentar sua testosterona naturalmente',
         primaryColor:'#c62116',
         progressTrackColor:'rgba(255,255,255,.2)',
         aspect:'16:9'
@@ -174,7 +183,15 @@
       host.style.setProperty('--sp-cta-text', contrastText(btnBg));
       host.style.setProperty('--sp-cta-radius', cfg.buttonRounded ? '999px' : '0px');
 
-      host.innerHTML = `
+      const preHeader = cfg.preHeaderEnabled ? `
+        <div class="sp-prehead" id="sp-prehead">
+          <div class="sp-prehead-top">${cfg.preHeaderTopText}</div>
+          <div class="sp-prehead-eyebrow">${cfg.preHeaderEyebrow}</div>
+          <h2 class="sp-prehead-title">${cfg.preHeaderTitle}</h2>
+        </div>
+      ` : '';
+
+      host.innerHTML = `${preHeader}
         <div class="sp-shell"><div class="sp-ratio" style="padding-top:${pad}%">
           <div class="sp-player" id="sp-player-host"><div id="sp-player-target"></div><div id="sp-click-shield" aria-hidden="true"></div></div>
           <div class="sp-overlay-top"></div><div class="sp-overlay-bottom"></div>
@@ -236,14 +253,20 @@
       const fill = host.querySelector('#sp-fill');
       const timeEl = host.querySelector('#sp-time');
       if(!state.started) host.classList.add('sp-prestart');
+      setPreheadVisible(!!(cfg.preHeaderEnabled && !state.started));
       const poster = host.querySelector('#sp-poster');
       const firstAudio = host.querySelector('#sp-first-audio');
       if(!state.started && firstAudio) firstAudio.style.display = 'block';
       const pausePlay = host.querySelector('#sp-pause-play');
       const clickShield = host.querySelector('#sp-click-shield');
       const modal = host.querySelector('#sp-modal');
+      const prehead = host.querySelector('#sp-prehead');
 
       function save(){ state.ts=Date.now(); localStorage.setItem(key, JSON.stringify(state)); }
+      function setPreheadVisible(show){
+        if(!prehead) return;
+        prehead.style.display = show ? 'block' : 'none';
+      }
       function showCTA(){
         if(!state.started) return;
         if(state.cta) {
@@ -313,6 +336,7 @@
 
         if(unmute){
           const firstRealPlay = !state.started;
+          setPreheadVisible(false);
           if(firstRealPlay){
             // primeiro play real SEMPRE começa do zero
             state.engaged = 0;
