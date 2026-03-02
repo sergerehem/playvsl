@@ -86,7 +86,7 @@
         buttonText:'Quero avançar',
         buttonShowAtSeconds:120, // segundo real do vídeo para liberar botão
         buttonBg:null,
-        buttonRounded:true,
+        buttonRounded:false,
         buttonNewTab:false,
         teaserProgressDurationSeconds:240, // menor = barra anda mais rápido
         teaserProgressCurve:0.58, // <1 acelera mais o começo
