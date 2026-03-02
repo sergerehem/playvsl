@@ -53,47 +53,47 @@
   <div class="wrap">
     <div class="hero locked" id="heroGrid">
       <section class="card">
-        <span class="pill">PlayVSL • YouTube → VSL</span>
-        <h1>O player que transforma seu vídeo do YouTube em <span class="accent">VSL de alta conversão</span>.</h1>
-        <p>Assista à demonstração e, quando o botão aparecer, desbloqueie seu snippet em segundos.</p>
+        <span class="pill" id="t_pill">PlayVSL • YouTube → VSL</span>
+        <h1 id="t_title">O player que transforma seu vídeo do YouTube em <span class="accent">VSL de alta conversão</span>.</h1>
+        <p id="t_subtitle">Assista à demonstração e, quando o botão aparecer, desbloqueie seu snippet em segundos.</p>
         <div id="playvsl-preview" style="margin-top:14px"></div>
       </section>
 
       <section class="card hidden" id="rightPanel">
         <div id="gateInfo">
-          <h2>Desbloqueio</h2>
-          <p>O configurador será liberado após você interagir com a VSL e clicar no botão quando aparecer.</p>
+          <h2 id="t_gate_title">Desbloqueio</h2>
+          <p id="t_gate_sub">O configurador será liberado após você interagir com a VSL e clicar no botão quando aparecer.</p>
         </div>
 
         <div id="leadStep" class="hidden">
-          <h2>Quase lá 👇</h2>
-          <p>Preencha para liberar o snippet.</p>
-          <label>Nome</label><input id="leadName" placeholder="Seu nome" />
-          <label>Email</label><input id="leadEmail" placeholder="voce@empresa.com" />
+          <h2 id="t_lead_title">Quase lá 👇</h2>
+          <p id="t_lead_sub">Preencha para liberar o snippet.</p>
+          <label id="t_name">Nome</label><input id="leadName" placeholder="Seu nome" />
+          <label id="t_email">Email</label><input id="leadEmail" placeholder="voce@empresa.com" />
           <button id="leadSubmit" class="btn btn-primary" style="margin-top:10px">Liberar snippet</button>
         </div>
 
         <div id="builderStep" class="hidden">
-          <h2>Configure e copie seu snippet</h2>
+          <h2 id="t_builder_title">Configure e copie seu snippet</h2>
           <div class="grid">
-            <div><label>YouTube URL</label><input id="youtubeUrl" value="https://youtu.be/wqGiHRWeTR0"></div>
+            <div><label id="t_youtube">YouTube URL</label><input id="youtubeUrl" value="https://youtu.be/wqGiHRWeTR0"></div>
             <div>
-              <label>Cor primária</label>
+              <label id="t_primary">Cor primária</label>
               <div class="color-row">
                 <input id="primaryColor" data-coloris value="#C62116" title="Cor primária">
               </div>
             </div>
-            <div><label>URL do botão</label><input id="buttonUrl" value="https://example.com"></div>
-            <div><label>Texto do botão</label><input id="buttonText" value="QUERO MEU SNIPPET AGORA - É GRÁTIS"></div>
-            <div><label>Mostrar botão em (s)</label><input id="buttonShowAtSeconds" type="number" min="1" value="10"></div>
+            <div><label id="t_button_url">URL do botão</label><input id="buttonUrl" value="https://example.com"></div>
+            <div><label id="t_button_text">Texto do botão</label><input id="buttonText" value="QUERO MEU SNIPPET AGORA - É GRÁTIS"></div>
+            <div><label id="t_show_seconds">Mostrar botão em (s)</label><input id="buttonShowAtSeconds" type="number" min="1" value="10"></div>
             <div>
-              <label>Cor do botão</label>
+              <label id="t_button_color">Cor do botão</label>
               <div class="color-row">
                 <input id="buttonBg" data-coloris value="#C62116" title="Cor do botão">
               </div>
             </div>
             <div>
-              <label>Abrir em nova aba</label>
+              <label id="t_new_tab">Abrir em nova aba</label>
               <div class="toggle">
                 <label class="switch">
                   <input id="buttonNewTab" type="checkbox">
@@ -114,7 +114,8 @@
     <footer style="margin-top:22px;padding:16px 8px;text-align:center;color:#6b7280;font-size:12px;line-height:1.6">
       <div><strong><a href="https://digi6.com.br" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">Digi6 Soluções Digitais</a></strong> · CNPJ 49.148.766/0001-07</div>
       <div>R. John Harrisson, 299 · São Paulo - SP · Brazil</div>
-      <div style="margin-top:6px">© 2026 PlayVSL. Todos os direitos reservados.</div>
+      <div id="t_footer_rights" style="margin-top:6px">© 2026 PlayVSL. Todos os direitos reservados.</div>
+      <div style="margin-top:8px"><button id="langPt" class="btn btn-ghost" style="padding:6px 10px">PT</button> <button id="langEn" class="btn btn-ghost" style="padding:6px 10px">EN</button></div>
     </footer>
   </div>
 
@@ -137,6 +138,59 @@
       ]
     });
 
+
+    const I18N = {
+      pt: {
+        title: 'O player que transforma seu vídeo do YouTube em <span class="accent">VSL de alta conversão</span>.',
+        subtitle: 'Assista à demonstração e, quando o botão aparecer, desbloqueie seu snippet em segundos.',
+        gateTitle: 'Desbloqueio',
+        gateSub: 'O configurador será liberado após você interagir com a VSL e clicar no botão quando aparecer.',
+        leadTitle: 'Quase lá 👇',
+        leadSub: 'Preencha para liberar o snippet.',
+        name: 'Nome', email: 'Email', leadBtn: 'Liberar snippet',
+        builderTitle: 'Configure e copie seu snippet',
+        youtube:'YouTube URL', primary:'Cor primária', buttonUrl:'URL do botão', buttonText:'Texto do botão',
+        showSeconds:'Mostrar botão em (s)', buttonColor:'Cor do botão', newTab:'Abrir em nova aba',
+        apply:'Aplicar no preview', copy:'Copiar snippet', yes:'Sim', no:'Não',
+        gateNeed: 'Para liberar o configurador, assista à VSL e clique no botão quando ele aparecer.',
+        alertFill: 'Preencha nome e email.',
+        alertFail: 'Não foi possível enviar seu cadastro agora. Tente novamente em instantes.',
+        rights: '© 2026 PlayVSL. Todos os direitos reservados.',
+        defaultButton: 'QUERO MEU SNIPPET AGORA - É GRÁTIS'
+      },
+      en: {
+        title: 'The player that turns your YouTube video into a <span class="accent">high-converting VSL</span>.',
+        subtitle: 'Watch the demo and, when the button appears, unlock your snippet in seconds.',
+        gateTitle: 'Unlock',
+        gateSub: 'The builder unlocks after you engage with the VSL and click the button when it appears.',
+        leadTitle: 'Almost there 👇',
+        leadSub: 'Fill this form to unlock your snippet.',
+        name: 'Name', email: 'Email', leadBtn: 'Unlock snippet',
+        builderTitle: 'Configure and copy your snippet',
+        youtube:'YouTube URL', primary:'Primary color', buttonUrl:'Button URL', buttonText:'Button text',
+        showSeconds:'Show button at (s)', buttonColor:'Button color', newTab:'Open in new tab',
+        apply:'Apply to preview', copy:'Copy snippet', yes:'Yes', no:'No',
+        gateNeed: 'To unlock the builder, watch the VSL and click the button when it appears.',
+        alertFill: 'Please enter name and email.',
+        alertFail: 'Could not submit your signup right now. Please try again shortly.',
+        rights: '© 2026 PlayVSL. All rights reserved.',
+        defaultButton: 'GET MY SNIPPET NOW - IT\'S FREE'
+      }
+    };
+
+    let LANG = localStorage.getItem('playvsl_lang') || (((navigator.language||'').toLowerCase().startsWith('pt')) ? 'pt' : 'en');
+    function t(k){ return (I18N[LANG] && I18N[LANG][k]) || I18N.pt[k] || k; }
+    function applyLang(){
+      document.documentElement.lang = LANG === 'pt' ? 'pt-BR' : 'en';
+      const set = (id,val,html=false)=>{ const el=$(id); if(!el) return; html ? el.innerHTML=val : el.textContent=val; };
+      set('t_title', t('title'), true); set('t_subtitle', t('subtitle')); set('t_gate_title', t('gateTitle')); set('t_gate_sub', t('gateSub'));
+      set('t_lead_title', t('leadTitle')); set('t_lead_sub', t('leadSub')); set('t_name', t('name')); set('t_email', t('email'));
+      set('leadSubmit', t('leadBtn')); set('t_builder_title', t('builderTitle')); set('t_youtube', t('youtube')); set('t_primary', t('primary'));
+      set('t_button_url', t('buttonUrl')); set('t_button_text', t('buttonText')); set('t_show_seconds', t('showSeconds')); set('t_button_color', t('buttonColor'));
+      set('t_new_tab', t('newTab')); set('apply', t('apply')); set('copy', t('copy')); set('t_footer_rights', t('rights'));
+      const ntab=$('buttonNewTabLabel'); if(ntab) ntab.textContent = $('buttonNewTab')?.checked ? t('yes') : t('no');
+      if($('buttonText') && !$('buttonText').dataset.touched){ $('buttonText').value = t('defaultButton'); }
+    }
     function baseCfg(){
       return {
         container:'#playvsl-preview',
@@ -203,7 +257,7 @@
 
       if(!canUnlock()){
         $('gateInfo').classList.remove('hidden');
-        $('gateInfo').innerHTML = '<h2>Desbloqueio</h2><p>Para liberar o configurador, assista à VSL e clique no botão quando ele aparecer.</p>';
+        $('gateInfo').innerHTML = '<h2 id="t_gate_title">Desbloqueio</h2><p>Para liberar o configurador, assista à VSL e clique no botão quando ele aparecer.</p>';
         return;
       }
 
@@ -214,7 +268,10 @@
     }
 
     // estado inicial
-    if($('buttonNewTabLabel')) $('buttonNewTabLabel').textContent = $('buttonNewTab')?.checked ? 'Sim' : 'Não';
+    if($('buttonText')) $('buttonText').addEventListener('input', ()=> $('buttonText').dataset.touched='1');
+    if($('langPt')) $('langPt').addEventListener('click', ()=>{ LANG='pt'; localStorage.setItem('playvsl_lang', LANG); applyLang(); quickUpdate(); });
+    if($('langEn')) $('langEn').addEventListener('click', ()=>{ LANG='en'; localStorage.setItem('playvsl_lang', LANG); applyLang(); quickUpdate(); });
+    applyLang();
     renderPreview(baseCfg());
     const formSavedOnLoad = localStorage.getItem('playvsl_lead_sent') === '1';
     if(formSavedOnLoad || params.get('unlock') === '1') unlockFlow();
@@ -222,12 +279,12 @@
     const quickUpdate = ()=>{ if($('out')) $('out').textContent = snippet(builderCfg()); };
     if($('primaryColor')) $('primaryColor').addEventListener('input', quickUpdate);
     if($('buttonBg')) $('buttonBg').addEventListener('input', quickUpdate);
-    if($('buttonNewTab')) $('buttonNewTab').addEventListener('change', ()=>{ $('buttonNewTabLabel').textContent = $('buttonNewTab').checked ? 'Sim' : 'Não'; quickUpdate(); });
+    if($('buttonNewTab')) $('buttonNewTab').addEventListener('change', ()=>{ $('buttonNewTabLabel').textContent = $('buttonNewTab').checked ? t('yes') : t('no'); quickUpdate(); });
 
     $('leadSubmit').addEventListener('click', async()=>{
       const name = $('leadName').value.trim();
       const email = $('leadEmail').value.trim();
-      if(!name || !email){ alert('Preencha nome e email.'); return; }
+      if(!name || !email){ alert(t('alertFill')); return; }
 
       // MVP: permite envio direto ao Encharge (token no front) OU via endpoint próprio.
       try{
@@ -250,7 +307,7 @@
         }
         if(r && !r.ok) throw new Error('Falha ao enviar lead');
       }catch(e){
-        alert('Não foi possível enviar seu cadastro agora. Tente novamente em instantes.');
+        alert(t('alertFail'));
         return;
       }
 
