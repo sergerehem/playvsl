@@ -498,6 +498,7 @@
                 emit('pause', {});
               } else if(st===0){
                 try{ state.engaged = Math.max(Number(state.engaged||0), Number(player.getDuration ? player.getDuration() : 0)); save(); }catch(e){}
+                try{ if(fill) fill.style.width = '100%'; }catch(e){}
                 emit('complete', {});
                 // loop automático no modo teaser (antes do clique para ouvir)
                 if(!state.started){
