@@ -99,6 +99,9 @@
       const isClosed = $('rightPanel')?.classList.contains('hidden') || $('heroGrid')?.classList.contains('locked');
       if(isClosed) document.body.classList.add('preview-played-locked');
     }
+    function handlePreviewPause(){
+      document.body.classList.remove('preview-played-locked');
+    }
 
     function baseCfg(){
       return {
@@ -110,7 +113,8 @@
         buttonShowAtSeconds:10,
         buttonBg:'#C62116',
         lang: LANG,
-        onPlay: handlePreviewPlay
+        onPlay: handlePreviewPlay,
+        onPause: handlePreviewPause
       };
     }
 
@@ -125,7 +129,8 @@
         buttonNewTab:$('buttonNewTab').checked,
         buttonBg:$('buttonBg').value,
         lang: LANG,
-        onPlay: handlePreviewPlay
+        onPlay: handlePreviewPlay,
+        onPause: handlePreviewPause
       };
     }
 

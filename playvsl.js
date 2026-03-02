@@ -94,6 +94,8 @@
         playbackRate:1.25,
         rememberDays:15,
         askResume:true,
+        onPlay:null,
+        onPause:null,
         primaryColor:'#c62116',
         progressTrackColor:'rgba(255,255,255,.2)',
         aspect:'16:9'
@@ -406,6 +408,9 @@
                 if(firstAudio && firstAudio.style.display==='block') return;
                 if(modal && modal.style.display==='flex') return;
                 if(pausePlay) pausePlay.style.display='grid';
+                if(typeof cfg.onPause === 'function'){
+                  try{ cfg.onPause({ state:Object.assign({},state), container:host }); }catch(e){}
+                }
               } else if(st===0){
                 // loop automático no modo teaser (antes do clique para ouvir)
                 if(!state.started){
