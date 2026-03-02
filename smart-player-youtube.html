@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Smart VSL Player</title>
+  <style>body{margin:0;background:#0f1115}.sp-wrap h2{color:#fff}</style>
+</head>
+<body> 
+  <div class="sp-wrap">
+    <h2>Player inteligente (estilo VSL)</h2>
+    <div id="smart-vsl"></div>
+  </div>
+
+  <script src="./playvsl.js"></script>
+  <script>
+    PlayVSL.init({
+      container: '#smart-vsl',
+      youtubeUrl: 'https://youtu.be/wqGiHRWeTR0',
+      buttonUrl: 'https://google.com',
+      buttonText: 'PR\u00D3XIMO PASSO',
+      buttonShowAtSeconds: 20,
+      buttonBg: '#2d7df7',
+      buttonRounded: true,
+      teaserProgressDurationSeconds: 540,
+      teaserProgressCurve: 0.68,
+      teaserPlaybackRate: 2,
+      playbackRate: 1.25,
+      askResume: true,
+      rememberDays: 15,
+      primaryColor: '#FFBE01',
+      aspect: '16:9'
+    });
+  </script>
+</body>
+</html>

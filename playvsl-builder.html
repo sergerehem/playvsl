@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PlayVSL Builder</title>
+  <style>
+    body{font-family:Inter,Arial,sans-serif;background:#0b1020;color:#eaf0ff;margin:0}
+    .wrap{max-width:980px;margin:24px auto;padding:0 16px}
+    .card{background:#121a31;border:1px solid #243050;border-radius:12px;padding:16px;margin-bottom:14px}
+    label{display:block;font-size:13px;opacity:.9;margin:10px 0 6px}
+    input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid #33446e;background:#0e152a;color:#fff}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .btn{background:#2f7df6;color:#fff;border:0;padding:10px 14px;border-radius:10px;cursor:pointer}
+    .btn.secondary{background:#25314f}
+    pre{white-space:pre-wrap;word-break:break-word;background:#0a1022;padding:12px;border-radius:10px;border:1px solid #2a375a}
+    .muted{opacity:.75;font-size:12px}
+    @media(max-width:800px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>PlayVSL — Builder</h1>
+    <div class="card">
+      <div class="grid">
+        <div>
+          <label>YouTube URL</label>
+          <input id="youtubeUrl" value="https://youtu.be/wqGiHRWeTR0" />
+        </div>
+        <div>
+          <label>Cor primária</label>
+          <input id="primaryColor" type="color" value="#c62116" />
+        </div>
+        <div>
+          <label>URL do botão</label>
+          <input id="buttonUrl" value="https://example.com" />
+        </div>
+        <div>
+          <label>Texto do botão</label>
+          <input id="buttonText" value="PRÓXIMO PASSO" />
+        </div>
+        <div>
+          <label>Mostrar botão em (segundos)</label>
+          <input id="buttonShowAtSeconds" type="number" min="1" value="120" />
+        </div>
+        <div>
+          <label>Aspect ratio</label>
+          <select id="aspect">
+            <option>16:9</option>
+            <option>9:16</option>
+            <option>4:3</option>
+          </select>
+        </div>
+      </div>
+      <p class="muted">Convenção > configuração: o builder expõe só o essencial.</p>
+      <button class="btn" id="generate">Gerar snippet</button>
+      <button class="btn secondary" id="copy">Copiar snippet</button>
+    </div>
+
+    <div class="card">
+      <h3>Snippet de embed</h3>
+      <pre id="out"></pre>
+      <p class="muted">Troque o src do script para seu domínio de produção quando publicar o PlayVSL.</p>
+    </div>
+  </div>
+
+  <script>
+    const $ = (id)=>document.getElementById(id);
+
+    function buildSnippet(){
+      const cfg = {
+        youtubeUrl: $('youtubeUrl').value.trim(),
+        primaryColor: $('primaryColor').value,
+        buttonUrl: $('buttonUrl').value.trim(),
+        buttonText: $('buttonText').value,
+        buttonShowAtSeconds: Number($('buttonShowAtSeconds').value || 120),
+        aspect: $('aspect').value
+      };
+
+      const snippet = `<div id="playvsl"></div>\n<script src="./playvsl.js"><\\/script>\n<script>\n  PlayVSL.init({\n    container: '#playvsl',\n    youtubeUrl: '${cfg.youtubeUrl}',\n    primaryColor: '${cfg.primaryColor}',\n    buttonUrl: '${cfg.buttonUrl}',\n    buttonText: '${cfg.buttonText.replace(/'/g,"\\'")}',\n    buttonShowAtSeconds: ${cfg.buttonShowAtSeconds},\n    aspect: '${cfg.aspect}'\n  });\n<\\/script>`;
+
+      $('out').textContent = snippet;
+    }
+
+    $('generate').addEventListener('click', buildSnippet);
+    $('copy').addEventListener('click', async()=>{
+      await navigator.clipboard.writeText($('out').textContent);
+      $('copy').textContent='Copiado!';
+      setTimeout(()=>$('copy').textContent='Copiar snippet',1200);
+    });
+
+    buildSnippet();
+  </script>
+</body>
+</html>

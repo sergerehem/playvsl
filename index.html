@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PlayVSL</title>
+  <style>
+    :root{--bg:#f6f8fc;--card:#fff;--line:#d9e1f2;--txt:#0f172a;--muted:#4b5563;--cta:#2563eb}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,Arial,sans-serif}
+    .wrap{max-width:1120px;margin:0 auto;padding:24px 16px}
+    .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 10px 30px rgba(16,24,40,.05)}
+    h1{font-size:38px;line-height:1.12;margin:0 0 8px} p{color:var(--muted)}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef3ff;color:#2b4bb4;font-size:12px;border:1px solid #cfe0ff}
+    .accent{color:#1d4ed8}
+    .hidden{display:none}
+    label{display:block;font-size:12px;color:#334155;margin:8px 0 4px}
+    input,select{width:100%;padding:10px;border-radius:10px;border:1px solid #c9d5ee;background:#fff;color:#111827}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .btn{border:0;border-radius:10px;padding:11px 14px;font-weight:700;cursor:pointer}
+    .btn-primary{background:var(--cta);color:#fff}
+    .btn-ghost{background:#eef2ff;color:#1e3a8a;border:1px solid #c7d2fe}
+    pre{white-space:pre-wrap;word-break:break-word;background:#f8faff;border:1px solid #d4def4;padding:12px;border-radius:10px;min-height:130px}
+    @media(max-width:920px){.hero{grid-template-columns:1fr}h1{font-size:32px}.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <section class="card">
+        <span class="pill">PlayVSL • YouTube → VSL</span>
+        <h1>O player que transforma seu vídeo do YouTube em <span class="accent">VSL de alta conversão</span>.</h1>
+        <p>Assista a demonstração. Quando o botão aparecer, clique para liberar o configurador.</p>
+        <div id="playvsl-preview" style="margin-top:14px"></div>
+      </section>
+
+      <section class="card">
+        <div id="gateInfo">
+          <h2>Desbloqueio</h2>
+          <p>O configurador será liberado após você interagir com a VSL e clicar no botão quando aparecer.</p>
+        </div>
+
+        <div id="leadStep" class="hidden">
+          <h2>Quase lá 👇</h2>
+          <p>Preencha para liberar o snippet.</p>
+          <label>Nome</label><input id="leadName" placeholder="Seu nome" />
+          <label>Email</label><input id="leadEmail" placeholder="voce@empresa.com" />
+          <button id="leadSubmit" class="btn btn-primary" style="margin-top:10px">Liberar configurador</button>
+        </div>
+
+        <div id="builderStep" class="hidden">
+          <h2>Configure e copie seu snippet</h2>
+          <div class="grid">
+            <div><label>YouTube URL</label><input id="youtubeUrl" value="https://youtu.be/wqGiHRWeTR0"></div>
+            <div><label>Cor primária</label><input id="primaryColor" type="color" value="#FFBE01"></div>
+            <div><label>URL do botão</label><input id="buttonUrl" value="https://example.com"></div>
+            <div><label>Texto do botão</label><input id="buttonText" value="PRÓXIMO PASSO"></div>
+            <div><label>Mostrar botão em (s)</label><input id="buttonShowAtSeconds" type="number" min="1" value="10"></div>
+            <div><label>Cor do botão</label><input id="buttonBg" type="color" value="#2f7df6"></div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+            <button id="apply" class="btn btn-primary">Aplicar no preview</button>
+            <button id="copy" class="btn btn-ghost">Copiar snippet</button>
+          </div>
+          <pre id="out"></pre>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="./playvsl.js"></script>
+  <script>
+    const $=id=>document.getElementById(id);
+    const params = new URLSearchParams(location.search);
+
+    function baseCfg(){
+      return {
+        container:'#playvsl-preview',
+        youtubeUrl:'https://youtu.be/wqGiHRWeTR0',
+        primaryColor:'#FFBE01',
+        buttonUrl:`${location.origin}${location.pathname}?unlock=1`,
+        buttonText:'LIBERAR CONFIGURADOR',
+        buttonShowAtSeconds:10,
+        buttonBg:'#2563eb'
+      };
+    }
+
+    function builderCfg(){
+      return {
+        container:'#playvsl-preview',
+        youtubeUrl:$('youtubeUrl').value.trim(),
+        primaryColor:$('primaryColor').value,
+        buttonUrl:$('buttonUrl').value.trim(),
+        buttonText:$('buttonText').value,
+        buttonShowAtSeconds:Number($('buttonShowAtSeconds').value||10),
+        buttonBg:$('buttonBg').value
+      };
+    }
+
+    function snippet(c){
+      return `<div id="playvsl"></div>\n<script src="./playvsl.js"><\\/script>\n<script>\n  PlayVSL.init({\n    container:'#playvsl',\n    youtubeUrl:'${c.youtubeUrl}',\n    primaryColor:'${c.primaryColor}',\n    buttonUrl:'${c.buttonUrl}',\n    buttonText:'${c.buttonText.replace(/'/g,"\\'")}',\n    buttonShowAtSeconds:${c.buttonShowAtSeconds},\n    buttonBg:'${c.buttonBg}'\n  });\n<\\/script>`;
+    }
+
+    function renderPreview(cfg){
+      const node = $('playvsl-preview');
+      node.innerHTML = '';
+      PlayVSL.init(cfg);
+    }
+
+    function unlockFlow(){
+      $('gateInfo').classList.add('hidden');
+      $('leadStep').classList.remove('hidden');
+      const formSaved = localStorage.getItem('playvsl_lead_sent') === '1';
+      if(formSaved){
+        $('leadStep').classList.add('hidden');
+        $('builderStep').classList.remove('hidden');
+        const c = builderCfg();
+        $('out').textContent = snippet(c);
+      }
+    }
+
+    // estado inicial
+    renderPreview(baseCfg());
+    if(params.get('unlock') === '1') unlockFlow();
+
+    $('leadSubmit').addEventListener('click', ()=>{
+      const name = $('leadName').value.trim();
+      const email = $('leadEmail').value.trim();
+      if(!name || !email){ alert('Preencha nome e email.'); return; }
+      // TODO: enviar para Encharge API
+      localStorage.setItem('playvsl_lead_sent','1');
+      localStorage.setItem('playvsl_lead_name',name);
+      localStorage.setItem('playvsl_lead_email',email);
+      $('leadStep').classList.add('hidden');
+      $('builderStep').classList.remove('hidden');
+      const c = builderCfg();
+      $('out').textContent = snippet(c);
+    });
+
+    if($('apply')) $('apply').addEventListener('click', ()=>{
+      const c = builderCfg();
+      $('out').textContent = snippet(c);
+      renderPreview(c);
+    });
+
+    if($('copy')) $('copy').addEventListener('click', async()=>{
+      await navigator.clipboard.writeText($('out').textContent);
+      $('copy').textContent='Copiado!';
+      setTimeout(()=>$('copy').textContent='Copiar snippet',1200);
+    });
+  </script>
+</body>
+</html>
