@@ -111,6 +111,7 @@
   <script>
     const $=id=>document.getElementById(id);
     const params = new URLSearchParams(location.search);
+    const LEAD_API = window.PLAYVSL_LEAD_API || ''; // ex: https://seu-worker.workers.dev/encharge/subscribe
 
     Coloris({
       el: '[data-coloris]',
@@ -202,11 +203,27 @@
     if($('buttonBg')) $('buttonBg').addEventListener('input', quickUpdate);
     if($('buttonNewTab')) $('buttonNewTab').addEventListener('change', ()=>{ $('buttonNewTabLabel').textContent = $('buttonNewTab').checked ? 'Sim' : 'Não'; quickUpdate(); });
 
-    $('leadSubmit').addEventListener('click', ()=>{
+    $('leadSubmit').addEventListener('click', async()=>{
       const name = $('leadName').value.trim();
       const email = $('leadEmail').value.trim();
       if(!name || !email){ alert('Preencha nome e email.'); return; }
-      // TODO: enviar para Encharge API
+
+      // Segurança: NUNCA enviar token Encharge do frontend.
+      // O frontend chama seu endpoint seguro, e o backend adiciona X-Encharge-Token.
+      if(LEAD_API){
+        try{
+          const r = await fetch(LEAD_API,{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({email,name,tag:'playvsl-lp'})
+          });
+          if(!r.ok) throw new Error('Falha ao enviar lead');
+        }catch(e){
+          alert('Não foi possível enviar seu cadastro agora. Tente novamente em instantes.');
+          return;
+        }
+      }
+
       localStorage.setItem('playvsl_lead_sent','1');
       localStorage.setItem('playvsl_lead_name',name);
       localStorage.setItem('playvsl_lead_email',email);

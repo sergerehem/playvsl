@@ -31,3 +31,13 @@ Abra `http://localhost:8080`.
   });
 </script>
 ```
+
+
+## Envio de leads para Encharge (seguro)
+
+⚠️ Não coloque `X-Encharge-Token` no frontend (GitHub Pages). O token ficaria público.
+
+Use um endpoint backend/proxy (ex.: Cloudflare Worker) e configure o token como segredo (`ENCHARGE_TOKEN`).
+
+- Template: `encharge-worker-template.js`
+- Frontend: defina `window.PLAYVSL_LEAD_API = 'https://SEU-WORKER/encharge/subscribe'` antes do script da página.
