@@ -24,7 +24,7 @@
 .sp-pause-play svg{width:74%;height:74%;display:block}
 .sp-play-triangle path{fill:var(--sp-contrast,#fff);stroke:var(--sp-contrast,#fff);stroke-width:3;stroke-linejoin:round}
 @media (max-width:900px){.sp-pause-play{width:120px;height:120px}.sp-pause-play svg{width:70%;height:70%}}
-.sp-bar{position:relative;height:6px;background:var(--sp-progress-track,rgba(255,255,255,.2));z-index:6}
+.sp-bar{position:relative;height:6px;background:linear-gradient(to bottom, rgba(0,0,0,.22), var(--sp-progress-track,rgba(255,255,255,.2)));z-index:6}
 .sp-bar-fill{height:100%;width:0;background:var(--sp-primary,#c62116);transition:width .35s linear}
 .sp-time{display:none!important}
 .sp-prestart .sp-bar,.sp-prestart .sp-time,.sp-prestart .sp-pause-play{display:none}
@@ -489,6 +489,7 @@
               const st = ev.data;
               // 1=playing, 2=paused, 0=ended
               if(st===1){
+                host.dataset.spEnded = '0';
                 if(pausePlay) pausePlay.style.display='none';
               } else if(st===2){
                 if(firstAudio && firstAudio.style.display==='block') return;
@@ -496,6 +497,7 @@
                 if(pausePlay) pausePlay.style.display='grid';
                 emit('pause', {});
               } else if(st===0){
+                try{ state.engaged = Math.max(Number(state.engaged||0), Number(player.getDuration ? player.getDuration() : 0)); save(); }catch(e){}
                 emit('complete', {});
                 // loop automático no modo teaser (antes do clique para ouvir)
                 if(!state.started){
@@ -503,6 +505,9 @@
                   try { player.mute(); } catch(e) {}
                   try { player.setPlaybackRate(Number(cfg.teaserPlaybackRate) || 2); } catch(e) {}
                   try { player.playVideo(); } catch(e) {}
+                } else {
+                  host.dataset.spEnded = '1';
+                  if(pausePlay) pausePlay.style.display='grid';
                 }
               }
             },
@@ -525,6 +530,16 @@
         else startAt(Math.max(0, player.getCurrentTime ? player.getCurrentTime() : 0), true);
       });
       pausePlay.addEventListener('click', ()=>{
+        const ended = host.dataset.spEnded === '1';
+        if(ended){
+          state.max = 0;
+          state.engaged = 0;
+          state.anchorSec = 0;
+          save();
+          host.dataset.spEnded = '0';
+          startAt(0, true);
+          return;
+        }
         startAt(Math.max(0, player.getCurrentTime ? player.getCurrentTime() : 0), true);
       });
 
