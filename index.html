@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PlayVSL | Player para VSL com YouTube e alta conversão</title>
-  <meta name="description" content="PlayVSL é o player que transforma seu vídeo do YouTube em VSL de alta conversão, com teaser inteligente, botão no tempo certo e setup em minutos." />
+  <title id="seo_title">PlayVSL | Player para VSL com YouTube e alta conversão</title>
+  <meta id="seo_desc" name="description" content="PlayVSL é o player que transforma seu vídeo do YouTube em VSL de alta conversão, com teaser inteligente, botão no tempo certo e setup em minutos." />
   <meta name="robots" content="index,follow,max-image-preview:large" />
   <link rel="canonical" href="https://playvsl.digi6.com.br/" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="PlayVSL | Player para VSL com YouTube e alta conversão" />
-  <meta property="og:description" content="Transforme seu vídeo do YouTube em VSL de alta conversão com teaser inteligente e botão no tempo certo." />
+  <meta id="seo_og_title" property="og:title" content="PlayVSL | Player para VSL com YouTube e alta conversão" />
+  <meta id="seo_og_desc" property="og:description" content="Transforme seu vídeo do YouTube em VSL de alta conversão com teaser inteligente e botão no tempo certo." />
   <meta property="og:url" content="https://playvsl.digi6.com.br/" />
   <meta property="og:site_name" content="PlayVSL" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="PlayVSL | Player para VSL com YouTube e alta conversão" />
-  <meta name="twitter:description" content="Transforme seu vídeo do YouTube em VSL de alta conversão com teaser inteligente e botão no tempo certo." />
+  <meta id="seo_tw_title" name="twitter:title" content="PlayVSL | Player para VSL com YouTube e alta conversão" />
+  <meta id="seo_tw_desc" name="twitter:description" content="Transforme seu vídeo do YouTube em VSL de alta conversão com teaser inteligente e botão no tempo certo." />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css"/>
   <style>
     :root{--bg:#f6f8fc;--card:#fff;--line:#d9e1f2;--txt:#0f172a;--muted:#4b5563;--cta:#dc2626}
@@ -47,7 +47,7 @@
     pre{white-space:pre-wrap;word-break:break-word;background:#f8faff;border:1px solid #d4def4;padding:12px;border-radius:10px;min-height:130px}
     @media(max-width:920px){.hero{grid-template-columns:1fr}h1{font-size:32px}.grid{grid-template-columns:1fr}}
   </style>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"PlayVSL","applicationCategory":"BusinessApplication","operatingSystem":"Web","url":"https://playvsl.digi6.com.br/","description":"Player para transformar vídeos do YouTube em VSLs de alta conversão.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+  <script id="seo_ldjson" type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"PlayVSL","applicationCategory":"BusinessApplication","operatingSystem":"Web","url":"https://playvsl.digi6.com.br/","description":"Player para transformar vídeos do YouTube em VSLs de alta conversão.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
 </head>
 <body>
   <div class="wrap">
@@ -156,7 +156,11 @@
         alertFill: 'Preencha nome e email.',
         alertFail: 'Não foi possível enviar seu cadastro agora. Tente novamente em instantes.',
         rights: '© 2026 PlayVSL. Todos os direitos reservados.',
-        defaultButton: 'QUERO MEU SNIPPET AGORA - É GRÁTIS'
+        defaultButton: 'QUERO MEU SNIPPET AGORA - É GRÁTIS',
+        seoTitle: 'PlayVSL | Player para VSL com YouTube e alta conversão',
+        seoDesc: 'PlayVSL é o player que transforma seu vídeo do YouTube em VSL de alta conversão, com teaser inteligente, botão no tempo certo e setup em minutos.',
+        seoOgDesc: 'Transforme seu vídeo do YouTube em VSL de alta conversão com teaser inteligente e botão no tempo certo.',
+        seoLdDesc: 'Player para transformar vídeos do YouTube em VSLs de alta conversão.'
       },
       en: {
         title: 'The player that turns your YouTube video into a <span class="accent">high-converting VSL</span>.',
@@ -174,7 +178,11 @@
         alertFill: 'Please enter name and email.',
         alertFail: 'Could not submit your signup right now. Please try again shortly.',
         rights: '© 2026 PlayVSL. All rights reserved.',
-        defaultButton: 'GET MY SNIPPET NOW - IT\'S FREE'
+        defaultButton: 'GET MY SNIPPET NOW - IT\'S FREE',
+        seoTitle: 'PlayVSL | YouTube VSL Player for higher conversions',
+        seoDesc: 'PlayVSL turns your YouTube video into a high-converting VSL with smart teaser, timed CTA, and setup in minutes.',
+        seoOgDesc: 'Turn your YouTube video into a high-converting VSL with smart teaser and timed CTA.',
+        seoLdDesc: 'Player to turn YouTube videos into high-converting VSLs.'
       }
     };
 
@@ -190,6 +198,26 @@
       set('t_new_tab', t('newTab')); set('apply', t('apply')); set('copy', t('copy')); set('t_footer_rights', t('rights'));
       const ntab=$('buttonNewTabLabel'); if(ntab) ntab.textContent = $('buttonNewTab')?.checked ? t('yes') : t('no');
       if($('buttonText') && !$('buttonText').dataset.touched){ $('buttonText').value = t('defaultButton'); }
+
+      const st=$('seo_title'); if(st) document.title = t('seoTitle');
+      const sd=$('seo_desc'); if(sd) sd.setAttribute('content', t('seoDesc'));
+      const sot=$('seo_og_title'); if(sot) sot.setAttribute('content', t('seoTitle'));
+      const sod=$('seo_og_desc'); if(sod) sod.setAttribute('content', t('seoOgDesc'));
+      const stt=$('seo_tw_title'); if(stt) stt.setAttribute('content', t('seoTitle'));
+      const std=$('seo_tw_desc'); if(std) std.setAttribute('content', t('seoOgDesc'));
+      const ld=$('seo_ldjson');
+      if(ld){
+        ld.textContent = JSON.stringify({
+          '@context':'https://schema.org',
+          '@type':'SoftwareApplication',
+          name:'PlayVSL',
+          applicationCategory:'BusinessApplication',
+          operatingSystem:'Web',
+          url:'https://playvsl.digi6.com.br/',
+          description:t('seoLdDesc'),
+          offers:{'@type':'Offer',price:'0',priceCurrency:'USD'}
+        });
+      }
     }
     function baseCfg(){
       return {
