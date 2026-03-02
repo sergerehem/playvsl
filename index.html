@@ -66,6 +66,10 @@
             <div><label>Texto do botão</label><input id="buttonText" value="PRÓXIMO PASSO"></div>
             <div><label>Mostrar botão em (s)</label><input id="buttonShowAtSeconds" type="number" min="1" value="10"></div>
             <div>
+              <label>Abertura do botão</label>
+              <select id="buttonNewTab"><option value="false" selected>Mesma aba (padrão)</option><option value="true">Nova aba</option></select>
+            </div>
+            <div>
               <label>Cor do botão</label>
               <div class="color-row">
                 <input id="buttonBg" data-coloris value="#2f7df6" title="Cor do botão">
@@ -124,12 +128,13 @@
         buttonUrl:$('buttonUrl').value.trim(),
         buttonText:$('buttonText').value,
         buttonShowAtSeconds:Number($('buttonShowAtSeconds').value||10),
+        buttonNewTab:$('buttonNewTab').value === 'true',
         buttonBg:$('buttonBg').value
       };
     }
 
     function snippet(c){
-      return `<div id="playvsl"></div>\n<script src="https://sergerehem.github.io/playvsl/playvsl.js"><\\/script>\n<script>\n  PlayVSL.init({\n    container:'#playvsl',\n    youtubeUrl:'${c.youtubeUrl}',\n    primaryColor:'${c.primaryColor}',\n    buttonUrl:'${c.buttonUrl}',\n    buttonText:'${c.buttonText.replace(/'/g,"\\'")}',\n    buttonShowAtSeconds:${c.buttonShowAtSeconds},\n    buttonBg:'${c.buttonBg}'\n  });\n<\\/script>`;
+      return `<div id="playvsl"></div>\n<script src="https://sergerehem.github.io/playvsl/playvsl.js"><\\/script>\n<script>\n  PlayVSL.init({\n    container:'#playvsl',\n    youtubeUrl:'${c.youtubeUrl}',\n    primaryColor:'${c.primaryColor}',\n    buttonUrl:'${c.buttonUrl}',\n    buttonText:'${c.buttonText.replace(/'/g,"\\'")}',\n    buttonShowAtSeconds:${c.buttonShowAtSeconds},\n    buttonNewTab:${c.buttonNewTab},\n    buttonBg:'${c.buttonBg}'\n  });\n<\\/script>`;
     }
 
     function renderPreview(cfg){

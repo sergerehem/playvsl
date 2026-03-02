@@ -89,6 +89,7 @@
         buttonShowAtSeconds:120, // segundo real do vídeo para liberar botão
         buttonBg:null,
         buttonRounded:true,
+        buttonNewTab:false,
         teaserProgressDurationSeconds:600, // menor que real para "andar" mais rápido no início
         teaserProgressCurve:0.72, // <1 acelera começo
         teaserPlaybackRate:2,
@@ -106,6 +107,7 @@
       if (typeof cfg.ctaAfterSeconds !== 'undefined') cfg.buttonShowAtSeconds = cfg.ctaAfterSeconds;
       if (cfg.ctaBg) cfg.buttonBg = cfg.ctaBg;
       if (typeof cfg.ctaRounded !== 'undefined') cfg.buttonRounded = cfg.ctaRounded;
+      if (typeof cfg.ctaNewTab !== 'undefined') cfg.buttonNewTab = cfg.ctaNewTab;
       if (typeof cfg.fakeDurationSeconds !== 'undefined') cfg.teaserProgressDurationSeconds = cfg.fakeDurationSeconds;
       if (typeof cfg.fakeCurve !== 'undefined') cfg.teaserProgressCurve = cfg.fakeCurve;
       if (typeof cfg.fakePlaybackRate !== 'undefined') cfg.teaserPlaybackRate = cfg.fakePlaybackRate;
@@ -186,9 +188,16 @@
           <div class="sp-bar"><div class="sp-bar-fill" id="sp-fill"></div></div>
           <div class="sp-time" id="sp-time">00:00</div>
         </div></div>
-        <a class="sp-cta" id="sp-cta" href="${cfg.buttonUrl}" target="_blank" rel="noopener">${cfg.buttonText}</a>`;
+        <a class="sp-cta" id="sp-cta" href="${cfg.buttonUrl}">${cfg.buttonText}</a>`;
 
       const cta = host.querySelector('#sp-cta');
+      if(cfg.buttonNewTab){
+        cta.setAttribute('target','_blank');
+        cta.setAttribute('rel','noopener');
+      } else {
+        cta.removeAttribute('target');
+        cta.removeAttribute('rel');
+      }
 
       // Hardening básico contra cópia casual (não é proteção absoluta)
       host.addEventListener('contextmenu', (e)=>e.preventDefault());
