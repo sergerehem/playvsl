@@ -3,7 +3,7 @@
 .sp-shell{position:relative;background:#000;border-radius:0;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.35)}
 .sp-ratio{position:relative;padding-top:56.25%}
 .sp-player{position:absolute;inset:0;background:#000;overflow:hidden}
-.sp-player.sp-ended iframe{opacity:0;pointer-events:none}
+.sp-player.sp-ended iframe,.sp-player.sp-paused iframe{opacity:0;pointer-events:none}
 #sp-player-target{position:absolute;inset:0}
 #sp-click-shield{position:absolute;inset:0;z-index:4;background:transparent;cursor:pointer}
 .sp-player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
@@ -395,7 +395,10 @@
 
       function startAt(sec, unmute=true){
         poster.style.display='none';
-        if(playerHost) playerHost.classList.remove('sp-ended');
+        if(playerHost){
+          playerHost.classList.remove('sp-ended');
+          playerHost.classList.remove('sp-paused');
+        }
         if(firstAudio) firstAudio.style.display = unmute ? 'none' : 'block';
         if(pausePlay) pausePlay.style.display='none';
 
@@ -493,11 +496,15 @@
               // 1=playing, 2=paused, 0=ended
               if(st===1){
                 host.dataset.spEnded = '0';
-                if(playerHost) playerHost.classList.remove('sp-ended');
+                if(playerHost){
+                  playerHost.classList.remove('sp-ended');
+                  playerHost.classList.remove('sp-paused');
+                }
                 if(pausePlay) pausePlay.style.display='none';
               } else if(st===2){
                 if(firstAudio && firstAudio.style.display==='block') return;
                 if(modal && modal.style.display==='flex') return;
+                if(playerHost) playerHost.classList.add('sp-paused');
                 if(pausePlay) pausePlay.style.display='grid';
                 emit('pause', {});
               } else if(st===0){
