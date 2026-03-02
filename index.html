@@ -17,6 +17,8 @@
     .hidden{display:none}
     label{display:block;font-size:12px;color:#334155;margin:8px 0 4px}
     input,select{width:100%;padding:10px;border-radius:10px;border:1px solid #c9d5ee;background:#fff;color:#111827}
+    input[type="color"]{padding:4px;height:40px;min-width:56px;cursor:pointer}
+    .color-row{display:grid;grid-template-columns:64px 1fr;gap:8px;align-items:center}
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .btn{border:0;border-radius:10px;padding:11px 14px;font-weight:700;cursor:pointer}
     .btn-primary{background:var(--cta);color:#fff}
@@ -53,11 +55,39 @@
           <h2>Configure e copie seu snippet</h2>
           <div class="grid">
             <div><label>YouTube URL</label><input id="youtubeUrl" value="https://youtu.be/wqGiHRWeTR0"></div>
-            <div><label>Cor primária</label><input id="primaryColor" type="color" value="#FFBE01"></div>
+            <div>
+              <label>Cor primária</label>
+              <div class="color-row">
+                <input id="primaryColor" type="color" value="#FFBE01">
+                <select id="primaryPreset">
+                  <option value="">Cores sugeridas</option>
+                  <option value="#FFBE01">Solar Yellow</option>
+                  <option value="#C62116">VSL Red</option>
+                  <option value="#2F7DF6">Electric Blue</option>
+                  <option value="#22C55E">Conversion Green</option>
+                  <option value="#111827">Slate Black</option>
+                  <option value="#7C3AED">Royal Purple</option>
+                </select>
+              </div>
+            </div>
             <div><label>URL do botão</label><input id="buttonUrl" value="https://example.com"></div>
             <div><label>Texto do botão</label><input id="buttonText" value="PRÓXIMO PASSO"></div>
             <div><label>Mostrar botão em (s)</label><input id="buttonShowAtSeconds" type="number" min="1" value="10"></div>
-            <div><label>Cor do botão</label><input id="buttonBg" type="color" value="#2f7df6"></div>
+            <div>
+              <label>Cor do botão</label>
+              <div class="color-row">
+                <input id="buttonBg" type="color" value="#2f7df6">
+                <select id="buttonPreset">
+                  <option value="">Cores sugeridas</option>
+                  <option value="#2F7DF6">Blue CTA</option>
+                  <option value="#16A34A">Green CTA</option>
+                  <option value="#DC2626">Red CTA</option>
+                  <option value="#F59E0B">Orange CTA</option>
+                  <option value="#111827">Dark CTA</option>
+                  <option value="#7C3AED">Purple CTA</option>
+                </select>
+              </div>
+            </div>
           </div>
           <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
             <button id="apply" class="btn btn-primary">Aplicar no preview</button>
@@ -125,6 +155,12 @@
     // estado inicial
     renderPreview(baseCfg());
     if(params.get('unlock') === '1') unlockFlow();
+
+    const quickUpdate = ()=>{ if($('out')) $('out').textContent = snippet(builderCfg()); };
+    if($('primaryPreset')) $('primaryPreset').addEventListener('change', (e)=>{ if(e.target.value) $('primaryColor').value=e.target.value; quickUpdate(); });
+    if($('buttonPreset')) $('buttonPreset').addEventListener('change', (e)=>{ if(e.target.value) $('buttonBg').value=e.target.value; quickUpdate(); });
+    if($('primaryColor')) $('primaryColor').addEventListener('input', quickUpdate);
+    if($('buttonBg')) $('buttonBg').addEventListener('input', quickUpdate);
 
     $('leadSubmit').addEventListener('click', ()=>{
       const name = $('leadName').value.trim();
