@@ -19,6 +19,7 @@
         buttonText: $('buttonText')?.value || '',
         buttonShowAtSeconds: Number($('buttonShowAtSeconds')?.value || 10),
         buttonNewTab: !!$('buttonNewTab')?.checked,
+        buttonRounded: !!$('buttonRounded')?.checked,
         buttonBg: $('buttonBg')?.value || '#C62116'
       };
       localStorage.setItem(BUILDER_KEY, JSON.stringify(data));
@@ -36,6 +37,7 @@
       if($('buttonText') && c.buttonText){ $('buttonText').value = c.buttonText; $('buttonText').dataset.touched='1'; }
       if($('buttonShowAtSeconds') && c.buttonShowAtSeconds) $('buttonShowAtSeconds').value = String(c.buttonShowAtSeconds);
       if($('buttonNewTab')) $('buttonNewTab').checked = !!c.buttonNewTab;
+      if($('buttonRounded')) $('buttonRounded').checked = !!c.buttonRounded;
       if($('buttonBg') && c.buttonBg) $('buttonBg').value = c.buttonBg;
     }catch(e){}
   };
@@ -44,7 +46,7 @@
     return {
       container:'#playvsl-preview', youtubeUrl:'https://youtu.be/wqGiHRWeTR0', primaryColor:'#C62116',
       buttonUrl:`${location.origin}${location.pathname}?unlock=1`, buttonText:'QUERO MEU SNIPPET AGORA - É GRÁTIS',
-      buttonShowAtSeconds:10, buttonBg:'#C62116', lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause
+      buttonShowAtSeconds:10, buttonRounded:false, buttonBg:'#C62116', lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause
     };
   };
 
@@ -53,13 +55,13 @@
       container:'#playvsl-preview', youtubeUrl:$('youtubeUrl').value.trim(), primaryColor:$('primaryColor').value,
       buttonUrl:$('buttonUrl').value.trim(), buttonText:$('buttonText').value,
       buttonShowAtSeconds:Number($('buttonShowAtSeconds').value||10), buttonNewTab:$('buttonNewTab').checked,
-      buttonBg:$('buttonBg').value, lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause
+      buttonRounded:$('buttonRounded').checked, buttonBg:$('buttonBg').value, lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause
     };
   };
 
   App.snippet = function(c){
     const closeScript = '</scr' + 'ipt>';
-    return `<div id="playvsl"></div>\n<script src="https://playvsl.digi6.com.br/playvsl.js">${closeScript}\n<script>\n  PlayVSL.init({\n    container:'#playvsl',\n    youtubeUrl:'${c.youtubeUrl}',\n    primaryColor:'${c.primaryColor}',\n    buttonUrl:'${c.buttonUrl}',\n    buttonText:'${c.buttonText.replace(/'/g,"\\'")}',\n    buttonShowAtSeconds:${c.buttonShowAtSeconds},\n    buttonNewTab:${c.buttonNewTab},\n    buttonBg:'${c.buttonBg}',\n    lang:'${c.lang || App.LANG}'\n  });\n${closeScript}`;
+    return `<div id="playvsl"></div>\n<script src="https://playvsl.digi6.com.br/playvsl.js">${closeScript}\n<script>\n  PlayVSL.init({\n    container:'#playvsl',\n    youtubeUrl:'${c.youtubeUrl}',\n    primaryColor:'${c.primaryColor}',\n    buttonUrl:'${c.buttonUrl}',\n    buttonText:'${c.buttonText.replace(/'/g,"\\'")}',\n    buttonShowAtSeconds:${c.buttonShowAtSeconds},\n    buttonNewTab:${c.buttonNewTab},\n    buttonRounded:${!!c.buttonRounded},\n    buttonBg:'${c.buttonBg}',\n    lang:'${c.lang || App.LANG}'\n  });\n${closeScript}`;
   };
 
   App.extractYouTubeId = function(input){

@@ -25,6 +25,7 @@
     el.addEventListener('change', App.quickUpdate);
   });
   if($('buttonNewTab')) $('buttonNewTab').addEventListener('change', App.quickUpdate);
+  if($('buttonRounded')) $('buttonRounded').addEventListener('change', App.quickUpdate);
 
   if($('leadSubmit')) $('leadSubmit').addEventListener('click', App.submitLead);
 
