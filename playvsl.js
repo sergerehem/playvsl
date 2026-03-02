@@ -296,8 +296,9 @@
       }
 
       function save(){ state.ts=Date.now(); localStorage.setItem(key, JSON.stringify(state)); }
-      function showCTA(){
-        if(!state.started) return;
+      function showCTA(force=false){
+        const alwaysShow = Number(cfg.buttonShowAtSeconds) <= 0;
+        if(!state.started && !force && !alwaysShow) return;
         if(state.cta) {
           cta.style.display='block';
           return;
@@ -471,6 +472,7 @@
               timer=setInterval(update,500);
               emit('ready', {});
               if(state.cta) showCTA();
+              if(Number(cfg.buttonShowAtSeconds) <= 0) showCTA(true);
               fitIframe16x9();
               setTimeout(fitIframe16x9, 150);
               setTimeout(fitIframe16x9, 500);
