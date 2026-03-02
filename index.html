@@ -9,6 +9,7 @@
     *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,Arial,sans-serif}
     .wrap{max-width:1120px;margin:0 auto;padding:24px 16px}
     .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}
+    .hero.locked{grid-template-columns:1fr}
     .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 10px 30px rgba(16,24,40,.05)}
     h1{font-size:38px;line-height:1.12;margin:0 0 8px} p{color:var(--muted)}
     .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef3ff;color:#2b4bb4;font-size:12px;border:1px solid #cfe0ff}
@@ -26,7 +27,7 @@
 </head>
 <body>
   <div class="wrap">
-    <div class="hero">
+    <div class="hero locked" id="heroGrid">
       <section class="card">
         <span class="pill">PlayVSL • YouTube → VSL</span>
         <h1>O player que transforma seu vídeo do YouTube em <span class="accent">VSL de alta conversão</span>.</h1>
@@ -34,7 +35,7 @@
         <div id="playvsl-preview" style="margin-top:14px"></div>
       </section>
 
-      <section class="card">
+      <section class="card hidden" id="rightPanel">
         <div id="gateInfo">
           <h2>Desbloqueio</h2>
           <p>O configurador será liberado após você interagir com a VSL e clicar no botão quando aparecer.</p>
@@ -45,7 +46,7 @@
           <p>Preencha para liberar o snippet.</p>
           <label>Nome</label><input id="leadName" placeholder="Seu nome" />
           <label>Email</label><input id="leadEmail" placeholder="voce@empresa.com" />
-          <button id="leadSubmit" class="btn btn-primary" style="margin-top:10px">Liberar configurador</button>
+          <button id="leadSubmit" class="btn btn-primary" style="margin-top:10px">Liberar snippet</button>
         </div>
 
         <div id="builderStep" class="hidden">
@@ -79,7 +80,7 @@
         youtubeUrl:'https://youtu.be/wqGiHRWeTR0',
         primaryColor:'#FFBE01',
         buttonUrl:`${location.origin}${location.pathname}?unlock=1`,
-        buttonText:'LIBERAR CONFIGURADOR',
+        buttonText:'QUERO MEU SNIPPET AGORA',
         buttonShowAtSeconds:10,
         buttonBg:'#2563eb'
       };
@@ -108,6 +109,8 @@
     }
 
     function unlockFlow(){
+      $('rightPanel').classList.remove('hidden');
+      $('heroGrid').classList.remove('locked');
       $('gateInfo').classList.add('hidden');
       $('leadStep').classList.remove('hidden');
       const formSaved = localStorage.getItem('playvsl_lead_sent') === '1';
