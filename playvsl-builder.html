@@ -77,7 +77,7 @@
         aspect: $('aspect').value
       };
 
-      const snippet = `<div id="playvsl"></div>\n<script src="./playvsl.js"><\\/script>\n<script>\n  PlayVSL.init({\n    container: '#playvsl',\n    youtubeUrl: '${cfg.youtubeUrl}',\n    primaryColor: '${cfg.primaryColor}',\n    buttonUrl: '${cfg.buttonUrl}',\n    buttonText: '${cfg.buttonText.replace(/'/g,"\\'")}',\n    buttonShowAtSeconds: ${cfg.buttonShowAtSeconds},\n    aspect: '${cfg.aspect}'\n  });\n<\\/script>`;
+      const snippet = `<div id="playvsl"></div>\n<script src="https://sergerehem.github.io/playvsl/playvsl.js"><\\/script>\n<script>\n  PlayVSL.init({\n    container: '#playvsl',\n    youtubeUrl: '${cfg.youtubeUrl}',\n    primaryColor: '${cfg.primaryColor}',\n    buttonUrl: '${cfg.buttonUrl}',\n    buttonText: '${cfg.buttonText.replace(/'/g,"\\'")}',\n    buttonShowAtSeconds: ${cfg.buttonShowAtSeconds},\n    aspect: '${cfg.aspect}'\n  });\n<\\/script>`;
 
       $('out').textContent = snippet;
     }

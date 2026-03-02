@@ -98,7 +98,7 @@
     }
 
     function snippet(c){
-      return `<div id="playvsl"></div>\n<script src="./playvsl.js"><\\/script>\n<script>\n  PlayVSL.init({\n    container:'#playvsl',\n    youtubeUrl:'${c.youtubeUrl}',\n    primaryColor:'${c.primaryColor}',\n    buttonUrl:'${c.buttonUrl}',\n    buttonText:'${c.buttonText.replace(/'/g,"\\'")}',\n    buttonShowAtSeconds:${c.buttonShowAtSeconds},\n    buttonBg:'${c.buttonBg}'\n  });\n<\\/script>`;
+      return `<div id="playvsl"></div>\n<script src="https://sergerehem.github.io/playvsl/playvsl.js"><\\/script>\n<script>\n  PlayVSL.init({\n    container:'#playvsl',\n    youtubeUrl:'${c.youtubeUrl}',\n    primaryColor:'${c.primaryColor}',\n    buttonUrl:'${c.buttonUrl}',\n    buttonText:'${c.buttonText.replace(/'/g,"\\'")}',\n    buttonShowAtSeconds:${c.buttonShowAtSeconds},\n    buttonBg:'${c.buttonBg}'\n  });\n<\\/script>`;
     }
 
     function renderPreview(cfg){
