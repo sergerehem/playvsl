@@ -3,6 +3,7 @@
 .sp-shell{position:relative;background:#000;border-radius:0;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.35)}
 .sp-ratio{position:relative;padding-top:56.25%}
 .sp-player{position:absolute;inset:0;background:#000;overflow:hidden}
+.sp-player.sp-ended iframe{opacity:0;pointer-events:none}
 #sp-player-target{position:absolute;inset:0}
 #sp-click-shield{position:absolute;inset:0;z-index:4;background:transparent;cursor:pointer}
 .sp-player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
@@ -28,7 +29,7 @@
 .sp-bar-fill{height:100%;width:0;background:var(--sp-primary,#c62116);transition:width .35s linear}
 .sp-time{display:none!important}
 .sp-prestart .sp-bar,.sp-prestart .sp-time,.sp-prestart .sp-pause-play{display:none}
-.sp-cta{display:none;margin:14px auto 0 auto;padding:14px 28px;background:var(--sp-cta-bg,#1a73e8);color:var(--sp-cta-text,#fff);text-decoration:none;border-radius:var(--sp-cta-radius,999px);font-weight:700;text-align:center;min-width:220px;width:fit-content}
+.sp-cta{display:none;margin:14px auto 0 auto;padding:14px 28px;background:var(--sp-cta-bg,#1a73e8);color:var(--sp-cta-text,#fff);text-decoration:none;border:0;outline:none;box-shadow:none;border-radius:var(--sp-cta-radius,999px);font-weight:700;text-align:center;min-width:220px;width:fit-content;-webkit-appearance:none;appearance:none}
 .sp-modal{position:absolute;inset:0;background:var(--sp-primary,#c62116);display:none;align-items:center;justify-content:center;z-index:8}
 .sp-modal-card{background:transparent;color:var(--sp-contrast,#fff);padding:18px;border-radius:2px;max-width:760px;width:92%;text-align:center;font-family:Arial,Helvetica,sans-serif}
 .sp-resume-title{font-size:30px;font-weight:700;line-height:1.1;margin:0;padding:.5em 0;color:var(--sp-contrast,#fff)}
@@ -256,6 +257,7 @@
       const firstAudio = host.querySelector('#sp-first-audio');
       if(!state.started && firstAudio) firstAudio.style.display = 'block';
       const pausePlay = host.querySelector('#sp-pause-play');
+      const playerHost = host.querySelector('#sp-player-host');
       const clickShield = host.querySelector('#sp-click-shield');
       const modal = host.querySelector('#sp-modal');
       const progressMarks = {25:false,50:false,75:false,100:false};
@@ -393,6 +395,7 @@
 
       function startAt(sec, unmute=true){
         poster.style.display='none';
+        if(playerHost) playerHost.classList.remove('sp-ended');
         if(firstAudio) firstAudio.style.display = unmute ? 'none' : 'block';
         if(pausePlay) pausePlay.style.display='none';
 
@@ -490,6 +493,7 @@
               // 1=playing, 2=paused, 0=ended
               if(st===1){
                 host.dataset.spEnded = '0';
+                if(playerHost) playerHost.classList.remove('sp-ended');
                 if(pausePlay) pausePlay.style.display='none';
               } else if(st===2){
                 if(firstAudio && firstAudio.style.display==='block') return;
@@ -508,6 +512,7 @@
                   try { player.playVideo(); } catch(e) {}
                 } else {
                   host.dataset.spEnded = '1';
+                  if(playerHost) playerHost.classList.add('sp-ended');
                   if(pausePlay) pausePlay.style.display='grid';
                 }
               }
