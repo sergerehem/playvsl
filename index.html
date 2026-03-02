@@ -94,8 +94,10 @@
     const params = new URLSearchParams(location.search);
 
     Coloris({
+      el: '[data-coloris]',
       themeMode: 'light',
       alpha: false,
+      format: 'hex',
       swatches: [
         '#FFBE01','#C62116','#2F7DF6','#22C55E','#111827','#7C3AED',
         '#16A34A','#DC2626','#F59E0B'
@@ -136,7 +138,26 @@
       PlayVSL.init(cfg);
     }
 
+    function getPlayerStateForBaseVideo(){
+      try{
+        const raw = localStorage.getItem('smartvsl_wqGiHRWeTR0');
+        if(!raw) return null;
+        return JSON.parse(raw);
+      }catch(e){ return null; }
+    }
+
+    function canUnlock(){
+      const st = getPlayerStateForBaseVideo();
+      return !!(st && st.started === true && st.cta === true);
+    }
+
     function unlockFlow(){
+      if(!canUnlock()){
+        $('gateInfo').classList.remove('hidden');
+        $('gateInfo').innerHTML = '<h2>Desbloqueio</h2><p>Para liberar o configurador, assista à VSL e clique no botão quando ele aparecer.</p>';
+        return;
+      }
+
       $('rightPanel').classList.remove('hidden');
       $('heroGrid').classList.remove('locked');
       $('gateInfo').classList.add('hidden');
