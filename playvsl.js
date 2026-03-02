@@ -289,12 +289,10 @@
         }
 
         // tempo engajado baseado no relógio REAL do player, a partir do 1º clique para ouvir
-        if(!state.cta){
-          const anchor = (state.anchorSec ?? 0);
-          const engagedNow = Math.max(0, cur - anchor);
-          state.engaged = Math.max(state.engaged || 0, engagedNow);
-          save();
-        }
+        const anchor = (state.anchorSec ?? 0);
+        const engagedNow = Math.max(0, cur - anchor);
+        state.engaged = Math.max(state.engaged || 0, engagedNow);
+        save();
 
         if(Math.floor(state.engaged || 0) >= Number(cfg.buttonShowAtSeconds) || state.cta) showCTA();
 
