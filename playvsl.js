@@ -136,6 +136,10 @@
 
       const host = document.querySelector(cfg.container);
       if(!host) throw new Error('container não encontrado');
+      // cleanup de instância anterior no mesmo container (evita erros/repetições no console)
+      if(typeof host.__playvslDestroy === 'function'){
+        try{ host.__playvslDestroy(); }catch(e){}
+      }
       const vid = ytid(cfg.youtubeUrl);
       const key = `smartvsl_${vid}`;
       const now = Date.now();
@@ -257,8 +261,10 @@
         return Math.min(100, curved*100);
       }
 
-      let player, timer;
+      let player, timer, fitTimer;
+      let destroyed = false;
       function update(){
+        if(destroyed) return;
         if(!player || typeof player.getCurrentTime!=='function') return;
         const cur = player.getCurrentTime() || 0;
         const dur = player.getDuration() || 0;
@@ -344,6 +350,14 @@
         startAt(0, false); // autoplay mudo
       }
 
+      function destroy(){
+        destroyed = true;
+        try{ if(timer) clearInterval(timer); }catch(e){}
+        try{ if(fitTimer) clearInterval(fitTimer); }catch(e){}
+        try{ window.removeEventListener('resize', fitIframe16x9); }catch(e){}
+        try{ if(player && typeof player.destroy==='function') player.destroy(); }catch(e){}
+      }
+
       function showResumeOnLoadIfNeeded(){
         const watched = Math.max(Number(state.max||0), Number(state.engaged||0));
         if(cfg.askResume && state.started === true && watched > 1){
@@ -367,6 +381,7 @@
           playerVars: {autoplay:0,controls:0,rel:0,modestbranding:1,iv_load_policy:3,playsinline:1,origin:location.origin},
           events: {
             onReady: ()=>{
+              if(destroyed) return;
               timer=setInterval(update,500);
               if(state.cta) showCTA();
               fitIframe16x9();
@@ -374,13 +389,14 @@
               setTimeout(fitIframe16x9, 500);
               setTimeout(fitIframe16x9, 1200);
               let tries = 0;
-              const fitTimer = setInterval(()=>{ tries++; const ok = fitIframe16x9(); if(ok && tries>8) clearInterval(fitTimer); if(tries>20) clearInterval(fitTimer); }, 200);
+              fitTimer = setInterval(()=>{ tries++; const ok = fitIframe16x9(); if(ok && tries>8) clearInterval(fitTimer); if(tries>20) clearInterval(fitTimer); }, 200);
               window.addEventListener('resize', fitIframe16x9);
 
               const resumed = showResumeOnLoadIfNeeded();
               if(!resumed) startFirstMutedOverlay();
             },
             onStateChange: (ev)=>{
+              if(destroyed) return;
               const st = ev.data;
               // 1=playing, 2=paused, 0=ended
               if(st===1){
@@ -403,6 +419,8 @@
           }
         });
       };
+
+      host.__playvslDestroy = destroy;
 
       if(!window.YT || !window.YT.Player){
         const s=document.createElement('script'); s.src='https://www.youtube.com/iframe_api'; document.head.appendChild(s);
