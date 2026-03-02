@@ -96,6 +96,16 @@
         askResume:true,
         onPlay:null,
         onPause:null,
+        onEvent:null,
+        onReady:null,
+        onFirstPlay:null,
+        onResume:null,
+        onRestart:null,
+        onProgress:null,
+        onCTAView:null,
+        onCTAClick:null,
+        onComplete:null,
+        onError:null,
         primaryColor:'#c62116',
         progressTrackColor:'rgba(255,255,255,.2)',
         aspect:'16:9'
@@ -142,6 +152,11 @@
       }
       const vid = ytid(cfg.youtubeUrl);
       const key = `smartvsl_${vid}`;
+      const visitorKey = 'playvsl_visitor_id';
+      const sessionKey = 'playvsl_session_id';
+      function uuid(){ return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,(c)=>{ const r=Math.random()*16|0; const v=c==='x'?r:(r&0x3|0x8); return v.toString(16); }); }
+      const visitorId = localStorage.getItem(visitorKey) || (localStorage.setItem(visitorKey, uuid()), localStorage.getItem(visitorKey));
+      const sessionId = sessionStorage.getItem(sessionKey) || (sessionStorage.setItem(sessionKey, uuid()), sessionStorage.getItem(sessionKey));
       const now = Date.now();
       const state = JSON.parse(localStorage.getItem(key) || '{"max":0,"cta":false,"ts":0,"started":false,"engaged":0,"anchorSec":null}');
       // saneamento de tipos (evita lixo de versões antigas)
@@ -223,6 +238,7 @@
         cta.removeAttribute('target');
         cta.removeAttribute('rel');
       }
+      cta.addEventListener('click', ()=> emit('ctaClick', {}));
 
       // Hardening básico contra cópia casual (não é proteção absoluta)
       host.addEventListener('contextmenu', (e)=>e.preventDefault());
@@ -242,6 +258,42 @@
       const pausePlay = host.querySelector('#sp-pause-play');
       const clickShield = host.querySelector('#sp-click-shield');
       const modal = host.querySelector('#sp-modal');
+      const progressMarks = {25:false,50:false,75:false,100:false};
+      let lastProgressEmitSec = -1;
+
+      function eventPayload(extra={}){
+        const currentTime = player && player.getCurrentTime ? Number(player.getCurrentTime()||0) : 0;
+        const duration = player && player.getDuration ? Number(player.getDuration()||0) : 0;
+        return Object.assign({
+          event: extra.event || null,
+          videoId: vid,
+          sessionId,
+          visitorId,
+          pageUrl: location.href,
+          pagePath: location.pathname,
+          referrer: document.referrer || null,
+          lang: lang,
+          userAgent: navigator.userAgent,
+          platform: navigator.platform || null,
+          isMobile: /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent || ''),
+          currentTime,
+          duration,
+          engagedTime: Number(state.engaged||0),
+          started: state.started === true,
+          ctaShown: state.cta === true,
+          ts: Date.now()
+        }, extra);
+      }
+      function emit(name, extra={}){
+        const payload = eventPayload(Object.assign({event:name}, extra));
+        const map = {
+          ready:'onReady', play:'onPlay', firstPlay:'onFirstPlay', resume:'onResume', restart:'onRestart',
+          pause:'onPause', progress:'onProgress', ctaView:'onCTAView', ctaClick:'onCTAClick', complete:'onComplete', error:'onError'
+        };
+        const cb = cfg[map[name]];
+        if(typeof cb === 'function'){ try{ cb(payload); }catch(e){} }
+        if(typeof cfg.onEvent === 'function'){ try{ cfg.onEvent(payload); }catch(e){} }
+      }
 
       function save(){ state.ts=Date.now(); localStorage.setItem(key, JSON.stringify(state)); }
       function showCTA(){
@@ -253,6 +305,7 @@
         cta.style.display='block';
         state.cta=true;
         save();
+        emit('ctaView', {});
       }
       function getSmartDuration(realDurationSec){
         const rd = Number(realDurationSec || 0);
@@ -299,6 +352,21 @@
         if(cur > state.max) { state.max = cur; save(); }
         fill.style.width = teaserProgress(state.engaged || 0, dur) + '%';
         timeEl.textContent = `${fmt(cur)} / ${fmt(dur)}`;
+
+        const engagedFloor = Math.floor(state.engaged || 0);
+        if(engagedFloor >= 0 && engagedFloor % 5 === 0 && engagedFloor !== lastProgressEmitSec){
+          lastProgressEmitSec = engagedFloor;
+          emit('progress', { intervalSec: engagedFloor });
+        }
+        if(dur > 0){
+          const pct = (cur / dur) * 100;
+          [25,50,75,100].forEach((m)=>{
+            if(!progressMarks[m] && pct >= m){
+              progressMarks[m] = true;
+              emit('progress', { milestone: m });
+            }
+          });
+        }
       }
 
       function fitIframe16x9(){
@@ -331,9 +399,8 @@
           state.started = true;
           save();
           host.classList.remove('sp-prestart');
-          if(typeof cfg.onPlay === 'function'){
-            try{ cfg.onPlay({ firstPlay:firstRealPlay, state:Object.assign({},state), container:host }); }catch(e){}
-          }
+          emit('play', { firstPlay:firstRealPlay });
+          emit(firstRealPlay ? 'firstPlay' : 'resume', {});
           player.unMute();
           try { player.setPlaybackRate(Number(cfg.playbackRate) || 1); } catch(e) {}
 
@@ -353,7 +420,7 @@
       }
 
       function bindResumeButtons(){
-        host.querySelector('#sp-restart').onclick = ()=>{ modal.style.display='none'; state.max=0; state.engaged=0; state.anchorSec=0; save(); startAt(0,true); };
+        host.querySelector('#sp-restart').onclick = ()=>{ modal.style.display='none'; state.max=0; state.engaged=0; state.anchorSec=0; save(); emit('restart',{}); startAt(0,true); };
         host.querySelector('#sp-resume').onclick = ()=>{ modal.style.display='none'; startAt(Math.max(0,state.max-2), true); };
       }
 
@@ -396,6 +463,7 @@
             onReady: ()=>{
               if(destroyed) return;
               timer=setInterval(update,500);
+              emit('ready', {});
               if(state.cta) showCTA();
               fitIframe16x9();
               setTimeout(fitIframe16x9, 150);
@@ -418,10 +486,9 @@
                 if(firstAudio && firstAudio.style.display==='block') return;
                 if(modal && modal.style.display==='flex') return;
                 if(pausePlay) pausePlay.style.display='grid';
-                if(typeof cfg.onPause === 'function'){
-                  try{ cfg.onPause({ state:Object.assign({},state), container:host }); }catch(e){}
-                }
+                emit('pause', {});
               } else if(st===0){
+                emit('complete', {});
                 // loop automático no modo teaser (antes do clique para ouvir)
                 if(!state.started){
                   try { player.seekTo(0, true); } catch(e) {}
@@ -431,7 +498,7 @@
                 }
               }
             },
-            onError: (e)=>{ timeEl.textContent=`Erro YouTube ${e.data}`; }
+            onError: (e)=>{ timeEl.textContent=`Erro YouTube ${e.data}`; emit('error', { code:e.data }); }
           }
         });
       };
