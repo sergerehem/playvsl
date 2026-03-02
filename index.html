@@ -18,7 +18,9 @@
     label{display:block;font-size:12px;color:#334155;margin:8px 0 4px}
     input,select{width:100%;padding:10px;border-radius:10px;border:1px solid #c9d5ee;background:#fff;color:#111827}
     input[type="color"]{padding:4px;height:40px;min-width:56px;cursor:pointer}
-    .color-row{display:grid;grid-template-columns:64px 1fr;gap:8px;align-items:center}
+    .color-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .swatches{display:flex;gap:6px;flex-wrap:wrap}
+    .sw{width:22px;height:22px;border-radius:999px;border:1px solid #cbd5e1;cursor:pointer;padding:0}
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .btn{border:0;border-radius:10px;padding:11px 14px;font-weight:700;cursor:pointer}
     .btn-primary{background:var(--cta);color:#fff}
@@ -58,16 +60,15 @@
             <div>
               <label>Cor primária</label>
               <div class="color-row">
-                <input id="primaryColor" type="color" value="#FFBE01">
-                <select id="primaryPreset">
-                  <option value="">Cores sugeridas</option>
-                  <option value="#FFBE01">Solar Yellow</option>
-                  <option value="#C62116">VSL Red</option>
-                  <option value="#2F7DF6">Electric Blue</option>
-                  <option value="#22C55E">Conversion Green</option>
-                  <option value="#111827">Slate Black</option>
-                  <option value="#7C3AED">Royal Purple</option>
-                </select>
+                <input id="primaryColor" type="color" value="#FFBE01" title="Cor primária">
+                <div class="swatches" id="primarySwatches">
+                  <button class="sw" data-color="#FFBE01" style="background:#FFBE01" title="Solar Yellow"></button>
+                  <button class="sw" data-color="#C62116" style="background:#C62116" title="VSL Red"></button>
+                  <button class="sw" data-color="#2F7DF6" style="background:#2F7DF6" title="Electric Blue"></button>
+                  <button class="sw" data-color="#22C55E" style="background:#22C55E" title="Conversion Green"></button>
+                  <button class="sw" data-color="#111827" style="background:#111827" title="Slate Black"></button>
+                  <button class="sw" data-color="#7C3AED" style="background:#7C3AED" title="Royal Purple"></button>
+                </div>
               </div>
             </div>
             <div><label>URL do botão</label><input id="buttonUrl" value="https://example.com"></div>
@@ -76,16 +77,15 @@
             <div>
               <label>Cor do botão</label>
               <div class="color-row">
-                <input id="buttonBg" type="color" value="#2f7df6">
-                <select id="buttonPreset">
-                  <option value="">Cores sugeridas</option>
-                  <option value="#2F7DF6">Blue CTA</option>
-                  <option value="#16A34A">Green CTA</option>
-                  <option value="#DC2626">Red CTA</option>
-                  <option value="#F59E0B">Orange CTA</option>
-                  <option value="#111827">Dark CTA</option>
-                  <option value="#7C3AED">Purple CTA</option>
-                </select>
+                <input id="buttonBg" type="color" value="#2f7df6" title="Cor do botão">
+                <div class="swatches" id="buttonSwatches">
+                  <button class="sw" data-color="#2F7DF6" style="background:#2F7DF6" title="Blue CTA"></button>
+                  <button class="sw" data-color="#16A34A" style="background:#16A34A" title="Green CTA"></button>
+                  <button class="sw" data-color="#DC2626" style="background:#DC2626" title="Red CTA"></button>
+                  <button class="sw" data-color="#F59E0B" style="background:#F59E0B" title="Orange CTA"></button>
+                  <button class="sw" data-color="#111827" style="background:#111827" title="Dark CTA"></button>
+                  <button class="sw" data-color="#7C3AED" style="background:#7C3AED" title="Purple CTA"></button>
+                </div>
               </div>
             </div>
           </div>
@@ -163,10 +163,10 @@
     if(params.get('unlock') === '1') unlockFlow();
 
     const quickUpdate = ()=>{ if($('out')) $('out').textContent = snippet(builderCfg()); };
-    if($('primaryPreset')) $('primaryPreset').addEventListener('change', (e)=>{ if(e.target.value) $('primaryColor').value=e.target.value; quickUpdate(); });
-    if($('buttonPreset')) $('buttonPreset').addEventListener('change', (e)=>{ if(e.target.value) $('buttonBg').value=e.target.value; quickUpdate(); });
     if($('primaryColor')) $('primaryColor').addEventListener('input', quickUpdate);
     if($('buttonBg')) $('buttonBg').addEventListener('input', quickUpdate);
+    document.querySelectorAll('#primarySwatches .sw').forEach(b=>b.addEventListener('click',(e)=>{e.preventDefault(); $('primaryColor').value=b.dataset.color; quickUpdate();}));
+    document.querySelectorAll('#buttonSwatches .sw').forEach(b=>b.addEventListener('click',(e)=>{e.preventDefault(); $('buttonBg').value=b.dataset.color; quickUpdate();}));
 
     $('leadSubmit').addEventListener('click', ()=>{
       const name = $('leadName').value.trim();
