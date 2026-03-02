@@ -6,9 +6,7 @@
 #sp-player-target{position:absolute;inset:0}
 #sp-click-shield{position:absolute;inset:0;z-index:4;background:transparent;cursor:pointer}
 .sp-player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-.sp-overlay-top,.sp-overlay-bottom{position:absolute;left:0;right:0;height:54px;pointer-events:none}
-.sp-overlay-top{top:0;background:linear-gradient(rgba(0,0,0,.55),transparent)}
-.sp-overlay-bottom{display:none}
+.sp-overlay-top,.sp-overlay-bottom{display:none}
 .sp-poster{position:absolute;inset:0;background:#000 center/cover no-repeat;display:grid;place-items:center;cursor:pointer;z-index:5}
 .sp-play{width:90px;height:90px;border-radius:999px;border:0;background:rgba(255,255,255,.9);font-size:30px;cursor:pointer}
 .sp-first-audio{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:7;display:none;width:80%;max-width:400px;background:var(--sp-primary-66,rgba(196,23,12,.66));color:var(--sp-contrast,#fff);border:2px solid var(--sp-contrast,#fff);border-radius:10px;padding:.5em;cursor:pointer;font-family:Arial,Helvetica,sans-serif}
