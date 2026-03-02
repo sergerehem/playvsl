@@ -45,7 +45,7 @@
   App.baseCfg = function(){
     return {
       container:'#playvsl-preview', youtubeUrl:'https://youtu.be/wqGiHRWeTR0', primaryColor:'#C62116',
-      buttonUrl:`${location.origin}${location.pathname}?unlock=1`, buttonText:'QUERO MEU SNIPPET AGORA - É GRÁTIS',
+      buttonUrl:`${location.origin}${location.pathname}?unlock=1`, buttonText:App.t('defaultButton'),
       buttonShowAtSeconds:10, buttonRounded:false, buttonBg:'#C62116', lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause
     };
   };
@@ -86,9 +86,11 @@
   App.renderPreview = function(cfg){
     const node = $('playvsl-preview');
     node.innerHTML = '';
+    const closed = App.isConfiguratorClosed();
     const previewCfg = Object.assign({}, cfg, {
-      buttonUrl: App.isConfiguratorClosed() ? 'javascript:void(0)' : (cfg.buttonUrl || '#'),
-      buttonNewTab: App.isConfiguratorClosed() ? false : !!cfg.buttonNewTab,
+      buttonUrl: closed ? 'javascript:void(0)' : (cfg.buttonUrl || '#'),
+      buttonText: closed ? App.t('defaultButton') : cfg.buttonText,
+      buttonNewTab: closed ? false : !!cfg.buttonNewTab,
       onCTAClick: App.handlePreviewCTAClick
     });
     PlayVSL.init(previewCfg);
