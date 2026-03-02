@@ -35,7 +35,7 @@
       if($('primaryColor') && c.primaryColor) $('primaryColor').value = c.primaryColor;
       if($('buttonUrl') && c.buttonUrl) $('buttonUrl').value = c.buttonUrl;
       if($('buttonText') && c.buttonText){ $('buttonText').value = c.buttonText; $('buttonText').dataset.touched='1'; }
-      if($('buttonShowAtSeconds') && c.buttonShowAtSeconds) $('buttonShowAtSeconds').value = String(c.buttonShowAtSeconds);
+      if($('buttonShowAtSeconds') && typeof c.buttonShowAtSeconds !== 'undefined') $('buttonShowAtSeconds').value = String(c.buttonShowAtSeconds);
       if($('buttonNewTab')) $('buttonNewTab').checked = !!c.buttonNewTab;
       if($('buttonRounded')) $('buttonRounded').checked = !!c.buttonRounded;
       if($('buttonBg') && c.buttonBg) $('buttonBg').value = c.buttonBg;
@@ -71,6 +71,19 @@
 
   App.resetPreviewState = function(cfg){ try{ const vid=App.extractYouTubeId(cfg.youtubeUrl); if(vid) localStorage.removeItem(`smartvsl_${vid}`); }catch(e){} };
 
+  App.applyShowAtBounds = function(durationSec){
+    const el = $('buttonShowAtSeconds');
+    if(!el) return;
+    const d = Number(durationSec || 0);
+    if(d > 0){
+      const max = Math.max(0, Math.floor(d));
+      el.max = String(max);
+      if(Number(el.value || 0) > max) el.value = String(max);
+    } else {
+      el.removeAttribute('max');
+    }
+  };
+
   App.isConfiguratorClosed = function(){
     return $('rightPanel')?.classList.contains('hidden') || $('heroGrid')?.classList.contains('locked');
   };
@@ -91,7 +104,9 @@
       buttonUrl: closed ? 'javascript:void(0)' : (cfg.buttonUrl || '#'),
       buttonText: closed ? App.t('defaultButton') : cfg.buttonText,
       buttonNewTab: closed ? false : !!cfg.buttonNewTab,
-      onCTAClick: App.handlePreviewCTAClick
+      onCTAClick: App.handlePreviewCTAClick,
+      onReady: (p)=>{ App.applyShowAtBounds(p?.duration); if(typeof cfg.onReady === 'function') cfg.onReady(p); },
+      onError: (p)=>{ App.applyShowAtBounds(0); if(typeof cfg.onError === 'function') cfg.onError(p); }
     });
     PlayVSL.init(previewCfg);
   };
