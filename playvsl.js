@@ -307,22 +307,28 @@
         save();
         emit('ctaView', {});
       }
-      function getSmartDuration(realDurationSec){
-        const rd = Number(realDurationSec || 0);
-        if(!rd || rd < 30) return Math.max(90, cfg.teaserProgressDurationSeconds);
-        // aproximação estilo "smart": parece mais curto no início sem ficar absurdo
-        const ratio = rd <= 300 ? 0.62 : rd <= 900 ? 0.56 : 0.5;
-        const derived = rd * ratio;
-        return Math.max(90, Math.min(900, derived));
-      }
-
       function teaserProgress(realSec, realDurationSec){
-        const d = getSmartDuration(realDurationSec);
+        const d = Number(realDurationSec || 0);
+        if(!d || d <= 0){
+          // enquanto o YouTube ainda não informou duração, evita chegar em 100%
+          const p0 = Math.min(1, Math.max(0, realSec / Math.max(120, cfg.teaserProgressDurationSeconds)));
+          return Math.min(95, Math.max(0, Math.pow(p0, 0.7) * 90));
+        }
+
+        // regra dura: 100% SOMENTE no último segundo real
         const p = Math.min(1, Math.max(0, realSec / d));
-        // duas fases: acelera no começo e desacelera perto do fim
-        const eased = p < 0.7
-          ? Math.pow(p / 0.7, cfg.teaserProgressCurve) * 0.78
-          : 0.78 + Math.pow((p - 0.7) / 0.3, 1.45) * 0.22;
+
+        // curva em duas metades:
+        // - 1ª metade: aparenta mais rápida
+        // - 2ª metade: desacelera, mas converge exatamente em 100% ao final
+        let eased;
+        if(p <= 0.5){
+          eased = 0.66 * Math.pow(p / 0.5, 0.72); // ~66% quando tempo real está em 50%
+        } else {
+          eased = 0.66 + 0.34 * Math.pow((p - 0.5) / 0.5, 1.38);
+        }
+
+        if(p >= 0.999) eased = 1;
         return Math.min(100, Math.max(0, eased * 100));
       }
 
