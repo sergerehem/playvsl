@@ -12,7 +12,9 @@
     if(formSaved){
       $('rightPanel').classList.remove('hidden'); $('heroGrid').classList.remove('locked'); $('gateInfo').classList.add('hidden');
       $('leadStep').classList.add('hidden'); $('builderStep').classList.remove('hidden');
-      $('out').textContent = App.snippet(App.builderCfg());
+      const c = App.builderCfg();
+      $('out').textContent = App.snippet(c);
+      App.renderPreview(c);
       return;
     }
     if(!App.canUnlock()){
@@ -22,6 +24,7 @@
     }
     $('rightPanel').classList.remove('hidden'); $('heroGrid').classList.remove('locked'); document.body.classList.remove('preview-played-locked');
     $('gateInfo').classList.add('hidden'); $('leadStep').classList.remove('hidden');
+    App.renderPreview(App.builderCfg());
   };
 
   App.submitLead = async function(){
@@ -46,6 +49,8 @@
     localStorage.setItem('playvsl_lead_name',name);
     localStorage.setItem('playvsl_lead_email',email);
     $('leadStep').classList.add('hidden'); $('builderStep').classList.remove('hidden');
-    $('out').textContent = App.snippet(App.builderCfg());
+    const c = App.builderCfg();
+    $('out').textContent = App.snippet(c);
+    App.renderPreview(c);
   };
 })();
