@@ -319,6 +319,9 @@
           state.started = true;
           save();
           host.classList.remove('sp-prestart');
+          if(typeof cfg.onPlay === 'function'){
+            try{ cfg.onPlay({ firstPlay:firstRealPlay, state:Object.assign({},state), container:host }); }catch(e){}
+          }
           player.unMute();
           try { player.setPlaybackRate(Number(cfg.playbackRate) || 1); } catch(e) {}
 

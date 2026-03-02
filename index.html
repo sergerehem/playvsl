@@ -27,6 +27,7 @@
     .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#fff1f2;color:#b91c1c;font-size:12px;border:1px solid #fecdd3}
     .accent{color:#dc2626}
     .hidden{display:none}
+    .preview-played-locked #t_pill,.preview-played-locked #t_title,.preview-played-locked #t_subtitle{display:none}
     label{display:block;font-size:12px;color:#334155;margin:8px 0 4px}
     input,select{width:100%;padding:10px;border-radius:10px;border:1px solid #c9d5ee;background:#fff;color:#111827}
     .color-row{display:block;width:100%}
@@ -218,6 +219,11 @@
         });
       }
     }
+    function handlePreviewPlay(evt){
+      const isClosed = $('rightPanel')?.classList.contains('hidden') || $('heroGrid')?.classList.contains('locked');
+      if(isClosed) document.body.classList.add('preview-played-locked');
+    }
+
     function baseCfg(){
       return {
         container:'#playvsl-preview',
@@ -227,7 +233,8 @@
         buttonText:'QUERO MEU SNIPPET AGORA - É GRÁTIS',
         buttonShowAtSeconds:10,
         buttonBg:'#C62116',
-        lang: LANG
+        lang: LANG,
+        onPlay: handlePreviewPlay
       };
     }
 
@@ -241,7 +248,8 @@
         buttonShowAtSeconds:Number($('buttonShowAtSeconds').value||10),
         buttonNewTab:$('buttonNewTab').checked,
         buttonBg:$('buttonBg').value,
-        lang: LANG
+        lang: LANG,
+        onPlay: handlePreviewPlay
       };
     }
 
@@ -310,6 +318,7 @@
 
       $('rightPanel').classList.remove('hidden');
       $('heroGrid').classList.remove('locked');
+      document.body.classList.remove('preview-played-locked');
       $('gateInfo').classList.add('hidden');
       $('leadStep').classList.remove('hidden');
     }
