@@ -45,8 +45,8 @@
   App.baseCfg = function(){
     return {
       container:'#playvsl-preview', youtubeUrl:'https://youtu.be/wqGiHRWeTR0', primaryColor:'#C62116',
-      buttonUrl:`${location.origin}${location.pathname}?unlock=1`, buttonText:App.t('defaultButton'),
-      buttonShowAtSeconds:10, buttonRounded:false, buttonBg:'#C62116', lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause
+      buttonUrl:'https://playvsl.digi6.com.br/', buttonText:App.t('defaultButton'),
+      buttonShowAtSeconds:10, buttonNewTab:true, buttonRounded:false, buttonBg:'#C62116', lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause
     };
   };
 
