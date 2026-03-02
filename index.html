@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>PlayVSL</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css"/>
   <style>
     :root{--bg:#f6f8fc;--card:#fff;--line:#d9e1f2;--txt:#0f172a;--muted:#4b5563;--cta:#2563eb}
     *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,Arial,sans-serif}
@@ -18,11 +19,7 @@
     label{display:block;font-size:12px;color:#334155;margin:8px 0 4px}
     input,select{width:100%;padding:10px;border-radius:10px;border:1px solid #c9d5ee;background:#fff;color:#111827}
     input[type="color"]{padding:4px;height:40px;min-width:56px;cursor:pointer}
-    .color-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;position:relative}
-    .palette-btn{border:1px solid #c9d5ee;background:#fff;border-radius:8px;padding:8px 10px;font-size:12px;cursor:pointer}
-    .swatches{display:none;position:absolute;top:46px;left:0;background:#fff;border:1px solid #d9e1f2;border-radius:10px;padding:8px;gap:6px;flex-wrap:wrap;box-shadow:0 12px 24px rgba(15,23,42,.08);z-index:20;max-width:240px}
-    .swatches.open{display:flex}
-    .sw{width:22px;height:22px;border-radius:999px;border:1px solid #cbd5e1;cursor:pointer;padding:0}
+    .color-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .btn{border:0;border-radius:10px;padding:11px 14px;font-weight:700;cursor:pointer}
     .btn-primary{background:var(--cta);color:#fff}
@@ -62,16 +59,7 @@
             <div>
               <label>Cor primária</label>
               <div class="color-row">
-                <input id="primaryColor" type="color" value="#FFBE01" title="Cor primária">
-                <button class="palette-btn" id="primaryPaletteBtn" type="button">Sugestões</button>
-                <div class="swatches" id="primarySwatches">
-                  <button class="sw" data-color="#FFBE01" style="background:#FFBE01" title="Solar Yellow"></button>
-                  <button class="sw" data-color="#C62116" style="background:#C62116" title="VSL Red"></button>
-                  <button class="sw" data-color="#2F7DF6" style="background:#2F7DF6" title="Electric Blue"></button>
-                  <button class="sw" data-color="#22C55E" style="background:#22C55E" title="Conversion Green"></button>
-                  <button class="sw" data-color="#111827" style="background:#111827" title="Slate Black"></button>
-                  <button class="sw" data-color="#7C3AED" style="background:#7C3AED" title="Royal Purple"></button>
-                </div>
+                <input id="primaryColor" class="coloris" value="#FFBE01" title="Cor primária">
               </div>
             </div>
             <div><label>URL do botão</label><input id="buttonUrl" value="https://example.com"></div>
@@ -80,16 +68,7 @@
             <div>
               <label>Cor do botão</label>
               <div class="color-row">
-                <input id="buttonBg" type="color" value="#2f7df6" title="Cor do botão">
-                <button class="palette-btn" id="buttonPaletteBtn" type="button">Sugestões</button>
-                <div class="swatches" id="buttonSwatches">
-                  <button class="sw" data-color="#2F7DF6" style="background:#2F7DF6" title="Blue CTA"></button>
-                  <button class="sw" data-color="#16A34A" style="background:#16A34A" title="Green CTA"></button>
-                  <button class="sw" data-color="#DC2626" style="background:#DC2626" title="Red CTA"></button>
-                  <button class="sw" data-color="#F59E0B" style="background:#F59E0B" title="Orange CTA"></button>
-                  <button class="sw" data-color="#111827" style="background:#111827" title="Dark CTA"></button>
-                  <button class="sw" data-color="#7C3AED" style="background:#7C3AED" title="Purple CTA"></button>
-                </div>
+                <input id="buttonBg" class="coloris" value="#2f7df6" title="Cor do botão">
               </div>
             </div>
           </div>
@@ -108,10 +87,20 @@
     </footer>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.js"></script>
   <script src="./playvsl.js"></script>
   <script>
     const $=id=>document.getElementById(id);
     const params = new URLSearchParams(location.search);
+
+    Coloris({
+      themeMode: 'light',
+      alpha: false,
+      swatches: [
+        '#FFBE01','#C62116','#2F7DF6','#22C55E','#111827','#7C3AED',
+        '#16A34A','#DC2626','#F59E0B'
+      ]
+    });
 
     function baseCfg(){
       return {
@@ -168,17 +157,6 @@
     const quickUpdate = ()=>{ if($('out')) $('out').textContent = snippet(builderCfg()); };
     if($('primaryColor')) $('primaryColor').addEventListener('input', quickUpdate);
     if($('buttonBg')) $('buttonBg').addEventListener('input', quickUpdate);
-    const toggle = (id)=>$(id).classList.toggle('open');
-    $('primaryPaletteBtn')?.addEventListener('click', ()=>toggle('primarySwatches'));
-    $('buttonPaletteBtn')?.addEventListener('click', ()=>toggle('buttonSwatches'));
-
-    document.querySelectorAll('#primarySwatches .sw').forEach(b=>b.addEventListener('click',(e)=>{e.preventDefault(); $('primaryColor').value=b.dataset.color; $('primarySwatches').classList.remove('open'); quickUpdate();}));
-    document.querySelectorAll('#buttonSwatches .sw').forEach(b=>b.addEventListener('click',(e)=>{e.preventDefault(); $('buttonBg').value=b.dataset.color; $('buttonSwatches').classList.remove('open'); quickUpdate();}));
-
-    document.addEventListener('click', (e)=>{
-      if(!e.target.closest('#primaryPaletteBtn') && !e.target.closest('#primarySwatches')) $('primarySwatches')?.classList.remove('open');
-      if(!e.target.closest('#buttonPaletteBtn') && !e.target.closest('#buttonSwatches')) $('buttonSwatches')?.classList.remove('open');
-    });
 
     $('leadSubmit').addEventListener('click', ()=>{
       const name = $('leadName').value.trim();
