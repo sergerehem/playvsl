@@ -8,6 +8,38 @@
   };
   App.handlePreviewPause = function(){ document.body.classList.remove('preview-played-locked'); };
 
+  const BUILDER_KEY = 'playvsl_builder_cfg';
+
+  App.saveBuilderPrefs = function(){
+    try{
+      const data = {
+        youtubeUrl: $('youtubeUrl')?.value?.trim() || '',
+        primaryColor: $('primaryColor')?.value || '#C62116',
+        buttonUrl: $('buttonUrl')?.value?.trim() || '',
+        buttonText: $('buttonText')?.value || '',
+        buttonShowAtSeconds: Number($('buttonShowAtSeconds')?.value || 10),
+        buttonNewTab: !!$('buttonNewTab')?.checked,
+        buttonBg: $('buttonBg')?.value || '#C62116'
+      };
+      localStorage.setItem(BUILDER_KEY, JSON.stringify(data));
+    }catch(e){}
+  };
+
+  App.loadBuilderPrefs = function(){
+    try{
+      const raw = localStorage.getItem(BUILDER_KEY);
+      if(!raw) return;
+      const c = JSON.parse(raw);
+      if($('youtubeUrl') && c.youtubeUrl) $('youtubeUrl').value = c.youtubeUrl;
+      if($('primaryColor') && c.primaryColor) $('primaryColor').value = c.primaryColor;
+      if($('buttonUrl') && c.buttonUrl) $('buttonUrl').value = c.buttonUrl;
+      if($('buttonText') && c.buttonText){ $('buttonText').value = c.buttonText; $('buttonText').dataset.touched='1'; }
+      if($('buttonShowAtSeconds') && c.buttonShowAtSeconds) $('buttonShowAtSeconds').value = String(c.buttonShowAtSeconds);
+      if($('buttonNewTab')) $('buttonNewTab').checked = !!c.buttonNewTab;
+      if($('buttonBg') && c.buttonBg) $('buttonBg').value = c.buttonBg;
+    }catch(e){}
+  };
+
   App.baseCfg = function(){
     return {
       container:'#playvsl-preview', youtubeUrl:'https://youtu.be/wqGiHRWeTR0', primaryColor:'#C62116',
@@ -38,5 +70,8 @@
   App.resetPreviewState = function(cfg){ try{ const vid=App.extractYouTubeId(cfg.youtubeUrl); if(vid) localStorage.removeItem(`smartvsl_${vid}`); }catch(e){} };
   App.renderPreview = function(cfg){ const node=$('playvsl-preview'); node.innerHTML=''; PlayVSL.init(cfg); };
 
-  App.quickUpdate = function(){ if($('out')) $('out').textContent = App.snippet(App.builderCfg()); };
+  App.quickUpdate = function(){
+    App.saveBuilderPrefs();
+    if($('out')) $('out').textContent = App.snippet(App.builderCfg());
+  };
 })();

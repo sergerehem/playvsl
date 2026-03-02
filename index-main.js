@@ -8,11 +8,13 @@
   });
 
   if($('buttonText')) $('buttonText').addEventListener('input', ()=> $('buttonText').dataset.touched='1');
+  App.loadBuilderPrefs();
   if($('langPt')) $('langPt').addEventListener('click', ()=>{ App.setLang('pt'); App.renderPreview(App.builderCfg()); App.quickUpdate(); });
   if($('langEn')) $('langEn').addEventListener('click', ()=>{ App.setLang('en'); App.renderPreview(App.builderCfg()); App.quickUpdate(); });
 
   App.applyLang();
-  App.renderPreview(App.baseCfg());
+  App.renderPreview(App.builderCfg());
+  App.quickUpdate();
 
   const formSavedOnLoad = localStorage.getItem('playvsl_lead_sent') === '1';
   if(formSavedOnLoad || App.params.get('unlock') === '1') App.unlockFlow();
@@ -28,6 +30,7 @@
 
   if($('apply')) $('apply').addEventListener('click', ()=>{
     const c = App.builderCfg();
+    App.saveBuilderPrefs();
     $('out').textContent = App.snippet(c);
     App.resetPreviewState(c);
     App.renderPreview(c);
