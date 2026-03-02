@@ -36,6 +36,8 @@
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .btn{border:0;border-radius:10px;padding:11px 14px;font-weight:700;cursor:pointer}
     .toggle{display:flex;align-items:center;gap:10px;margin-top:4px}
+    .toggle-inline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px}
+    .toggle-inline label{margin:0}
     .switch{position:relative;display:inline-block;width:46px;height:26px}
     .switch input{opacity:0;width:0;height:0}
     .slider{position:absolute;cursor:pointer;inset:0;background:#cbd5e1;border-radius:999px;transition:.2s}
@@ -92,15 +94,12 @@
                 <input id="buttonBg" data-coloris value="#C62116" title="Cor do botão">
               </div>
             </div>
-            <div>
+            <div class="toggle-inline">
               <label id="t_new_tab">Abrir em nova aba</label>
-              <div class="toggle">
-                <label class="switch">
-                  <input id="buttonNewTab" type="checkbox">
-                  <span class="slider"></span>
-                </label>
-                <span id="buttonNewTabLabel">Não</span>
-              </div>
+              <label class="switch">
+                <input id="buttonNewTab" type="checkbox">
+                <span class="slider"></span>
+              </label>
             </div>
           </div>
           <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
@@ -196,7 +195,7 @@
       set('leadSubmit', t('leadBtn')); set('t_builder_title', t('builderTitle')); set('t_youtube', t('youtube')); set('t_primary', t('primary'));
       set('t_button_url', t('buttonUrl')); set('t_button_text', t('buttonText')); set('t_show_seconds', t('showSeconds')); set('t_button_color', t('buttonColor'));
       set('t_new_tab', t('newTab')); set('apply', t('apply')); set('copy', t('copy')); set('t_footer_rights', t('rights'));
-      const ntab=$('buttonNewTabLabel'); if(ntab) ntab.textContent = $('buttonNewTab')?.checked ? t('yes') : t('no');
+      // toggle sem texto Yes/No (UX mais limpa)
       if($('buttonText') && !$('buttonText').dataset.touched){ $('buttonText').value = t('defaultButton'); }
 
       const st=$('seo_title'); if(st) document.title = t('seoTitle');
@@ -307,7 +306,7 @@
     const quickUpdate = ()=>{ if($('out')) $('out').textContent = snippet(builderCfg()); };
     if($('primaryColor')) $('primaryColor').addEventListener('input', quickUpdate);
     if($('buttonBg')) $('buttonBg').addEventListener('input', quickUpdate);
-    if($('buttonNewTab')) $('buttonNewTab').addEventListener('change', ()=>{ $('buttonNewTabLabel').textContent = $('buttonNewTab').checked ? t('yes') : t('no'); quickUpdate(); });
+    if($('buttonNewTab')) $('buttonNewTab').addEventListener('change', quickUpdate);
 
     $('leadSubmit').addEventListener('click', async()=>{
       const name = $('leadName').value.trim();
