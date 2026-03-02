@@ -75,6 +75,30 @@
             <button id="copy" class="btn btn-ghost">Copiar snippet</button>
           </div>
           <pre id="out"></pre>
+          <label style="margin-top:10px">Exemplo didático (embed com callbacks)</label>
+          <pre>&lt;div id="playvsl"&gt;&lt;/div&gt;
+&lt;script src="https://playvsl.digi6.com.br/playvsl.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  function onPlay(evt){
+    // Ex.: ocultar elementos acima do player
+    document.body.classList.add('video-playing');
+  }
+
+  function onPause(evt){
+    // Ex.: restaurar elementos quando pausar
+    document.body.classList.remove('video-playing');
+  }
+
+  PlayVSL.init({
+    container: '#playvsl',
+    youtubeUrl: 'https://youtu.be/wqGiHRWeTR0',
+    buttonUrl: 'https://seulink.com',
+    buttonText: 'QUERO MEU SNIPPET AGORA - É GRÁTIS',
+    buttonShowAtSeconds: 10,
+    onPlay,
+    onPause
+  });
+&lt;/script&gt;</pre>
         </div>
       </section>
     </div>
