@@ -88,8 +88,8 @@
         buttonBg:null,
         buttonRounded:true,
         buttonNewTab:false,
-        teaserProgressDurationSeconds:600, // menor que real para "andar" mais rápido no início
-        teaserProgressCurve:0.72, // <1 acelera começo
+        teaserProgressDurationSeconds:240, // menor = barra anda mais rápido
+        teaserProgressCurve:0.58, // <1 acelera mais o começo
         teaserPlaybackRate:2,
         playbackRate:1.25,
         rememberDays:15,
