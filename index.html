@@ -24,6 +24,13 @@
     .color-row .clr-field button{right:0!important;left:auto!important;width:34px!important;border-radius:0 10px 10px 0!important;border-left:1px solid #c9d5ee!important}
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .btn{border:0;border-radius:10px;padding:11px 14px;font-weight:700;cursor:pointer}
+    .toggle{display:flex;align-items:center;gap:10px;margin-top:4px}
+    .switch{position:relative;display:inline-block;width:46px;height:26px}
+    .switch input{opacity:0;width:0;height:0}
+    .slider{position:absolute;cursor:pointer;inset:0;background:#cbd5e1;border-radius:999px;transition:.2s}
+    .slider:before{content:"";position:absolute;height:20px;width:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+    .switch input:checked + .slider{background:#2563eb}
+    .switch input:checked + .slider:before{transform:translateX(20px)}
     .btn-primary{background:var(--cta);color:#fff}
     .btn-ghost{background:#eef2ff;color:#1e3a8a;border:1px solid #c7d2fe}
     pre{white-space:pre-wrap;word-break:break-word;background:#f8faff;border:1px solid #d4def4;padding:12px;border-radius:10px;min-height:130px}
@@ -68,13 +75,19 @@
             <div><label>Texto do botão</label><input id="buttonText" value="PRÓXIMO PASSO"></div>
             <div><label>Mostrar botão em (s)</label><input id="buttonShowAtSeconds" type="number" min="1" value="10"></div>
             <div>
-              <label>Abertura do botão</label>
-              <select id="buttonNewTab"><option value="false" selected>Mesma aba (padrão)</option><option value="true">Nova aba</option></select>
-            </div>
-            <div>
               <label>Cor do botão</label>
               <div class="color-row">
                 <input id="buttonBg" data-coloris value="#2f7df6" title="Cor do botão">
+              </div>
+            </div>
+            <div>
+              <label>Abrir em nova aba</label>
+              <div class="toggle">
+                <label class="switch">
+                  <input id="buttonNewTab" type="checkbox">
+                  <span class="slider"></span>
+                </label>
+                <span id="buttonNewTabLabel">Não</span>
               </div>
             </div>
           </div>
@@ -130,7 +143,7 @@
         buttonUrl:$('buttonUrl').value.trim(),
         buttonText:$('buttonText').value,
         buttonShowAtSeconds:Number($('buttonShowAtSeconds').value||10),
-        buttonNewTab:$('buttonNewTab').value === 'true',
+        buttonNewTab:$('buttonNewTab').checked,
         buttonBg:$('buttonBg').value
       };
     }
@@ -179,12 +192,14 @@
     }
 
     // estado inicial
+    if($('buttonNewTabLabel')) $('buttonNewTabLabel').textContent = $('buttonNewTab')?.checked ? 'Sim' : 'Não';
     renderPreview(baseCfg());
     if(params.get('unlock') === '1') unlockFlow();
 
     const quickUpdate = ()=>{ if($('out')) $('out').textContent = snippet(builderCfg()); };
     if($('primaryColor')) $('primaryColor').addEventListener('input', quickUpdate);
     if($('buttonBg')) $('buttonBg').addEventListener('input', quickUpdate);
+    if($('buttonNewTab')) $('buttonNewTab').addEventListener('change', ()=>{ $('buttonNewTabLabel').textContent = $('buttonNewTab').checked ? 'Sim' : 'Não'; quickUpdate(); });
 
     $('leadSubmit').addEventListener('click', ()=>{
       const name = $('leadName').value.trim();
