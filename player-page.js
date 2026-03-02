@@ -70,7 +70,29 @@
   };
 
   App.resetPreviewState = function(cfg){ try{ const vid=App.extractYouTubeId(cfg.youtubeUrl); if(vid) localStorage.removeItem(`smartvsl_${vid}`); }catch(e){} };
-  App.renderPreview = function(cfg){ const node=$('playvsl-preview'); node.innerHTML=''; PlayVSL.init(cfg); };
+
+  App.isConfiguratorClosed = function(){
+    return $('rightPanel')?.classList.contains('hidden') || $('heroGrid')?.classList.contains('locked');
+  };
+
+  App.handlePreviewCTAClick = function(){
+    if(!App.isConfiguratorClosed()) return;
+    App.unlockFlow();
+    // após desbloquear, re-render para o CTA assumir o link configurado
+    App.renderPreview(App.builderCfg());
+    App.quickUpdate();
+  };
+
+  App.renderPreview = function(cfg){
+    const node = $('playvsl-preview');
+    node.innerHTML = '';
+    const previewCfg = Object.assign({}, cfg, {
+      buttonUrl: App.isConfiguratorClosed() ? 'javascript:void(0)' : (cfg.buttonUrl || '#'),
+      buttonNewTab: App.isConfiguratorClosed() ? false : !!cfg.buttonNewTab,
+      onCTAClick: App.handlePreviewCTAClick
+    });
+    PlayVSL.init(previewCfg);
+  };
 
   App.quickUpdate = function(){
     App.saveBuilderPrefs();
