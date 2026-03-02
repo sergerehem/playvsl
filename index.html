@@ -72,7 +72,7 @@
               </div>
             </div>
             <div><label>URL do botão</label><input id="buttonUrl" value="https://example.com"></div>
-            <div><label>Texto do botão</label><input id="buttonText" value="PRÓXIMO PASSO"></div>
+            <div><label>Texto do botão</label><input id="buttonText" value="QUERO MEU SNIPPET AGORA - É GRÁTIS"></div>
             <div><label>Mostrar botão em (s)</label><input id="buttonShowAtSeconds" type="number" min="1" value="10"></div>
             <div>
               <label>Cor do botão</label>
@@ -152,7 +152,7 @@
 
     function snippet(c){
       const closeScript = '</scr' + 'ipt>';
-      return `<div id="playvsl"></div>\n<script src="https://sergerehem.github.io/playvsl/playvsl.js">${closeScript}\n<script>\n  PlayVSL.init({\n    container:'#playvsl',\n    youtubeUrl:'${c.youtubeUrl}',\n    primaryColor:'${c.primaryColor}',\n    buttonUrl:'${c.buttonUrl}',\n    buttonText:'${c.buttonText.replace(/'/g,"\\'")}',\n    buttonShowAtSeconds:${c.buttonShowAtSeconds},\n    buttonNewTab:${c.buttonNewTab},\n    buttonBg:'${c.buttonBg}'\n  });\n${closeScript}`;
+      return `<div id="playvsl"></div>\n<script src="https://playvsl.digi6.com.br/playvsl/playvsl.js">${closeScript}\n<script>\n  PlayVSL.init({\n    container:'#playvsl',\n    youtubeUrl:'${c.youtubeUrl}',\n    primaryColor:'${c.primaryColor}',\n    buttonUrl:'${c.buttonUrl}',\n    buttonText:'${c.buttonText.replace(/'/g,"\\'")}',\n    buttonShowAtSeconds:${c.buttonShowAtSeconds},\n    buttonNewTab:${c.buttonNewTab},\n    buttonBg:'${c.buttonBg}'\n  });\n${closeScript}`;
     }
 
     function renderPreview(cfg){
