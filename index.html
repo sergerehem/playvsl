@@ -306,8 +306,11 @@
     if(formSavedOnLoad || params.get('unlock') === '1') unlockFlow();
 
     const quickUpdate = ()=>{ if($('out')) $('out').textContent = snippet(builderCfg()); };
-    if($('primaryColor')) $('primaryColor').addEventListener('input', quickUpdate);
-    if($('buttonBg')) $('buttonBg').addEventListener('input', quickUpdate);
+    ['youtubeUrl','primaryColor','buttonUrl','buttonText','buttonShowAtSeconds','buttonBg'].forEach((id)=>{
+      const el=$(id); if(!el) return;
+      el.addEventListener('input', quickUpdate);
+      el.addEventListener('change', quickUpdate);
+    });
     if($('buttonNewTab')) $('buttonNewTab').addEventListener('change', quickUpdate);
 
     $('leadSubmit').addEventListener('click', async()=>{
