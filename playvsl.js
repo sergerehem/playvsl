@@ -129,7 +129,7 @@
           resumeAria: 'Continue video',
           resumeTitle: 'You already started watching this video',
           resumeWatch: 'Continue watching?',
-          resumeFromStart: 'Watch from the beginning?'
+          resumeFromStart: 'Start over?'
         }
       };
       const t = i18n[lang];
