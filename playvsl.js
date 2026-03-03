@@ -1,8 +1,7 @@
 (function(){
   const SMARTPLAYER_CSS = `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700&family=Open+Sans:wght@400;700&family=Poppins:wght@400;700&family=Roboto:wght@400;500;700&display=swap');
 .sp-wrap{max-width:980px;margin:24px auto;padding:0;font-family:Inter,Arial,sans-serif;color:#e8edf2}
-.sp-shell{position:relative;width:100%;background:#000;border-radius:0;overflow:hidden;box-shadow:inset 0 0 0 1px #c3c8d0;border:0;box-sizing:border-box}
-.sp-shell::after{content:"";position:absolute;top:0;right:0;bottom:0;width:1px;background:#c3c8d0;z-index:8;pointer-events:none}
+.sp-shell{position:relative;width:100%;background:#000;border-radius:0;overflow:hidden;box-shadow:none;border:0;box-sizing:border-box}
 .sp-ratio{position:relative;padding-top:56.25%}
 .sp-player{position:absolute;inset:0;background:#000;overflow:hidden}
 .sp-player iframe{transition:opacity .78s ease}
