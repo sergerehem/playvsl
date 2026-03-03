@@ -16,8 +16,8 @@
       const payload = Object.assign({
         event: eventName,
         videoId: App.extractYouTubeId(App.builderCfg().youtubeUrl || App.baseCfg().youtubeUrl),
-        sessionId: (sessionStorage.getItem('playvsl_session_id') || '').replace(/^=+/, '') || null,
-        visitorId: (localStorage.getItem('playvsl_visitor_id') || '').replace(/^=+/, '') || null,
+        sessionId: sessionStorage.getItem('playvsl_session_id') || null,
+        visitorId: localStorage.getItem('playvsl_visitor_id') || null,
         pageUrl: location.href,
         pageOrigin: location.origin,
         pageHost: location.host,
