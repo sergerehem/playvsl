@@ -103,13 +103,22 @@ PlayVSL.init({
 
     <div class="card">
       <h2>5) Dúvidas comuns</h2>
-      <p class="muted">Respostas rápidas para os problemas mais frequentes no dia a dia.</p>
-      <h3>A barra chegou em 100% antes do fim</h3>
-      <p>Já corrigido: ela converge para 100% no final real do vídeo.</p>
-      <h3>Quero CTA imediato</h3>
-      <p>Use <code>buttonShowAtSeconds: 0</code>.</p>
-      <h3>Próximos vídeos do YouTube no pause/fim</h3>
-      <p>PlayVSL já oculta o iframe no pause/final para evitar esses overlays e manter foco na conversão.</p>
+      <p class="muted">Respostas objetivas para quem está implementando o player pela primeira vez.</p>
+
+      <h3>O botão de CTA não apareceu. O que pode ser?</h3>
+      <p>Verifique o parâmetro <code>buttonShowAtSeconds</code>. Se quiser mostrar desde o início, use <code>0</code>. Também confirme se o vídeo realmente iniciou (play).</p>
+
+      <h3>Quero que o botão abra em nova aba</h3>
+      <p>Use <code>buttonNewTab: true</code>. Se preferir abrir na mesma aba, use <code>false</code>.</p>
+
+      <h3>Como deixar o botão mais arredondado?</h3>
+      <p>Use <code>buttonRounded: true</code>. Se desativar (<code>false</code>), ele mantém um arredondamento leve para boa usabilidade.</p>
+
+      <h3>Como trocar idioma (PT/EN)?</h3>
+      <p>A landing detecta o idioma do navegador automaticamente. O usuário também pode alternar manualmente no rodapé (PT | EN).</p>
+
+      <h3>Como evitar overlays do YouTube no pause e no fim?</h3>
+      <p>O PlayVSL já trata isso automaticamente: ao pausar/finalizar, o iframe é ocultado para manter foco no player e no CTA.</p>
     </div>
   </div>
 </body>
