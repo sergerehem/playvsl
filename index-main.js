@@ -26,6 +26,13 @@
   });
   if($('buttonNewTab')) $('buttonNewTab').addEventListener('change', App.quickUpdate);
   if($('buttonRounded')) $('buttonRounded').addEventListener('change', App.quickUpdate);
+  if($('buttonBoldBtn')) $('buttonBoldBtn').addEventListener('click', ()=>{
+    const b = $('buttonBoldBtn');
+    const on = !b.classList.contains('active');
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    App.quickUpdate();
+  });
 
   if($('leadSubmit')) $('leadSubmit').addEventListener('click', App.submitLead);
 

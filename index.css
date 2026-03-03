@@ -17,6 +17,10 @@
     .color-row .clr-field button{right:0!important;left:auto!important;width:34px!important;border-radius:0 10px 10px 0!important;border-left:1px solid #c9d5ee!important}
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .btn{border:0;border-radius:10px;padding:11px 14px;font-weight:700;cursor:pointer}
+    .font-tools-row{display:flex;gap:8px;align-items:center}
+    .font-tools-row select{flex:1}
+    .text-tool-btn{width:40px;height:40px;border-radius:10px;border:1px solid #c9d5ee;background:#fff;color:#0f172a;font-weight:800;cursor:pointer;line-height:1}
+    .text-tool-btn.active{background:#111;color:#fff;border-color:#111}
     .toggle{display:flex;align-items:center;gap:10px;margin-top:4px}
     .toggle-inline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px}
     .toggle-inline label{margin:0}

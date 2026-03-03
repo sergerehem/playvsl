@@ -77,7 +77,8 @@
         buttonBg: $('buttonBg')?.value || '#C62116',
         buttonRevealEffect: $('buttonRevealEffect')?.value || 'fade',
         buttonFontFamily: $('buttonFontFamily')?.value || 'arial',
-        buttonFontSize: Number($('buttonFontSize')?.value || 20)
+        buttonFontSize: Number($('buttonFontSize')?.value || 20),
+        buttonBold: !!$('buttonBoldBtn')?.classList.contains('active')
       };
       localStorage.setItem(BUILDER_KEY, JSON.stringify(data));
     }catch(e){}
@@ -99,6 +100,7 @@
       if($('buttonRevealEffect') && c.buttonRevealEffect) $('buttonRevealEffect').value = c.buttonRevealEffect;
       if($('buttonFontFamily') && c.buttonFontFamily) $('buttonFontFamily').value = c.buttonFontFamily;
       if($('buttonFontSize') && c.buttonFontSize) $('buttonFontSize').value = String(c.buttonFontSize);
+      const b=$('buttonBoldBtn'); if(b){ const on = typeof c.buttonBold === 'undefined' ? true : !!c.buttonBold; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); }
     }catch(e){}
   };
 
@@ -106,7 +108,7 @@
     return {
       container:'#playvsl-preview', youtubeUrl:'https://youtu.be/wqGiHRWeTR0', primaryColor:'#C62116',
       buttonUrl:'https://playvsl.digi6.com.br/', buttonText:App.t('defaultButton'),
-      buttonShowAtSeconds:10, buttonNewTab:true, buttonRounded:true, buttonBg:'#C62116', buttonRevealEffect:'fade', buttonFontFamily:'arial', buttonFontSize:20, lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause, onEvent: App.trackLandingEvent
+      buttonShowAtSeconds:10, buttonNewTab:true, buttonRounded:true, buttonBg:'#C62116', buttonRevealEffect:'fade', buttonFontFamily:'arial', buttonFontSize:20, buttonBold:true, lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause, onEvent: App.trackLandingEvent
     };
   };
 
@@ -115,13 +117,13 @@
       container:'#playvsl-preview', youtubeUrl:$('youtubeUrl').value.trim(), primaryColor:$('primaryColor').value,
       buttonUrl:$('buttonUrl').value.trim(), buttonText:$('buttonText').value,
       buttonShowAtSeconds:Number($('buttonShowAtSeconds').value||10), buttonNewTab:$('buttonNewTab').checked,
-      buttonRounded:$('buttonRounded').checked, buttonBg:$('buttonBg').value, buttonRevealEffect:$('buttonRevealEffect').value, buttonFontFamily:$('buttonFontFamily').value, buttonFontSize:Number($('buttonFontSize').value||20), lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause, onEvent: App.trackLandingEvent
+      buttonRounded:$('buttonRounded').checked, buttonBg:$('buttonBg').value, buttonRevealEffect:$('buttonRevealEffect').value, buttonFontFamily:$('buttonFontFamily').value, buttonFontSize:Number($('buttonFontSize').value||20), buttonBold:$('buttonBoldBtn').classList.contains('active'), lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause, onEvent: App.trackLandingEvent
     };
   };
 
   App.snippet = function(c){
     const closeScript = '</scr' + 'ipt>';
-    return `<div id="playvsl"></div>\n<script src="https://playvsl.digi6.com.br/playvsl.js">${closeScript}\n<script>\n  PlayVSL.init({\n    container:'#playvsl',\n    youtubeUrl:'${c.youtubeUrl}',\n    primaryColor:'${c.primaryColor}',\n    buttonUrl:'${c.buttonUrl}',\n    buttonText:'${c.buttonText.replace(/'/g,"\\'")}',\n    buttonShowAtSeconds:${c.buttonShowAtSeconds},\n    buttonNewTab:${c.buttonNewTab},\n    buttonRounded:${!!c.buttonRounded},\n    buttonBg:'${c.buttonBg}',\n    buttonRevealEffect:'${c.buttonRevealEffect || 'fade'}',\n    buttonFontFamily:'${c.buttonFontFamily || 'arial'}',\n    buttonFontSize:${Number(c.buttonFontSize || 20)},\n    lang:'${c.lang || App.LANG}'\n  });\n${closeScript}`;
+    return `<div id="playvsl"></div>\n<script src="https://playvsl.digi6.com.br/playvsl.js">${closeScript}\n<script>\n  PlayVSL.init({\n    container:'#playvsl',\n    youtubeUrl:'${c.youtubeUrl}',\n    primaryColor:'${c.primaryColor}',\n    buttonUrl:'${c.buttonUrl}',\n    buttonText:'${c.buttonText.replace(/'/g,"\\'")}',\n    buttonShowAtSeconds:${c.buttonShowAtSeconds},\n    buttonNewTab:${c.buttonNewTab},\n    buttonRounded:${!!c.buttonRounded},\n    buttonBg:'${c.buttonBg}',\n    buttonRevealEffect:'${c.buttonRevealEffect || 'fade'}',\n    buttonFontFamily:'${c.buttonFontFamily || 'arial'}',\n    buttonFontSize:${Number(c.buttonFontSize || 20)},\n    buttonBold:${typeof c.buttonBold === 'undefined' ? true : !!c.buttonBold},\n    lang:'${c.lang || App.LANG}'\n  });\n${closeScript}`;
   };
 
   App.extractYouTubeId = function(input){
