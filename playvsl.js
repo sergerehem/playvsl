@@ -4,6 +4,9 @@
 .sp-shell{position:relative;background:#000;border-radius:0;overflow:hidden;box-shadow:none}
 .sp-ratio{position:relative;padding-top:56.25%}
 .sp-player{position:absolute;inset:0;background:#000;overflow:hidden}
+.sp-player::before,.sp-player::after{content:"";position:absolute;top:0;bottom:0;width:2px;background:#000;z-index:3;pointer-events:none}
+.sp-player::before{left:0}
+.sp-player::after{right:0}
 .sp-player iframe{transition:opacity .78s ease}
 .sp-player.sp-ended iframe,.sp-player.sp-paused iframe{opacity:0;pointer-events:none}
 #sp-player-target{position:absolute;inset:0}
