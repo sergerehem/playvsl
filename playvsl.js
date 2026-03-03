@@ -4,7 +4,7 @@
 .sp-shell{position:relative;background:#000;border-radius:0;overflow:hidden;box-shadow:none;border:1px solid #d1d5db;box-sizing:border-box}
 .sp-ratio{position:relative;padding-top:56.25%}
 .sp-player{position:absolute;inset:0;background:#000;overflow:hidden}
-.sp-player::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--sp-progress-track,rgba(255,255,255,.2));pointer-events:none;z-index:5}
+.sp-player::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:var(--sp-progress-track,rgba(255,255,255,.2));pointer-events:none;z-index:10}
 .sp-player iframe{transition:opacity .78s ease}
 .sp-player.sp-ended iframe,.sp-player.sp-paused iframe{opacity:0;pointer-events:none}
 #sp-player-target{position:absolute;inset:0}
