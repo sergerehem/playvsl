@@ -55,7 +55,7 @@
     if(ld){
       ld.textContent = JSON.stringify({
         '@context':'https://schema.org','@type':'SoftwareApplication',name:'PlayVSL',applicationCategory:'BusinessApplication',
-        operatingSystem:'Web',url:'https://playvsl.digi6.com.br/',description:App.t('seoLdDesc'),offers:{'@type':'Offer',price:'0',priceCurrency:'USD'}
+        operatingSystem:'Web',url:'https://playvsl.com/',description:App.t('seoLdDesc'),offers:{'@type':'Offer',price:'0',priceCurrency:'USD'}
       });
     }
   };
