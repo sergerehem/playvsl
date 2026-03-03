@@ -3,7 +3,16 @@
   const $ = App.$;
 
   App.getPlayerStateForBaseVideo = function(){
-    try{ const raw = localStorage.getItem('playvsl_wqGiHRWeTR0'); if(!raw) return null; return JSON.parse(raw); }catch(e){ return null; }
+    try{
+      const fromBuilder = (typeof App.builderCfg === 'function' ? App.builderCfg()?.youtubeUrl : null) || '';
+      const fromBase = (typeof App.baseCfg === 'function' ? App.baseCfg()?.youtubeUrl : null) || '';
+      const vid = (typeof App.extractYouTubeId === 'function' ? App.extractYouTubeId(fromBuilder || fromBase) : '') || 'wqGiHRWeTR0';
+      const raw = localStorage.getItem(`playvsl_${vid}`);
+      if(!raw) return null;
+      return JSON.parse(raw);
+    }catch(e){
+      return null;
+    }
   };
   App.canUnlock = function(){ const st = App.getPlayerStateForBaseVideo(); return !!(st && st.started === true && st.cta === true); };
 
