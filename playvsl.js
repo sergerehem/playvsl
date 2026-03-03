@@ -1,5 +1,5 @@
 (function(){
-  const SMARTPLAYER_CSS = `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@600;700&family=Lato:wght@700&family=Montserrat:wght@700&family=Open+Sans:wght@700&family=Poppins:wght@700&family=Roboto:wght@700&display=swap');
+  const SMARTPLAYER_CSS = `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700&family=Open+Sans:wght@400;700&family=Poppins:wght@400;700&family=Roboto:wght@400;500;700&display=swap');
 .sp-wrap{max-width:980px;margin:24px auto;padding:0 16px;font-family:Inter,Arial,sans-serif;color:#e8edf2}
 .sp-shell{position:relative;background:#000;border-radius:0;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.35)}
 .sp-ratio{position:relative;padding-top:56.25%}
@@ -244,7 +244,7 @@
         mono: '"Roboto Mono", "Courier New", monospace'
       };
       host.style.setProperty('--sp-cta-font', fontMap[ff] || fontMap.arial);
-      host.style.setProperty('--sp-cta-weight', cfg.buttonBold === false ? '500' : '700');
+      host.style.setProperty('--sp-cta-weight', cfg.buttonBold === false ? '400' : '700');
       const fs = Number(cfg.buttonFontSize || 20);
       const ctaSize = fs <= 17 ? 16 : fs >= 23 ? 24 : 20;
       host.style.setProperty('--sp-cta-size', `${ctaSize}px`);
