@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.0.1 - 2026-03-03
+
+Stability and UX polish release.
+
+### Highlights
+- Fixed resume/restart reliability in embedded environments (Bubble and similar).
+- Separated human-start logic from teaser autoplay to avoid false resume detection.
+- Reduced noisy localStorage writes (timestamp now updates only on real progress changes).
+- Improved transition UX (reduced black flashes on teaser/restart/resume flows).
+- Simplified poster strategy to use `hqdefault` thumbnail for faster, more predictable loading.
+- Updated FAQ with full embed example, clearer parameter docs, payload semantics, and revised section order.
+- Added minified distributions:
+  - `playvsl.min.js`
+  - `playvsl.v1.0.1.min.js`
+
 ## v1.0.0 - 2026-03-02
 
 Stable baseline release of PlayVSL.
