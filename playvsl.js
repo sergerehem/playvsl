@@ -539,19 +539,37 @@
       }
 
       function bindResumeButtons(){
-        host.querySelector('#sp-restart').onclick = ()=>{
+        function forceHumanPlay(sec, isRestart){
           hadTrustedInteraction = true;
           modal.style.display='none';
-          state.max=0; state.engaged=0; state.anchorSec=0;
+          if(playerHost){
+            playerHost.classList.remove('sp-ended');
+            playerHost.classList.remove('sp-paused');
+          }
+          if(poster) poster.style.display='none';
+          if(firstAudio) firstAudio.style.display='none';
+          if(pausePlay) pausePlay.style.display='none';
+          host.classList.remove('sp-prestart');
+
+          state.started = true;
+          state.humanStart = true;
+          if(isRestart){
+            state.max = 0;
+            state.engaged = 0;
+            state.anchorSec = 0;
+            emit('restart',{});
+          }
           save();
-          emit('restart',{});
-          startAt(0,true);
-        };
-        host.querySelector('#sp-resume').onclick = ()=>{
-          hadTrustedInteraction = true;
-          modal.style.display='none';
-          startAt(Math.max(0,state.max-2), true);
-        };
+
+          if(can('unMute')) player.unMute();
+          try { if(can('setPlaybackRate')) player.setPlaybackRate(Number(cfg.playbackRate) || 1); } catch(e) {}
+          try { if(can('seekTo')) player.seekTo(Math.max(0, Number(sec||0)), true); } catch(e) {}
+          if(can('playVideo')) player.playVideo();
+          else pendingStart = { sec:Number(sec||0), unmute:true };
+        }
+
+        host.querySelector('#sp-restart').onclick = ()=> forceHumanPlay(0, true);
+        host.querySelector('#sp-resume').onclick = ()=> forceHumanPlay(Math.max(0,state.max-2), false);
       }
 
       function startFirstMutedOverlay(){
