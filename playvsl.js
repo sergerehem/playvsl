@@ -8,7 +8,7 @@
 .sp-player.sp-ended iframe,.sp-player.sp-paused iframe{opacity:0;pointer-events:none}
 #sp-player-target{position:absolute;inset:0}
 #sp-click-shield{position:absolute;inset:0;z-index:4;background:transparent;cursor:pointer}
-.sp-player iframe{position:absolute;left:-1px;top:0;width:calc(100% + 4px);height:100%;border:0;max-width:none;max-height:none}
+.sp-player iframe{position:absolute;left:-2px;top:0;width:calc(100% + 4px);height:100%;border:0;max-width:none;max-height:none}
 .sp-overlay-top,.sp-overlay-bottom{display:none}
 .sp-poster{position:absolute;inset:0;background:#000 center/cover no-repeat;display:grid;place-items:center;cursor:pointer;z-index:5}
 .sp-play{width:90px;height:90px;border-radius:999px;border:0;background:rgba(255,255,255,.9);font-size:30px;cursor:pointer}
@@ -467,7 +467,7 @@
         if(!box || !ifr) return false;
         // força o iframe interno a acompanhar exatamente o container responsivo
         ifr.style.setProperty('position','absolute','important');
-        ifr.style.setProperty('left','-1px','important');
+        ifr.style.setProperty('left','-2px','important');
         ifr.style.setProperty('top','0','important');
         ifr.style.setProperty('width','calc(100% + 4px)','important');
         ifr.style.setProperty('height','100%','important');
