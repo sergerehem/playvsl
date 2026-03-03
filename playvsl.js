@@ -201,16 +201,17 @@
       const visitorId = localStorage.getItem(visitorKey) || (localStorage.setItem(visitorKey, uuid()), localStorage.getItem(visitorKey));
       const sessionId = sessionStorage.getItem(sessionKey) || (sessionStorage.setItem(sessionKey, uuid()), sessionStorage.getItem(sessionKey));
       const now = Date.now();
-      const state = JSON.parse(localStorage.getItem(key) || '{"max":0,"cta":false,"ts":0,"started":false,"engaged":0,"anchorSec":null}');
+      const state = JSON.parse(localStorage.getItem(key) || '{"max":0,"cta":false,"ts":0,"started":false,"humanStart":false,"engaged":0,"anchorSec":null}');
       // saneamento de tipos (evita lixo de versões antigas)
       state.max = Number(state.max || 0);
       state.engaged = Number(state.engaged || 0);
       state.ts = Number(state.ts || 0);
       state.started = state.started === true;
+      state.humanStart = state.humanStart === true;
       state.cta = state.cta === true;
       state.anchorSec = (state.anchorSec === null || typeof state.anchorSec === 'undefined') ? null : Number(state.anchorSec);
 
-      if(state.ts && (now - state.ts) > cfg.rememberDays*86400000){ state.max=0; state.cta=false; state.started=false; state.engaged=0; state.anchorSec=null; }
+      if(state.ts && (now - state.ts) > cfg.rememberDays*86400000){ state.max=0; state.cta=false; state.started=false; state.humanStart=false; state.engaged=0; state.anchorSec=null; }
       if(state.started && state.anchorSec === null){
         // migração de versões antigas: começa do zero de forma conservadora
         state.anchorSec = 0;
@@ -506,6 +507,7 @@
             state.anchorSec = 0;
           }
           state.started = true;
+          if(firstRealPlay) state.humanStart = true;
           save();
           host.classList.remove('sp-prestart');
           emit('play', { firstPlay:firstRealPlay });
@@ -550,7 +552,7 @@
 
       function showResumeOnLoadIfNeeded(){
         const watched = Math.max(Number(state.max||0), Number(state.engaged||0));
-        if(cfg.askResume && state.started === true && watched > 1){
+        if(cfg.askResume && state.started === true && state.humanStart === true && watched > 1){
           modal.style.display='flex';
           bindResumeButtons();
           return true;
