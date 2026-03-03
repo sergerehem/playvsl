@@ -10,15 +10,40 @@
 
   App._ctaClickedWhileClosed = false;
 
+  App.sendLandingMetric = function(eventName, extra={}){
+    try{
+      if(!App.EVENTS_WEBHOOK) return;
+      const payload = Object.assign({
+        event: eventName,
+        videoId: App.extractYouTubeId(App.builderCfg().youtubeUrl || App.baseCfg().youtubeUrl),
+        sessionId: sessionStorage.getItem('playvsl_session_id') || null,
+        visitorId: localStorage.getItem('playvsl_visitor_id') || null,
+        pageUrl: location.href,
+        pageOrigin: location.origin,
+        pageHost: location.host,
+        pageDomain: location.hostname,
+        pagePath: location.pathname,
+        referrer: document.referrer || null,
+        lang: App.LANG,
+        ts: Date.now()
+      }, extra || {});
+      fetch(App.EVENTS_WEBHOOK, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(payload),
+        keepalive:true
+      }).catch(()=>{});
+    }catch(e){}
+  };
+
   App.trackLandingEvent = function(payload){
     try{
       const evt = payload && payload.event;
-      if(!['firstPlay','ctaView','ctaClick'].includes(evt)) return;
+      if(!['firstPlay','ctaView'].includes(evt)) return;
       if(!App.EVENTS_WEBHOOK) return;
 
       const closedNow = App.isConfiguratorClosed();
-      const allowCta = evt === 'ctaClick' && App._ctaClickedWhileClosed === true;
-      if(!closedNow && !allowCta) return;
+      if(!closedNow) return;
 
       fetch(App.EVENTS_WEBHOOK, {
         method:'POST',
@@ -26,8 +51,6 @@
         body: JSON.stringify(payload),
         keepalive:true
       }).catch(()=>{});
-
-      if(allowCta) App._ctaClickedWhileClosed = false;
     }catch(e){}
   };
 
@@ -114,6 +137,7 @@
   App.handlePreviewCTAClick = function(){
     if(!App.isConfiguratorClosed()) return;
     App._ctaClickedWhileClosed = true;
+    App.sendLandingMetric('ctaClick', { source: 'landing_locked' });
     App.unlockFlow();
     // após desbloquear, re-render para o CTA assumir o link configurado
     App.renderPreview(App.builderCfg());
