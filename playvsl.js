@@ -560,8 +560,8 @@
             playerHost.classList.remove('sp-ended');
             playerHost.classList.remove('sp-paused');
           }
-          // no restart, mantém poster até PLAY; no resume, segue direto para evitar delay visual
-          if(poster) poster.style.display = isRestart ? 'block' : 'none';
+          // mantém poster até PLAY também no resume para evitar flash/tela preta
+          if(poster) poster.style.display = 'block';
           if(firstAudio) firstAudio.style.display='none';
           if(pausePlay) pausePlay.style.display='none';
           host.classList.remove('sp-prestart');
