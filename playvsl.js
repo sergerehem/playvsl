@@ -35,7 +35,7 @@
 .sp-cta:active{color:var(--sp-cta-text,#fff);filter:brightness(.88);transform:translateY(0)}
 .sp-cta:visited{color:var(--sp-cta-text,#fff)}
 .sp-cta.sp-cta-fade{animation:spCtaAppearCenter .38s ease-out both}
-.sp-cta.sp-cta-pulse{animation:spCtaPulseBurst 2.1s ease-out 1 both}
+.sp-cta.sp-cta-pulse{animation:spCtaPulseBurst 3s ease-out 1 both}
 @keyframes spCtaAppearCenter{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
 @keyframes spCtaPulseBurst{0%{transform:scale(1)}15%{transform:scale(1.04)}30%{transform:scale(1)}45%{transform:scale(1.035)}60%{transform:scale(1)}75%{transform:scale(1.025)}100%{transform:scale(1)}}
 .sp-modal{position:absolute;inset:0;background:var(--sp-primary,#c62116);display:none;align-items:center;justify-content:center;z-index:8}
