@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PlayVSL FAQ | Dúvidas frequentes e eventos</title>
-  <meta name="description" content="FAQ do PlayVSL com embed rápido, eventos onPlay/onPause/onEvent, integração com n8n e exemplos práticos." />
+  <title id="seo_title">PlayVSL FAQ | Dúvidas frequentes e eventos</title>
+  <meta id="seo_desc" name="description" content="FAQ do PlayVSL com embed rápido, eventos onPlay/onPause/onEvent, integração com n8n e exemplos práticos." />
   <link rel="canonical" href="https://playvsl.digi6.com.br/faq.html" />
   <style>
     body{font-family:Inter,Arial,sans-serif;background:#f6f8fc;color:#0f172a;margin:0}
@@ -16,19 +16,22 @@
     pre{background:#0b1020;color:#dbeafe;padding:12px;border-radius:10px;overflow:auto}
     code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
     a{color:#b91c1c}
+    .lang{display:flex;gap:8px;justify-content:flex-end}
+    .lang button{border:1px solid #d9e1f2;background:#fff;border-radius:8px;padding:6px 10px;cursor:pointer}
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="card">
-      <h1>FAQ PlayVSL</h1>
-      <p class="muted">Guia rápido de embed, eventos e integrações.</p>
-      <p><a href="/">← Voltar para a landing</a></p>
+      <div class="lang"><button id="langPt">PT</button><button id="langEn">EN</button></div>
+      <h1 id="t_h1">FAQ PlayVSL</h1>
+      <p class="muted" id="t_intro">Guia rápido de embed, eventos e integrações.</p>
+      <p><a href="/" id="t_back">← Voltar para a landing</a></p>
     </div>
 
     <div class="card">
-      <h2>1) Como embedar o PlayVSL?</h2>
-      <p class="muted">Copie este bloco e cole na sua página. Troque apenas a URL do YouTube e o link do botão.</p>
+      <h2 id="t_s1_h">1) Como embedar o PlayVSL?</h2>
+      <p class="muted" id="t_s1_p">Copie este bloco e cole na sua página. Troque apenas a URL do YouTube e o link do botão.</p>
       <pre><code>&lt;div id="playvsl"&gt;&lt;/div&gt;
 &lt;script src="https://playvsl.digi6.com.br/playvsl.js"&gt;&lt;/script&gt;
 &lt;script&gt;
@@ -43,49 +46,40 @@
     </div>
 
     <div class="card">
-      <h2>2) Quais eventos existem?</h2>
-      <p class="muted">Eventos servem para medir comportamento do usuário (play, pausa, clique no CTA, conclusão etc.). Você pode usar callbacks específicos ou centralizar tudo em <code>onEvent</code>.</p>
+      <h2 id="t_s2_h">2) Quais eventos existem?</h2>
+      <p class="muted" id="t_s2_p">Eventos servem para medir comportamento do usuário (play, pausa, clique no CTA, conclusão etc.). Você pode usar callbacks específicos ou centralizar tudo em <code>onEvent</code>.</p>
       <ul>
-        <li><code>onReady</code></li>
-        <li><code>onPlay</code></li>
-        <li><code>onFirstPlay</code></li>
-        <li><code>onResume</code></li>
-        <li><code>onRestart</code></li>
-        <li><code>onPause</code></li>
-        <li><code>onProgress</code> (intervalos e marcos 25/50/75/100)</li>
-        <li><code>onCTAView</code></li>
-        <li><code>onCTAClick</code></li>
-        <li><code>onComplete</code></li>
-        <li><code>onError</code></li>
+        <li><code>onReady</code></li><li><code>onPlay</code></li><li><code>onFirstPlay</code></li><li><code>onResume</code></li><li><code>onRestart</code></li><li><code>onPause</code></li><li><code>onProgress</code></li><li><code>onCTAView</code></li><li><code>onCTAClick</code></li><li><code>onComplete</code></li><li><code>onError</code></li>
       </ul>
       <pre><code>PlayVSL.init({
   ...,
   onEvent: (payload) =&gt; {
-    // Envie para n8n, GA4, API etc
     console.log(payload.event, payload);
   }
 });</code></pre>
     </div>
 
     <div class="card">
-      <h2>3) Como fazer “sumir elementos acima do vídeo no play”?</h2>
-      <p class="muted">Use este padrão quando quiser focar o usuário no vídeo. No play, você esconde os blocos de cima; no pause, volta a mostrar.</p>
-      <p class="muted">Dica: aplique classes nos elementos que devem sumir (por exemplo, seu título <code>h1</code> e subtítulo <code>h3</code>).</p>
+      <h2 id="t_s3_h">3) Como fazer “sumir elementos acima do vídeo no play”?</h2>
+      <p class="muted" id="t_s3_p1">Use este padrão quando quiser focar o usuário no vídeo. No play, você esconde os blocos de cima; no pause, volta a mostrar.</p>
+      <p class="muted" id="t_s3_p2">A forma correta é: classe nos elementos que quer ocultar (ex.: h1 e h3) e uma classe de estado no body (ex.: <code>video-playing</code>).</p>
       <pre><code>&lt;h1 class="hide-on-play"&gt;Título principal&lt;/h1&gt;
-&lt;h3 class="hide-on-play"&gt;Subtítulo da oferta&lt;/h3&gt;</code></pre>
-      <pre><code>PlayVSL.init({
+&lt;h3 class="hide-on-play"&gt;Subtítulo da oferta&lt;/h3&gt;
+
+PlayVSL.init({
   ...,
   onPlay: () =&gt; document.body.classList.add('video-playing'),
   onPause: () =&gt; document.body.classList.remove('video-playing')
-});</code></pre>
-      <pre><code>.video-playing .hide-on-play {
+});
+
+.video-playing .hide-on-play {
   display:none;
 }</code></pre>
     </div>
 
     <div class="card">
-      <h2>4) Como enviar eventos para n8n?</h2>
-      <p class="muted">Esta é a forma mais simples de começar a ter estatísticas sem criar backend complexo: o PlayVSL envia eventos para um webhook e o n8n grava onde você quiser.</p>
+      <h2 id="t_s4_h">4) Como enviar eventos para n8n?</h2>
+      <p class="muted" id="t_s4_p">Forma mais simples: enviar <code>onEvent</code> para um webhook n8n e gravar em planilha/banco.</p>
       <pre><code>const WEBHOOK = 'https://SEU-N8N/webhook/playvsl-events';
 
 PlayVSL.init({
@@ -102,24 +96,71 @@ PlayVSL.init({
     </div>
 
     <div class="card">
-      <h2>5) Dúvidas comuns</h2>
-      <p class="muted">Respostas objetivas para quem está implementando o player pela primeira vez.</p>
-
-      <h3>O botão de CTA não apareceu. O que pode ser?</h3>
-      <p>Verifique o parâmetro <code>buttonShowAtSeconds</code>. Se quiser mostrar desde o início, use <code>0</code>. Também confirme se o vídeo realmente iniciou (play).</p>
-
-      <h3>Quero que o botão abra em nova aba</h3>
-      <p>Use <code>buttonNewTab: true</code>. Se preferir abrir na mesma aba, use <code>false</code>.</p>
-
-      <h3>Como deixar o botão mais arredondado?</h3>
-      <p>Use <code>buttonRounded: true</code>. Se desativar (<code>false</code>), ele mantém um arredondamento leve para boa usabilidade.</p>
-
-      <h3>Como trocar idioma (PT/EN)?</h3>
-      <p>A landing detecta o idioma do navegador automaticamente. O usuário também pode alternar manualmente no rodapé (PT | EN).</p>
-
-      <h3>Como evitar overlays do YouTube no pause e no fim?</h3>
-      <p>O PlayVSL já trata isso automaticamente: ao pausar/finalizar, o iframe é ocultado para manter foco no player e no CTA.</p>
+      <h2 id="t_s5_h">5) Dúvidas comuns</h2>
+      <p class="muted" id="t_s5_p">Respostas objetivas para quem está implementando o player pela primeira vez.</p>
+      <h3 id="t_q1">O botão de CTA não apareceu. O que pode ser?</h3>
+      <p id="t_a1">Verifique <code>buttonShowAtSeconds</code>. Para mostrar no início, use <code>0</code>.</p>
+      <h3 id="t_q2">Quero que o botão abra em nova aba</h3>
+      <p id="t_a2">Use <code>buttonNewTab: true</code>.</p>
+      <h3 id="t_q3">Como deixar o botão mais arredondado?</h3>
+      <p id="t_a3">Use <code>buttonRounded: true</code>.</p>
+      <h3 id="t_q4">Como evitar overlays do YouTube no pause e no fim?</h3>
+      <p id="t_a4">O PlayVSL já oculta o iframe no pause/final para manter foco no CTA.</p>
     </div>
   </div>
+
+  <script>
+    const I18N = {
+      pt: {
+        seoTitle:'PlayVSL FAQ | Dúvidas frequentes e eventos',
+        seoDesc:'FAQ do PlayVSL com embed rápido, eventos onPlay/onPause/onEvent, integração com n8n e exemplos práticos.',
+        h1:'FAQ PlayVSL', intro:'Guia rápido de embed, eventos e integrações.', back:'← Voltar para a landing',
+        s1h:'1) Como embedar o PlayVSL?', s1p:'Copie este bloco e cole na sua página. Troque apenas a URL do YouTube e o link do botão.',
+        s2h:'2) Quais eventos existem?', s2p:'Eventos servem para medir comportamento do usuário (play, pausa, clique no CTA, conclusão etc.). Você pode usar callbacks específicos ou centralizar tudo em onEvent.',
+        s3h:'3) Como fazer “sumir elementos acima do vídeo no play”?', s3p1:'Use este padrão quando quiser focar o usuário no vídeo. No play, você esconde os blocos de cima; no pause, volta a mostrar.',
+        s3p2:'A forma correta é: classe nos elementos que quer ocultar (ex.: h1 e h3) e uma classe de estado no body (ex.: video-playing).',
+        s4h:'4) Como enviar eventos para n8n?', s4p:'Forma mais simples: enviar onEvent para um webhook n8n e gravar em planilha/banco.',
+        s5h:'5) Dúvidas comuns', s5p:'Respostas objetivas para quem está implementando o player pela primeira vez.',
+        q1:'O botão de CTA não apareceu. O que pode ser?', a1:'Verifique buttonShowAtSeconds. Para mostrar no início, use 0.',
+        q2:'Quero que o botão abra em nova aba', a2:'Use buttonNewTab: true.',
+        q3:'Como deixar o botão mais arredondado?', a3:'Use buttonRounded: true.',
+        q4:'Como evitar overlays do YouTube no pause e no fim?', a4:'O PlayVSL já oculta o iframe no pause/final para manter foco no CTA.'
+      },
+      en: {
+        seoTitle:'PlayVSL FAQ | Frequently asked questions and events',
+        seoDesc:'PlayVSL FAQ with quick embed, onPlay/onPause/onEvent callbacks, n8n integration and practical examples.',
+        h1:'PlayVSL FAQ', intro:'Quick guide for embed, events and integrations.', back:'← Back to landing page',
+        s1h:'1) How to embed PlayVSL?', s1p:'Copy this block and paste it on your page. Replace only the YouTube URL and button link.',
+        s2h:'2) Which events are available?', s2p:'Events help measure user behavior (play, pause, CTA click, completion, etc.). You can use specific callbacks or centralize everything with onEvent.',
+        s3h:'3) How to hide elements above the video on play?', s3p1:'Use this pattern when you want to keep focus on the video. On play, hide top blocks; on pause, show them again.',
+        s3p2:'Correct pattern: class on elements to hide (e.g., h1/h3) and a body state class (e.g., video-playing).',
+        s4h:'4) How to send events to n8n?', s4p:'Simplest way: send onEvent to an n8n webhook and store in sheets/database.',
+        s5h:'5) Common questions', s5p:'Short answers for first-time implementation.',
+        q1:'CTA button did not appear. Why?', a1:'Check buttonShowAtSeconds. To show from the start, use 0.',
+        q2:'I want the button to open in a new tab', a2:'Use buttonNewTab: true.',
+        q3:'How can I make the button more rounded?', a3:'Use buttonRounded: true.',
+        q4:'How to avoid YouTube overlays on pause/end?', a4:'PlayVSL already hides the iframe on pause/end to keep focus on CTA.'
+      }
+    };
+
+    function applyLang(lang){
+      const t = I18N[lang] || I18N.pt;
+      document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+      document.title = t.seoTitle;
+      document.getElementById('seo_desc')?.setAttribute('content', t.seoDesc);
+      const map = {
+        t_h1:t.h1,t_intro:t.intro,t_back:t.back,t_s1_h:t.s1h,t_s1_p:t.s1p,t_s2_h:t.s2h,t_s2_p:t.s2p,
+        t_s3_h:t.s3h,t_s3_p1:t.s3p1,t_s3_p2:t.s3p2,t_s4_h:t.s4h,t_s4_p:t.s4p,t_s5_h:t.s5h,t_s5_p:t.s5p,
+        t_q1:t.q1,t_a1:t.a1,t_q2:t.q2,t_a2:t.a2,t_q3:t.q3,t_a3:t.a3,t_q4:t.q4,t_a4:t.a4
+      };
+      Object.entries(map).forEach(([id,val])=>{ const el=document.getElementById(id); if(el) el.textContent = val; });
+      localStorage.setItem('playvsl_lang', lang);
+    }
+
+    const initial = localStorage.getItem('playvsl_lang') || (((navigator.language||'').toLowerCase().startsWith('pt')) ? 'pt' : 'en');
+    document.getElementById('langPt').addEventListener('click', ()=>applyLang('pt'));
+    document.getElementById('langEn').addEventListener('click', ()=>applyLang('en'));
+    applyLang(initial);
+  </script>
 </body>
 </html>
