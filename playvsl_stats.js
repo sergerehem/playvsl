@@ -19,13 +19,8 @@
     if(!webhookUrl) return;
     const body = JSON.stringify(payload);
 
-    try{
-      if(navigator.sendBeacon){
-        const ok = navigator.sendBeacon(webhookUrl, new Blob([body], {type:'application/json'}));
-        if(ok) return;
-      }
-    }catch(e){ if(debug) console.warn('[PlayVSLStats] sendBeacon failed', e); }
-
+    // Evita CORS com credentials implícitos do sendBeacon em cenários cross-domain.
+    // Mantemos fetch no-cors para máxima compatibilidade em embeds externos.
     fetch(webhookUrl, {
       method:'POST',
       body,
