@@ -34,10 +34,10 @@
 .sp-cta:hover,.sp-cta:focus-visible{color:var(--sp-cta-text,#fff);text-decoration:none;filter:brightness(.93);transform:translateY(-1px)}
 .sp-cta:active{color:var(--sp-cta-text,#fff);filter:brightness(.88);transform:translateY(0)}
 .sp-cta:visited{color:var(--sp-cta-text,#fff)}
-.sp-cta.sp-cta-fade{animation:spCtaFade .35s ease both}
-.sp-cta.sp-cta-pulse{animation:spCtaPulse .7s ease 1}
-@keyframes spCtaFade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-@keyframes spCtaPulse{0%{transform:scale(1)}45%{transform:scale(1.04)}100%{transform:scale(1)}}
+.sp-cta.sp-cta-fade{animation:spCtaAppearCenter .38s ease-out both}
+.sp-cta.sp-cta-pulse{animation:spCtaPulseBurst 1.35s ease-out 1 both}
+@keyframes spCtaAppearCenter{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+@keyframes spCtaPulseBurst{0%{transform:scale(1)}15%{transform:scale(1.04)}30%{transform:scale(1)}45%{transform:scale(1.035)}60%{transform:scale(1)}75%{transform:scale(1.025)}100%{transform:scale(1)}}
 .sp-modal{position:absolute;inset:0;background:var(--sp-primary,#c62116);display:none;align-items:center;justify-content:center;z-index:8}
 .sp-modal-card{background:transparent;color:var(--sp-contrast,#fff);padding:18px;border-radius:2px;max-width:760px;width:92%;text-align:center;font-family:Arial,Helvetica,sans-serif}
 .sp-resume-title{font-size:30px;font-weight:700;line-height:1.1;margin:0;padding:.5em 0;color:var(--sp-contrast,#fff)}
@@ -345,11 +345,16 @@
       function showCTA(force=false){
         const alwaysShow = Number(cfg.buttonShowAtSeconds) <= 0;
         if(!state.started && !force && !alwaysShow) return;
+
+        const wasVisible = cta.style.display === 'block';
         if(state.cta) {
-          cta.style.display='block';
-          animateCTA();
+          if(!wasVisible){
+            cta.style.display='block';
+            animateCTA();
+          }
           return;
         }
+
         cta.style.display='block';
         animateCTA();
         state.cta=true;
