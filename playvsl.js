@@ -514,7 +514,8 @@
             state.anchorSec = 0;
           }
           state.started = true;
-          if(firstRealPlay) state.humanStart = true;
+          // qualquer play com áudio após interação deve marcar início humano
+          state.humanStart = true;
           save();
           host.classList.remove('sp-prestart');
           emit('play', { firstPlay:firstRealPlay });
@@ -650,23 +651,23 @@
       host.__playvslDestroy = destroy;
       ensureYouTubeAPI().then(()=>{ if(!destroyed) createPlayer(); });
 
-      poster.addEventListener('click', (e)=>{
-        if(e && e.isTrusted) hadTrustedInteraction = true;
+      poster.addEventListener('click', ()=>{
+        hadTrustedInteraction = true;
         if(playerHost && playerHost.classList.contains('sp-paused')){
           startAt(currentSec(), true);
           return;
         }
         askResumeAndPlay();
       });
-      firstAudio.addEventListener('click', (e)=>{
-        if(e && e.isTrusted) hadTrustedInteraction = true;
+      firstAudio.addEventListener('click', ()=>{
+        hadTrustedInteraction = true;
         firstAudio.style.display='none';
         // no primeiro play real, começa do zero (evita "pulinho" do teaser)
         if(!state.started) startAt(0, true);
         else startAt(currentSec(), true);
       });
-      pausePlay.addEventListener('click', (e)=>{
-        if(e && e.isTrusted) hadTrustedInteraction = true;
+      pausePlay.addEventListener('click', ()=>{
+        hadTrustedInteraction = true;
         const ended = host.dataset.spEnded === '1';
         if(ended){
           state.max = 0;
@@ -685,8 +686,8 @@
         clickShield.addEventListener('contextmenu', (e)=>e.preventDefault());
         clickShield.addEventListener('mousedown', (e)=>{ if(e.button===2) e.preventDefault(); });
         clickShield.addEventListener('auxclick', (e)=>e.preventDefault());
-        clickShield.addEventListener('click', (e)=>{
-          if(e && e.isTrusted) hadTrustedInteraction = true;
+        clickShield.addEventListener('click', ()=>{
+          hadTrustedInteraction = true;
           if(!player || !player.getPlayerState) return;
           if(firstAudio && firstAudio.style.display==='block') return; // mantém fluxo do primeiro clique
           const st = player.getPlayerState();
