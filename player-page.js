@@ -157,7 +157,7 @@
     node.innerHTML = '';
     const closed = App.isConfiguratorClosed();
     const previewCfg = Object.assign({}, cfg, {
-      buttonUrl: closed ? 'javascript:void(0)' : (cfg.buttonUrl || '#'),
+      buttonUrl: closed ? '#' : (cfg.buttonUrl || '#'),
       buttonText: closed ? App.t('defaultButton') : cfg.buttonText,
       buttonNewTab: closed ? false : !!cfg.buttonNewTab,
       onCTAClick: App.handlePreviewCTAClick,
@@ -165,6 +165,15 @@
       onError: (p)=>{ App.applyShowAtBounds(0); if(typeof cfg.onError === 'function') cfg.onError(p); }
     });
     PlayVSL.init(previewCfg);
+
+    // redundância segura para LP: garante dupla função do CTA quando configurador está fechado
+    if(closed){
+      const cta = node.querySelector('.sp-cta');
+      if(cta){
+        cta.setAttribute('href', '#');
+        cta.addEventListener('click', (e)=>{ e.preventDefault(); App.handlePreviewCTAClick(); });
+      }
+    }
   };
 
   App.quickUpdate = function(){
