@@ -8,18 +8,26 @@
   };
   App.handlePreviewPause = function(){ document.body.classList.remove('preview-played-locked'); };
 
+  App._ctaClickedWhileClosed = false;
+
   App.trackLandingEvent = function(payload){
     try{
-      if(!App.isConfiguratorClosed()) return;
       const evt = payload && payload.event;
       if(!['firstPlay','ctaView','ctaClick'].includes(evt)) return;
       if(!App.EVENTS_WEBHOOK) return;
+
+      const closedNow = App.isConfiguratorClosed();
+      const allowCta = evt === 'ctaClick' && App._ctaClickedWhileClosed === true;
+      if(!closedNow && !allowCta) return;
+
       fetch(App.EVENTS_WEBHOOK, {
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify(payload),
         keepalive:true
       }).catch(()=>{});
+
+      if(allowCta) App._ctaClickedWhileClosed = false;
     }catch(e){}
   };
 
@@ -105,6 +113,7 @@
 
   App.handlePreviewCTAClick = function(){
     if(!App.isConfiguratorClosed()) return;
+    App._ctaClickedWhileClosed = true;
     App.unlockFlow();
     // após desbloquear, re-render para o CTA assumir o link configurado
     App.renderPreview(App.builderCfg());
