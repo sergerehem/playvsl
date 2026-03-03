@@ -320,6 +320,20 @@
       const timeEl = host.querySelector('#sp-time');
       if(!state.started) host.classList.add('sp-prestart');
       const poster = host.querySelector('#sp-poster');
+      // evita poster preto quando maxresdefault não existe: fallback automático para hqdefault
+      (function ensurePosterFallback(){
+        if(!poster) return;
+        const maxres = `https://img.youtube.com/vi/${vid}/maxresdefault.jpg`;
+        const hq = `https://img.youtube.com/vi/${vid}/hqdefault.jpg`;
+        const img = new Image();
+        img.onload = ()=>{
+          if(!img.naturalWidth || img.naturalWidth < 180){
+            poster.style.backgroundImage = `url('${hq}')`;
+          }
+        };
+        img.onerror = ()=>{ poster.style.backgroundImage = `url('${hq}')`; };
+        img.src = maxres;
+      })();
       const firstAudio = host.querySelector('#sp-first-audio');
       if(!state.started && firstAudio) firstAudio.style.display = 'block';
       const pausePlay = host.querySelector('#sp-pause-play');
@@ -546,8 +560,8 @@
             playerHost.classList.remove('sp-ended');
             playerHost.classList.remove('sp-paused');
           }
-          // mantém poster por cima até o player confirmar PLAY (evita flash de tela preta)
-          if(poster) poster.style.display='block';
+          // no restart, mantém poster até PLAY; no resume, segue direto para evitar delay visual
+          if(poster) poster.style.display = isRestart ? 'block' : 'none';
           if(firstAudio) firstAudio.style.display='none';
           if(pausePlay) pausePlay.style.display='none';
           host.classList.remove('sp-prestart');
