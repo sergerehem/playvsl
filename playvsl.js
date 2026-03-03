@@ -81,6 +81,26 @@
     return yiq >= 150 ? '#111' : '#fff';
   }
 
+  function ensureYouTubeAPI(){
+    if(window.YT && window.YT.Player) return Promise.resolve();
+    if(window.__playvslYtReadyPromise) return window.__playvslYtReadyPromise;
+
+    window.__playvslYtReadyPromise = new Promise((resolve)=>{
+      const prev = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = function(){
+        try{ if(typeof prev === 'function') prev(); }catch(e){}
+        resolve();
+      };
+      if(!document.querySelector('script[src="https://www.youtube.com/iframe_api"]')){
+        const s=document.createElement('script');
+        s.src='https://www.youtube.com/iframe_api';
+        document.head.appendChild(s);
+      }
+    });
+
+    return window.__playvslYtReadyPromise;
+  }
+
   window.PlayVSL = {
     init(opts){
       ensureSmartPlayerCss();
@@ -475,7 +495,7 @@
         } else startAt(0,true);
       }
 
-      window.onYouTubeIframeAPIReady = function(){
+      function createPlayer(){
         player = new YT.Player(host.querySelector('#sp-player-target'), {
           videoId: vid,
           playerVars: {autoplay:0,controls:0,rel:0,modestbranding:1,iv_load_policy:3,playsinline:1,origin:location.origin},
@@ -500,7 +520,6 @@
             onStateChange: (ev)=>{
               if(destroyed) return;
               const st = ev.data;
-              // 1=playing, 2=paused, 0=ended
               if(st===1){
                 host.dataset.spEnded = '0';
                 if(playerHost){
@@ -518,7 +537,6 @@
                 try{ state.engaged = Math.max(Number(state.engaged||0), Number(player.getDuration ? player.getDuration() : 0)); save(); }catch(e){}
                 try{ if(fill) fill.style.width = '100%'; }catch(e){}
                 emit('complete', {});
-                // loop automático no modo teaser (antes do clique para ouvir)
                 if(!state.started){
                   try { player.seekTo(0, true); } catch(e) {}
                   try { player.mute(); } catch(e) {}
@@ -534,13 +552,10 @@
             onError: (e)=>{ timeEl.textContent=`Erro YouTube ${e.data}`; emit('error', { code:e.data }); }
           }
         });
-      };
+      }
 
       host.__playvslDestroy = destroy;
-
-      if(!window.YT || !window.YT.Player){
-        const s=document.createElement('script'); s.src='https://www.youtube.com/iframe_api'; document.head.appendChild(s);
-      } else window.onYouTubeIframeAPIReady();
+      ensureYouTubeAPI().then(()=>{ if(!destroyed) createPlayer(); });
 
       poster.addEventListener('click', askResumeAndPlay);
       firstAudio.addEventListener('click', ()=>{
