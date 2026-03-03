@@ -440,12 +440,19 @@
         // tempo engajado baseado no relógio REAL do player, a partir do 1º clique para ouvir
         const anchor = (state.anchorSec ?? 0);
         const engagedNow = Math.max(0, cur - anchor);
-        state.engaged = Math.max(state.engaged || 0, engagedNow);
-        save();
+        const prevEngaged = Number(state.engaged || 0);
+        const nextEngaged = Math.max(prevEngaged, engagedNow);
+        let changed = false;
+
+        if(nextEngaged > (prevEngaged + 0.05)){
+          state.engaged = nextEngaged;
+          changed = true;
+        }
 
         if(Math.floor(state.engaged || 0) >= Number(cfg.buttonShowAtSeconds) || state.cta) showCTA();
 
-        if(cur > state.max) { state.max = cur; save(); }
+        if(cur > (Number(state.max || 0) + 0.05)) { state.max = cur; changed = true; }
+        if(changed) save();
         fill.style.width = teaserProgress(state.engaged || 0, dur) + '%';
         timeEl.textContent = `${fmt(cur)} / ${fmt(dur)}`;
 
