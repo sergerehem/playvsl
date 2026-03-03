@@ -33,4 +33,5 @@
     .btn-primary{background:var(--cta);color:#fff}
     .btn-ghost{background:#fff1f2;color:#991b1b;border:1px solid #fecdd3}
     pre{white-space:pre-wrap;word-break:break-word;background:#f8faff;border:1px solid #d4def4;padding:12px;border-radius:10px;min-height:130px}
+    #playvsl-preview .sp-shell{box-shadow:none!important}
     @media(max-width:920px){.hero{grid-template-columns:1fr}h1{font-size:32px}.grid{grid-template-columns:1fr}}
