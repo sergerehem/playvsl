@@ -260,7 +260,7 @@
         <div class="sp-shell"><div class="sp-ratio" style="padding-top:${pad}%">
           <div class="sp-player" id="sp-player-host"><div id="sp-player-target"></div><div id="sp-click-shield" aria-hidden="true"></div></div>
           <div class="sp-overlay-top"></div><div class="sp-overlay-bottom"></div>
-          <div class="sp-poster" id="sp-poster" style="background-image:url('https://img.youtube.com/vi/${vid}/maxresdefault.jpg')"></div>
+          <div class="sp-poster" id="sp-poster" style="background-image:url('https://img.youtube.com/vi/${vid}/hqdefault.jpg')"></div>
           <button class="sp-first-audio" id="sp-first-audio">
             <div class="t1">${t.audioStarted}</div>
             <div class="ico" aria-hidden="true">
@@ -320,18 +320,17 @@
       const timeEl = host.querySelector('#sp-time');
       if(!state.started) host.classList.add('sp-prestart');
       const poster = host.querySelector('#sp-poster');
-      // evita poster preto quando maxresdefault não existe: fallback automático para hqdefault
-      (function ensurePosterFallback(){
+      // começa com hqdefault (sempre disponível) e só promove para maxres se existir
+      (function ensurePosterQuality(){
         if(!poster) return;
         const maxres = `https://img.youtube.com/vi/${vid}/maxresdefault.jpg`;
-        const hq = `https://img.youtube.com/vi/${vid}/hqdefault.jpg`;
         const img = new Image();
         img.onload = ()=>{
-          if(!img.naturalWidth || img.naturalWidth < 180){
-            poster.style.backgroundImage = `url('${hq}')`;
+          if(img.naturalWidth && img.naturalWidth >= 720){
+            poster.style.backgroundImage = `url('${maxres}')`;
           }
         };
-        img.onerror = ()=>{ poster.style.backgroundImage = `url('${hq}')`; };
+        img.onerror = ()=>{};
         img.src = maxres;
       })();
       const firstAudio = host.querySelector('#sp-first-audio');
