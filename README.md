@@ -2,11 +2,15 @@
 
 O player que transforma seu vídeo do YouTube em VSL de alta conversão.
 
-## Arquivos
-- `playvsl.js` — script único do player (injeta CSS automaticamente)
+## Estrutura do projeto
+- `playvsl.js` — script principal (fonte, legível)
+- `playvsl.min.js` — build minificado (latest)
+- `playvsl.v1.0.1.min.js` — build versionado estável
 - `index.html` — landing + fluxo de unlock + builder embutido
-- `playvsl-builder.html` — builder dedicado para gerar snippet
-- `smart-player-youtube.html` — página demo
+- `faq.html` — documentação pública
+- `assets/css/index.css` — estilos da landing
+- `assets/js/*` — scripts da landing (`app-core`, `i18n`, `player-page`, `lead`, `index-main`)
+- `archive/legacy/*` — arquivos antigos de referência (não usados em produção)
 
 ## Rodar localmente
 ```bash
@@ -39,5 +43,5 @@ Abra `http://localhost:8080`.
 
 Use um endpoint backend/proxy (ex.: Cloudflare Worker) e configure o token como segredo (`ENCHARGE_TOKEN`).
 
-- Template: `encharge-worker-template.js`
+- Template: `archive/legacy/encharge-worker-template.js`
 - Frontend: defina `window.PLAYVSL_LEAD_API = 'https://SEU-WORKER/encharge/subscribe'` antes do script da página.
