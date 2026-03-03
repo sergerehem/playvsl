@@ -28,10 +28,11 @@
 .sp-pause-play svg{width:74%;height:74%;display:block}
 .sp-play-triangle path{fill:var(--sp-contrast,#fff);stroke:var(--sp-contrast,#fff);stroke-width:3;stroke-linejoin:round}
 @media (max-width:900px){.sp-pause-play{width:120px;height:120px}.sp-pause-play svg{width:70%;height:70%}}
-.sp-bar{position:relative;height:6px;margin-top:-2px;background:var(--sp-progress-track,rgba(255,255,255,.2));z-index:6}
+.sp-bar-wrap{position:relative;z-index:6;background:#fff;padding-top:2px}
+.sp-bar{position:relative;height:6px;background:var(--sp-progress-track,rgba(255,255,255,.2))}
 .sp-bar-fill{height:100%;width:0;background:var(--sp-primary,#c62116);transition:width .35s linear}
 .sp-time{display:none!important}
-.sp-prestart .sp-bar,.sp-prestart .sp-time,.sp-prestart .sp-pause-play{display:none}
+.sp-prestart .sp-bar-wrap,.sp-prestart .sp-time,.sp-prestart .sp-pause-play{display:none}
 .sp-cta{display:none;margin:22px auto 0 auto;padding:var(--sp-cta-pad-y,14px) var(--sp-cta-pad-x,28px);background:var(--sp-cta-bg,#1a73e8);color:var(--sp-cta-text,#fff);text-decoration:none;border:0;outline:none;box-shadow:none;border-radius:var(--sp-cta-radius,999px);font-weight:var(--sp-cta-weight,700);font-family:var(--sp-cta-font,Inter,Arial,sans-serif);font-size:var(--sp-cta-size,20px);line-height:1.1;text-align:center;min-width:220px;width:fit-content;-webkit-appearance:none;appearance:none;transition:filter .18s ease,transform .18s ease,opacity .28s ease}
 .sp-cta:hover,.sp-cta:focus-visible{color:var(--sp-cta-text,#fff);text-decoration:none;filter:brightness(.93);transform:translateY(-1px)}
 .sp-cta:active{color:var(--sp-cta-text,#fff);filter:brightness(.88);transform:translateY(0)}
@@ -292,7 +293,7 @@
           </div></div>
           <div class="sp-time" id="sp-time">00:00</div>
         </div></div>
-        <div class="sp-bar"><div class="sp-bar-fill" id="sp-fill"></div></div>
+        <div class="sp-bar-wrap"><div class="sp-bar"><div class="sp-bar-fill" id="sp-fill"></div></div></div>
         <a class="sp-cta" id="sp-cta" href="${cfg.buttonUrl}">${cfg.buttonText}</a>`;
 
       const cta = host.querySelector('#sp-cta');
