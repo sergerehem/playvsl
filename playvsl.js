@@ -27,7 +27,7 @@
 .sp-pause-play svg{width:74%;height:74%;display:block}
 .sp-play-triangle path{fill:var(--sp-contrast,#fff);stroke:var(--sp-contrast,#fff);stroke-width:3;stroke-linejoin:round}
 @media (max-width:900px){.sp-pause-play{width:120px;height:120px}.sp-pause-play svg{width:70%;height:70%}}
-.sp-bar{position:relative;height:6px;background:linear-gradient(to bottom, rgba(0,0,0,.22), var(--sp-progress-track,rgba(255,255,255,.2)));z-index:6}
+.sp-bar{position:relative;height:6px;background:var(--sp-progress-track,rgba(255,255,255,.2));z-index:6}
 .sp-bar-fill{height:100%;width:0;background:var(--sp-primary,#c62116);transition:width .35s linear}
 .sp-time{display:none!important}
 .sp-prestart .sp-bar,.sp-prestart .sp-time,.sp-prestart .sp-pause-play{display:none}
