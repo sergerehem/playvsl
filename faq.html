@@ -120,6 +120,11 @@ PlayVSL.init({
       <h3 id="t_q3">Como deixar o botão mais arredondado?</h3>
       <p id="t_a3">Use <code>buttonRounded: true</code>.</p>
     </div>
+
+    <div class="card">
+      <h2 id="t_contact_h">Ainda com dúvidas ou sugestões?</h2>
+      <p class="muted" id="t_contact_p">Se precisar de ajuda ou quiser sugerir melhorias, envie um email para <a href="mailto:contato@digi6.com.br">contato@digi6.com.br</a>.</p>
+    </div>
   </div>
 
   <script>
@@ -136,7 +141,7 @@ PlayVSL.init({
         s5h:'5) Dúvidas comuns', s5p:'Respostas objetivas para quem está implementando o player pela primeira vez.',
         q1:'O botão de CTA não apareceu. O que pode ser?', a1:'Verifique buttonShowAtSeconds. Para mostrar no início, use 0.',
         q2:'Quero que o botão abra em nova aba', a2:'Use buttonNewTab: true.',
-        q3:'Como deixar o botão mais arredondado?', a3:'Use buttonRounded: true.'
+        q3:'Como deixar o botão mais arredondado?', a3:'Use buttonRounded: true.', contactH:'Ainda com dúvidas ou sugestões?', contactP:'Se precisar de ajuda ou quiser sugerir melhorias, envie um email para'
       },
       en: {
         seoTitle:'PlayVSL FAQ | Frequently asked questions and events',
@@ -150,7 +155,7 @@ PlayVSL.init({
         s5h:'5) Common questions', s5p:'Short answers for first-time implementation.',
         q1:'CTA button did not appear. Why?', a1:'Check buttonShowAtSeconds. To show from the start, use 0.',
         q2:'I want the button to open in a new tab', a2:'Use buttonNewTab: true.',
-        q3:'How can I make the button more rounded?', a3:'Use buttonRounded: true.'
+        q3:'How can I make the button more rounded?', a3:'Use buttonRounded: true.', contactH:'Still have questions or suggestions?', contactP:'If you need help or want to suggest improvements, email'
       }
     };
 
@@ -162,9 +167,11 @@ PlayVSL.init({
       const map = {
         t_h1:t.h1,t_intro:t.intro,t_back:t.back,t_s1_h:t.s1h,t_s1_p:t.s1p,t_s2_h:t.s2h,t_s2_p:t.s2p,
         t_s3_h:t.s3h,t_s3_p1:t.s3p1,t_s3_p2:t.s3p2,t_s4_h:t.s4h,t_s4_p:t.s4p,t_s4_payload_h:t.s4ph,t_s5_h:t.s5h,t_s5_p:t.s5p,
-        t_q1:t.q1,t_a1:t.a1,t_q2:t.q2,t_a2:t.a2,t_q3:t.q3,t_a3:t.a3
+        t_q1:t.q1,t_a1:t.a1,t_q2:t.q2,t_a2:t.a2,t_q3:t.q3,t_a3:t.a3,t_contact_h:t.contactH,t_contact_p:t.contactP
       };
       Object.entries(map).forEach(([id,val])=>{ const el=document.getElementById(id); if(el) el.textContent = val; });
+      const cp=document.getElementById('t_contact_p');
+      if(cp){ cp.innerHTML = `${t.contactP} <a href="mailto:contato@digi6.com.br">contato@digi6.com.br</a>.`; }
       localStorage.setItem('playvsl_lang', lang);
     }
 
