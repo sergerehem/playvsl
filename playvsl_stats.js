@@ -17,13 +17,18 @@
 
   function send(webhookUrl, payload, debug){
     if(!webhookUrl) return;
-    const body = JSON.stringify(payload || {});
 
-    // Sem sendBeacon para evitar conflitos de credentials/CORS em embeds externos.
+    // POST simples (sem preflight): application/x-www-form-urlencoded
+    const params = new URLSearchParams();
+    Object.entries(payload || {}).forEach(([k,v])=>{
+      if(v === undefined || v === null) return;
+      params.set(k, typeof v === 'object' ? JSON.stringify(v) : String(v));
+    });
+
     fetch(webhookUrl, {
       method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body,
+      headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},
+      body: params.toString(),
       keepalive:true,
       mode:'cors',
       credentials:'omit'

@@ -27,10 +27,12 @@
         lang: App.LANG,
         ts: Date.now()
       }, extra || {});
+      const params = new URLSearchParams();
+      Object.entries(payload || {}).forEach(([k,v])=>{ if(v!==undefined && v!==null) params.set(k, String(v)); });
       fetch(App.EVENTS_WEBHOOK, {
         method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify(payload),
+        headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},
+        body: params.toString(),
         keepalive:true,
         mode:'cors',
         credentials:'omit'
@@ -47,10 +49,12 @@
       const closedNow = App.isConfiguratorClosed();
       if(!closedNow) return;
 
+      const params = new URLSearchParams();
+      Object.entries(payload || {}).forEach(([k,v])=>{ if(v!==undefined && v!==null) params.set(k, String(v)); });
       fetch(App.EVENTS_WEBHOOK, {
         method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify(payload),
+        headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},
+        body: params.toString(),
         keepalive:true,
         mode:'cors',
         credentials:'omit'
