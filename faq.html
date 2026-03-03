@@ -89,7 +89,47 @@ PlayVSL.init({
     </div>
 
     <div class="card">
-      <h2 id="t_s4_h">3) Como enviar eventos via webhook?</h2>
+      <h2 id="t_s2_h">3) Quais eventos existem?</h2>
+      <p class="muted" id="t_s2_p">Eventos servem para medir comportamento do usuário (play, pausa, clique no CTA, conclusão etc.). Você pode usar callbacks específicos ou centralizar tudo em <code>onEvent</code>.</p>
+      <ul>
+        <li><code>onReady</code></li><li><code>onPlay</code></li><li><code>onFirstPlay</code></li><li><code>onResume</code></li><li><code>onRestart</code></li><li><code>onPause</code></li><li><code>onProgress</code></li><li><code>onCTAView</code></li><li><code>onCTAClick</code></li><li><code>onComplete</code></li><li><code>onError</code></li>
+      </ul>
+      <pre><code>PlayVSL.init({
+  ...,
+  onEvent: (payload) =&gt; {
+    console.log(payload.event, payload);
+  }
+});</code></pre>
+      <h3>Exemplo de payload do <code>onEvent</code></h3>
+      <pre><code>{
+  "event": "progress",
+  "videoId": "wqGiHRWeTR0",
+  "sessionId": "8f2a...",
+  "visitorId": "0d77...",
+  "pageUrl": "https://seusite.com/vsl",
+  "pageDomain": "seusite.com",
+  "lang": "pt",
+  "currentTime": 132.4,
+  "duration": 840,
+  "engagedTime": 79.8,
+  "ctaShown": false,
+  "ts": 1772574000000
+}</code></pre>
+      <h3>Atributos e significados</h3>
+      <ul>
+        <li><code>event</code>: tipo do evento (play, pause, progress, ctaClick...).</li>
+        <li><code>videoId</code>: ID do vídeo no YouTube.</li>
+        <li><code>sessionId</code>: sessão atual do navegador.</li>
+        <li><code>visitorId</code>: identificador persistente do visitante.</li>
+        <li><code>currentTime</code>: segundo atual no momento do evento.</li>
+        <li><code>engagedTime</code>: tempo engajado real após início humano.</li>
+        <li><code>ctaShown</code>: se o CTA já foi exibido.</li>
+        <li><code>ts</code>: timestamp do evento.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2 id="t_s4_h">4) Como enviar eventos via webhook?</h2>
       <p class="muted" id="t_s4_p">Forma mais simples: enviar <code>onEvent</code> para qualquer webhook (n8n, Make, Zapier ou API própria).</p>
       <p class="muted" id="t_s4_events">Eventos possíveis: <code>ready</code>, <code>play</code>, <code>firstPlay</code>, <code>resume</code>, <code>restart</code>, <code>pause</code>, <code>progress</code>, <code>ctaView</code>, <code>ctaClick</code>, <code>complete</code>, <code>error</code>.</p>
       <pre><code>const WEBHOOK = 'https://SEU-N8N/webhook/playvsl-events';
@@ -134,46 +174,6 @@ PlayVSL.init({
     </div>
 
     <div class="card">
-      <h2 id="t_s2_h">4) Quais eventos existem?</h2>
-      <p class="muted" id="t_s2_p">Eventos servem para medir comportamento do usuário (play, pausa, clique no CTA, conclusão etc.). Você pode usar callbacks específicos ou centralizar tudo em <code>onEvent</code>.</p>
-      <ul>
-        <li><code>onReady</code></li><li><code>onPlay</code></li><li><code>onFirstPlay</code></li><li><code>onResume</code></li><li><code>onRestart</code></li><li><code>onPause</code></li><li><code>onProgress</code></li><li><code>onCTAView</code></li><li><code>onCTAClick</code></li><li><code>onComplete</code></li><li><code>onError</code></li>
-      </ul>
-      <pre><code>PlayVSL.init({
-  ...,
-  onEvent: (payload) =&gt; {
-    console.log(payload.event, payload);
-  }
-});</code></pre>
-      <h3>Exemplo de payload do <code>onEvent</code></h3>
-      <pre><code>{
-  "event": "progress",
-  "videoId": "wqGiHRWeTR0",
-  "sessionId": "8f2a...",
-  "visitorId": "0d77...",
-  "pageUrl": "https://seusite.com/vsl",
-  "pageDomain": "seusite.com",
-  "lang": "pt",
-  "currentTime": 132.4,
-  "duration": 840,
-  "engagedTime": 79.8,
-  "ctaShown": false,
-  "ts": 1772574000000
-}</code></pre>
-      <h3>Atributos e significados</h3>
-      <ul>
-        <li><code>event</code>: tipo do evento (play, pause, progress, ctaClick...).</li>
-        <li><code>videoId</code>: ID do vídeo no YouTube.</li>
-        <li><code>sessionId</code>: sessão atual do navegador.</li>
-        <li><code>visitorId</code>: identificador persistente do visitante.</li>
-        <li><code>currentTime</code>: segundo atual no momento do evento.</li>
-        <li><code>engagedTime</code>: tempo engajado real após início humano.</li>
-        <li><code>ctaShown</code>: se o CTA já foi exibido.</li>
-        <li><code>ts</code>: timestamp do evento.</li>
-      </ul>
-    </div>
-
-    <div class="card">
       <h2 id="t_s5_h">5) Dúvidas comuns</h2>
       <p class="muted" id="t_s5_p">Respostas objetivas para quem está implementando o player pela primeira vez.</p>
       <h3 id="t_q1">O botão de CTA não apareceu. O que pode ser?</h3>
@@ -199,10 +199,10 @@ PlayVSL.init({
         seoDesc:'FAQ do PlayVSL com embed rápido, eventos onPlay/onPause/onEvent, integração com n8n e exemplos práticos.',
         h1:'FAQ PlayVSL', intro:'Guia rápido de embed, eventos e integrações.', back:'Voltar',
         s1h:'1) Como embedar o PlayVSL?', s1p:'Copie este bloco e cole na sua página. Troque apenas a URL do YouTube e o link do botão.',
-        s2h:'4) Quais eventos existem?', s2p:'Eventos servem para medir comportamento do usuário (play, pausa, clique no CTA, conclusão etc.). Você pode usar callbacks específicos ou centralizar tudo em onEvent.',
+        s2h:'3) Quais eventos existem?', s2p:'Eventos servem para medir comportamento do usuário (play, pausa, clique no CTA, conclusão etc.). Você pode usar callbacks específicos ou centralizar tudo em onEvent.',
         s3h:'2) Como fazer “sumir elementos acima do vídeo no play”?', s3p1:'Use este padrão quando quiser focar o usuário no vídeo. No play, você esconde os blocos de cima; no pause, volta a mostrar.',
         s3p2:'A forma correta é: classe nos elementos que quer ocultar (ex.: h1 e h3) e uma classe de estado no body (ex.: video-playing).',
-        s4h:'3) Como enviar eventos via webhook?', s4p:'Forma mais simples: enviar onEvent para qualquer webhook (n8n, Make, Zapier ou API própria).', s4events:'Eventos possíveis: ready, play, firstPlay, resume, restart, pause, progress, ctaView, ctaClick, complete, error.', s4ph:'Exemplo de payload',
+        s4h:'4) Como enviar eventos via webhook?', s4p:'Forma mais simples: enviar onEvent para qualquer webhook (n8n, Make, Zapier ou API própria).', s4events:'Eventos possíveis: ready, play, firstPlay, resume, restart, pause, progress, ctaView, ctaClick, complete, error.', s4ph:'Exemplo de payload',
         s5h:'5) Dúvidas comuns', s5p:'Respostas objetivas para quem está implementando o player pela primeira vez.',
         q1:'O botão de CTA não apareceu. O que pode ser?', a1:'Verifique buttonShowAtSeconds. Para mostrar no início, use 0.',
         q2:'Quero que o botão abra em nova aba', a2:'Use buttonNewTab: true.',
@@ -214,10 +214,10 @@ PlayVSL.init({
         seoDesc:'PlayVSL FAQ with quick embed, onPlay/onPause/onEvent callbacks, n8n integration and practical examples.',
         h1:'PlayVSL FAQ', intro:'Quick guide for embed, events and integrations.', back:'Back',
         s1h:'1) How to embed PlayVSL?', s1p:'Copy this block and paste it on your page. Replace only the YouTube URL and button link.',
-        s2h:'4) Which events are available?', s2p:'Events help measure user behavior (play, pause, CTA click, completion, etc.). You can use specific callbacks or centralize everything with onEvent.',
+        s2h:'3) Which events are available?', s2p:'Events help measure user behavior (play, pause, CTA click, completion, etc.). You can use specific callbacks or centralize everything with onEvent.',
         s3h:'2) How to hide elements above the video on play?', s3p1:'Use this pattern when you want to keep focus on the video. On play, hide top blocks; on pause, show them again.',
         s3p2:'Correct pattern: class on elements to hide (e.g., h1/h3) and a body state class (e.g., video-playing).',
-        s4h:'3) How to send events via webhook?', s4p:'Simplest way: send onEvent to any webhook (n8n, Make, Zapier, or your own API).', s4events:'Available events: ready, play, firstPlay, resume, restart, pause, progress, ctaView, ctaClick, complete, error.', s4ph:'Payload example',
+        s4h:'4) How to send events via webhook?', s4p:'Simplest way: send onEvent to any webhook (n8n, Make, Zapier, or your own API).', s4events:'Available events: ready, play, firstPlay, resume, restart, pause, progress, ctaView, ctaClick, complete, error.', s4ph:'Payload example',
         s5h:'5) Common questions', s5p:'Short answers for first-time implementation.',
         q1:'CTA button did not appear. Why?', a1:'Check buttonShowAtSeconds. To show from the start, use 0.',
         q2:'I want the button to open in a new tab', a2:'Use buttonNewTab: true.',
