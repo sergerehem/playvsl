@@ -70,13 +70,15 @@
     <div class="card">
       <h2>3) Como fazer “sumir elementos acima do vídeo no play”?</h2>
       <p class="muted">Use este padrão quando quiser focar o usuário no vídeo. No play, você esconde os blocos de cima; no pause, volta a mostrar.</p>
+      <p class="muted">Dica: aplique classes nos elementos que devem sumir (por exemplo, seu título <code>h1</code> e subtítulo <code>h3</code>).</p>
+      <pre><code>&lt;h1 class="hide-on-play"&gt;Título principal&lt;/h1&gt;
+&lt;h3 class="hide-on-play"&gt;Subtítulo da oferta&lt;/h3&gt;</code></pre>
       <pre><code>PlayVSL.init({
   ...,
   onPlay: () =&gt; document.body.classList.add('video-playing'),
   onPause: () =&gt; document.body.classList.remove('video-playing')
 });</code></pre>
-      <pre><code>.video-playing .headline,
-.video-playing .preheader {
+      <pre><code>.video-playing .hide-on-play {
   display:none;
 }</code></pre>
     </div>
