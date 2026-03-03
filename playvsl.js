@@ -592,7 +592,9 @@
       }
 
       function startFirstMutedOverlay(){
-        poster.style.display='none';
+        // mantém poster até PLAY real do teaser para evitar flash preto no pré-início
+        keepPosterUntilPlay = true;
+        poster.style.display='block';
         firstAudio.style.display='block';
         startAt(0, false); // autoplay mudo
       }
