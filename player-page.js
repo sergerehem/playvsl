@@ -123,7 +123,24 @@
 
   App.snippet = function(c){
     const closeScript = '</scr' + 'ipt>';
-    return `<div id="playvsl"></div>\n<script src="https://playvsl.digi6.com.br/playvsl.js">${closeScript}\n<script>\n  PlayVSL.init({\n    container:'#playvsl',\n    youtubeUrl:'${c.youtubeUrl}',\n    primaryColor:'${c.primaryColor}',\n    buttonUrl:'${c.buttonUrl}',\n    buttonText:'${c.buttonText.replace(/'/g,"\\'")}',\n    buttonShowAtSeconds:${c.buttonShowAtSeconds},\n    buttonNewTab:${c.buttonNewTab},\n    buttonRounded:${!!c.buttonRounded},\n    buttonBg:'${c.buttonBg}',\n    buttonRevealEffect:'${c.buttonRevealEffect || 'fade'}',\n    buttonFontFamily:'${c.buttonFontFamily || 'arial'}',\n    buttonFontSize:${Number(c.buttonFontSize || 20)},\n    buttonBold:${typeof c.buttonBold === 'undefined' ? true : !!c.buttonBold},\n    lang:'${c.lang || App.LANG}'\n  });\n${closeScript}`;
+    const cfg = {
+      container:'#playvsl',
+      youtubeUrl:c.youtubeUrl,
+      primaryColor:c.primaryColor,
+      buttonUrl:c.buttonUrl,
+      buttonText:(c.buttonText || '').replace(/'/g,"\\'"),
+      buttonShowAtSeconds:Number(c.buttonShowAtSeconds || 0),
+      buttonNewTab:!!c.buttonNewTab,
+      buttonRounded:!!c.buttonRounded,
+      buttonBg:c.buttonBg,
+      buttonRevealEffect:c.buttonRevealEffect || 'fade',
+      buttonFontFamily:c.buttonFontFamily || 'arial',
+      buttonFontSize:Number(c.buttonFontSize || 20),
+      buttonBold:typeof c.buttonBold === 'undefined' ? true : !!c.buttonBold,
+      lang:c.lang || App.LANG
+    };
+
+    return `<div id="playvsl"></div>\n<script src="https://playvsl.digi6.com.br/playvsl.js" defer>${closeScript}\n<script>\n  window.addEventListener('load', function () {\n    if (!window.PlayVSL || typeof window.PlayVSL.init !== 'function') return;\n\n    PlayVSL.init({\n      container: '${cfg.container}',\n      youtubeUrl: '${cfg.youtubeUrl}',\n      primaryColor: '${cfg.primaryColor}',\n      buttonUrl: '${cfg.buttonUrl}',\n      buttonText: '${cfg.buttonText}',\n      buttonShowAtSeconds: ${cfg.buttonShowAtSeconds},\n      buttonNewTab: ${cfg.buttonNewTab},\n      buttonRounded: ${cfg.buttonRounded},\n      buttonBg: '${cfg.buttonBg}',\n      buttonRevealEffect: '${cfg.buttonRevealEffect}',\n      buttonFontFamily: '${cfg.buttonFontFamily}',\n      buttonFontSize: ${cfg.buttonFontSize},\n      buttonBold: ${cfg.buttonBold},\n      lang: '${cfg.lang}'\n    });\n  });\n${closeScript}`;
   };
 
   App.extractYouTubeId = function(input){
