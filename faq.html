@@ -78,8 +78,8 @@ PlayVSL.init({
     </div>
 
     <div class="card">
-      <h2 id="t_s4_h">4) Como enviar eventos para n8n?</h2>
-      <p class="muted" id="t_s4_p">Forma mais simples: enviar <code>onEvent</code> para um webhook n8n e gravar em planilha/banco.</p>
+      <h2 id="t_s4_h">4) Como enviar eventos via webhook?</h2>
+      <p class="muted" id="t_s4_p">Forma mais simples: enviar <code>onEvent</code> para qualquer webhook (n8n, Make, Zapier ou API própria).</p>
       <pre><code>const WEBHOOK = 'https://SEU-N8N/webhook/playvsl-events';
 
 PlayVSL.init({
@@ -93,6 +93,21 @@ PlayVSL.init({
     }).catch(()=&gt;{});
   }
 });</code></pre>
+
+      <h3 id="t_s4_payload_h">Exemplo de payload</h3>
+      <pre><code>{
+  "event": "ctaClick",
+  "videoId": "wqGiHRWeTR0",
+  "sessionId": "9e4e...",
+  "visitorId": "d31b...",
+  "pageUrl": "https://seusite.com/vsl",
+  "lang": "pt",
+  "currentTime": 312.4,
+  "duration": 1320.0,
+  "engagedTime": 298.1,
+  "ctaShown": true,
+  "ts": 1772490000000
+}</code></pre>
     </div>
 
     <div class="card">
@@ -117,7 +132,7 @@ PlayVSL.init({
         s2h:'2) Quais eventos existem?', s2p:'Eventos servem para medir comportamento do usuário (play, pausa, clique no CTA, conclusão etc.). Você pode usar callbacks específicos ou centralizar tudo em onEvent.',
         s3h:'3) Como fazer “sumir elementos acima do vídeo no play”?', s3p1:'Use este padrão quando quiser focar o usuário no vídeo. No play, você esconde os blocos de cima; no pause, volta a mostrar.',
         s3p2:'A forma correta é: classe nos elementos que quer ocultar (ex.: h1 e h3) e uma classe de estado no body (ex.: video-playing).',
-        s4h:'4) Como enviar eventos para n8n?', s4p:'Forma mais simples: enviar onEvent para um webhook n8n e gravar em planilha/banco.',
+        s4h:'4) Como enviar eventos via webhook?', s4p:'Forma mais simples: enviar onEvent para qualquer webhook (n8n, Make, Zapier ou API própria).', s4ph:'Exemplo de payload',
         s5h:'5) Dúvidas comuns', s5p:'Respostas objetivas para quem está implementando o player pela primeira vez.',
         q1:'O botão de CTA não apareceu. O que pode ser?', a1:'Verifique buttonShowAtSeconds. Para mostrar no início, use 0.',
         q2:'Quero que o botão abra em nova aba', a2:'Use buttonNewTab: true.',
@@ -131,7 +146,7 @@ PlayVSL.init({
         s2h:'2) Which events are available?', s2p:'Events help measure user behavior (play, pause, CTA click, completion, etc.). You can use specific callbacks or centralize everything with onEvent.',
         s3h:'3) How to hide elements above the video on play?', s3p1:'Use this pattern when you want to keep focus on the video. On play, hide top blocks; on pause, show them again.',
         s3p2:'Correct pattern: class on elements to hide (e.g., h1/h3) and a body state class (e.g., video-playing).',
-        s4h:'4) How to send events to n8n?', s4p:'Simplest way: send onEvent to an n8n webhook and store in sheets/database.',
+        s4h:'4) How to send events via webhook?', s4p:'Simplest way: send onEvent to any webhook (n8n, Make, Zapier, or your own API).', s4ph:'Payload example',
         s5h:'5) Common questions', s5p:'Short answers for first-time implementation.',
         q1:'CTA button did not appear. Why?', a1:'Check buttonShowAtSeconds. To show from the start, use 0.',
         q2:'I want the button to open in a new tab', a2:'Use buttonNewTab: true.',
@@ -146,7 +161,7 @@ PlayVSL.init({
       document.getElementById('seo_desc')?.setAttribute('content', t.seoDesc);
       const map = {
         t_h1:t.h1,t_intro:t.intro,t_back:t.back,t_s1_h:t.s1h,t_s1_p:t.s1p,t_s2_h:t.s2h,t_s2_p:t.s2p,
-        t_s3_h:t.s3h,t_s3_p1:t.s3p1,t_s3_p2:t.s3p2,t_s4_h:t.s4h,t_s4_p:t.s4p,t_s5_h:t.s5h,t_s5_p:t.s5p,
+        t_s3_h:t.s3h,t_s3_p1:t.s3p1,t_s3_p2:t.s3p2,t_s4_h:t.s4h,t_s4_p:t.s4p,t_s4_payload_h:t.s4ph,t_s5_h:t.s5h,t_s5_p:t.s5p,
         t_q1:t.q1,t_a1:t.a1,t_q2:t.q2,t_a2:t.a2,t_q3:t.q3,t_a3:t.a3
       };
       Object.entries(map).forEach(([id,val])=>{ const el=document.getElementById(id); if(el) el.textContent = val; });
