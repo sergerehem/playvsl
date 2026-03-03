@@ -3,7 +3,7 @@
   const $ = App.$;
 
   App.getPlayerStateForBaseVideo = function(){
-    try{ const raw = localStorage.getItem('playvsl_wqGiHRWeTR0') || localStorage.getItem('smartvsl_wqGiHRWeTR0'); if(!raw) return null; return JSON.parse(raw); }catch(e){ return null; }
+    try{ const raw = localStorage.getItem('playvsl_wqGiHRWeTR0'); if(!raw) return null; return JSON.parse(raw); }catch(e){ return null; }
   };
   App.canUnlock = function(){ const st = App.getPlayerStateForBaseVideo(); return !!(st && st.started === true && st.cta === true); };
 

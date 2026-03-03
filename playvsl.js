@@ -154,14 +154,13 @@
       }
       const vid = ytid(cfg.youtubeUrl);
       const key = `playvsl_${vid}`;
-      const legacyKey = `smartvsl_${vid}`;
       const visitorKey = 'playvsl_visitor_id';
       const sessionKey = 'playvsl_session_id';
       function uuid(){ return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,(c)=>{ const r=Math.random()*16|0; const v=c==='x'?r:(r&0x3|0x8); return v.toString(16); }); }
       const visitorId = localStorage.getItem(visitorKey) || (localStorage.setItem(visitorKey, uuid()), localStorage.getItem(visitorKey));
       const sessionId = sessionStorage.getItem(sessionKey) || (sessionStorage.setItem(sessionKey, uuid()), sessionStorage.getItem(sessionKey));
       const now = Date.now();
-      const state = JSON.parse(localStorage.getItem(key) || localStorage.getItem(legacyKey) || '{"max":0,"cta":false,"ts":0,"started":false,"engaged":0,"anchorSec":null}');
+      const state = JSON.parse(localStorage.getItem(key) || '{"max":0,"cta":false,"ts":0,"started":false,"engaged":0,"anchorSec":null}');
       // saneamento de tipos (evita lixo de versões antigas)
       state.max = Number(state.max || 0);
       state.engaged = Number(state.engaged || 0);
@@ -299,7 +298,7 @@
         if(typeof cfg.onEvent === 'function'){ try{ cfg.onEvent(payload); }catch(e){} }
       }
 
-      function save(){ state.ts=Date.now(); localStorage.setItem(key, JSON.stringify(state)); try{ localStorage.removeItem(legacyKey); }catch(e){} }
+      function save(){ state.ts=Date.now(); localStorage.setItem(key, JSON.stringify(state)); }
       function showCTA(force=false){
         const alwaysShow = Number(cfg.buttonShowAtSeconds) <= 0;
         if(!state.started && !force && !alwaysShow) return;
@@ -573,6 +572,5 @@
       }
     }
   };
-  // compatibilidade retroativa
-  window.SmartVSL = window.PlayVSL;
+  // alias antigo removido
 })();

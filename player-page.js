@@ -69,7 +69,7 @@
     return String(input||'').trim();
   };
 
-  App.resetPreviewState = function(cfg){ try{ const vid=App.extractYouTubeId(cfg.youtubeUrl); if(vid){ localStorage.removeItem(`playvsl_${vid}`); localStorage.removeItem(`smartvsl_${vid}`); } }catch(e){} };
+  App.resetPreviewState = function(cfg){ try{ const vid=App.extractYouTubeId(cfg.youtubeUrl); if(vid){ localStorage.removeItem(`playvsl_${vid}`); } }catch(e){} };
 
   App.applyShowAtBounds = function(durationSec){
     const el = $('buttonShowAtSeconds');
