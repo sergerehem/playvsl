@@ -438,6 +438,8 @@
       let pendingStart = null;
       let destroyed = false;
       let hadTrustedInteraction = false;
+      let keepPosterUntilPlay = false;
+      let suppressShieldUntil = 0;
       function update(){
         if(destroyed) return;
         if(!player || typeof player.getCurrentTime!=='function') return;
@@ -512,7 +514,7 @@
           pendingStart = { sec:Number(sec||0), unmute: !!unmute };
           return;
         }
-        poster.style.display='none';
+        if(!keepPosterUntilPlay) poster.style.display='none';
         if(playerHost){
           playerHost.classList.remove('sp-ended');
           playerHost.classList.remove('sp-paused');
@@ -561,6 +563,8 @@
             playerHost.classList.remove('sp-paused');
           }
           // mantém poster até PLAY também no resume para evitar flash/tela preta
+          keepPosterUntilPlay = true;
+          suppressShieldUntil = Date.now() + 700;
           if(poster) poster.style.display = 'block';
           if(firstAudio) firstAudio.style.display='none';
           if(pausePlay) pausePlay.style.display='none';
@@ -653,6 +657,7 @@
               if(destroyed) return;
               const st = ev.data;
               if(st===1){
+                keepPosterUntilPlay = false;
                 host.dataset.spEnded = '0';
                 if(playerHost){
                   playerHost.classList.remove('sp-ended');
@@ -742,6 +747,7 @@
         clickShield.addEventListener('mousedown', (e)=>{ if(e.button===2) e.preventDefault(); });
         clickShield.addEventListener('auxclick', (e)=>e.preventDefault());
         clickShield.addEventListener('click', ()=>{
+          if(Date.now() < suppressShieldUntil) return;
           hadTrustedInteraction = true;
           if(!player || !player.getPlayerState) return;
           if(firstAudio && firstAudio.style.display==='block') return; // mantém fluxo do primeiro clique
