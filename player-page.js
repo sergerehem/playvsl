@@ -74,7 +74,8 @@
         buttonShowAtSeconds: Number($('buttonShowAtSeconds')?.value || 10),
         buttonNewTab: !!$('buttonNewTab')?.checked,
         buttonRounded: !!$('buttonRounded')?.checked,
-        buttonBg: $('buttonBg')?.value || '#C62116'
+        buttonBg: $('buttonBg')?.value || '#C62116',
+        buttonRevealEffect: $('buttonRevealEffect')?.value || 'fade'
       };
       localStorage.setItem(BUILDER_KEY, JSON.stringify(data));
     }catch(e){}
@@ -93,6 +94,7 @@
       if($('buttonNewTab')) $('buttonNewTab').checked = !!c.buttonNewTab;
       if($('buttonRounded')) $('buttonRounded').checked = !!c.buttonRounded;
       if($('buttonBg') && c.buttonBg) $('buttonBg').value = c.buttonBg;
+      if($('buttonRevealEffect') && c.buttonRevealEffect) $('buttonRevealEffect').value = c.buttonRevealEffect;
     }catch(e){}
   };
 
@@ -100,7 +102,7 @@
     return {
       container:'#playvsl-preview', youtubeUrl:'https://youtu.be/wqGiHRWeTR0', primaryColor:'#C62116',
       buttonUrl:'https://playvsl.digi6.com.br/', buttonText:App.t('defaultButton'),
-      buttonShowAtSeconds:10, buttonNewTab:true, buttonRounded:true, buttonBg:'#C62116', lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause, onEvent: App.trackLandingEvent
+      buttonShowAtSeconds:10, buttonNewTab:true, buttonRounded:true, buttonBg:'#C62116', buttonRevealEffect:'fade', lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause, onEvent: App.trackLandingEvent
     };
   };
 
@@ -109,13 +111,13 @@
       container:'#playvsl-preview', youtubeUrl:$('youtubeUrl').value.trim(), primaryColor:$('primaryColor').value,
       buttonUrl:$('buttonUrl').value.trim(), buttonText:$('buttonText').value,
       buttonShowAtSeconds:Number($('buttonShowAtSeconds').value||10), buttonNewTab:$('buttonNewTab').checked,
-      buttonRounded:$('buttonRounded').checked, buttonBg:$('buttonBg').value, lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause, onEvent: App.trackLandingEvent
+      buttonRounded:$('buttonRounded').checked, buttonBg:$('buttonBg').value, buttonRevealEffect:$('buttonRevealEffect').value, lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause, onEvent: App.trackLandingEvent
     };
   };
 
   App.snippet = function(c){
     const closeScript = '</scr' + 'ipt>';
-    return `<div id="playvsl"></div>\n<script src="https://playvsl.digi6.com.br/playvsl.js">${closeScript}\n<script>\n  PlayVSL.init({\n    container:'#playvsl',\n    youtubeUrl:'${c.youtubeUrl}',\n    primaryColor:'${c.primaryColor}',\n    buttonUrl:'${c.buttonUrl}',\n    buttonText:'${c.buttonText.replace(/'/g,"\\'")}',\n    buttonShowAtSeconds:${c.buttonShowAtSeconds},\n    buttonNewTab:${c.buttonNewTab},\n    buttonRounded:${!!c.buttonRounded},\n    buttonBg:'${c.buttonBg}',\n    lang:'${c.lang || App.LANG}'\n  });\n${closeScript}`;
+    return `<div id="playvsl"></div>\n<script src="https://playvsl.digi6.com.br/playvsl.js">${closeScript}\n<script>\n  PlayVSL.init({\n    container:'#playvsl',\n    youtubeUrl:'${c.youtubeUrl}',\n    primaryColor:'${c.primaryColor}',\n    buttonUrl:'${c.buttonUrl}',\n    buttonText:'${c.buttonText.replace(/'/g,"\\'")}',\n    buttonShowAtSeconds:${c.buttonShowAtSeconds},\n    buttonNewTab:${c.buttonNewTab},\n    buttonRounded:${!!c.buttonRounded},\n    buttonBg:'${c.buttonBg}',\n    buttonRevealEffect:'${c.buttonRevealEffect || 'fade'}',\n    lang:'${c.lang || App.LANG}'\n  });\n${closeScript}`;
   };
 
   App.extractYouTubeId = function(input){
