@@ -30,7 +30,7 @@
 .sp-bar-fill{height:100%;width:0;background:var(--sp-primary,#c62116);transition:width .35s linear}
 .sp-time{display:none!important}
 .sp-prestart .sp-bar,.sp-prestart .sp-time,.sp-prestart .sp-pause-play{display:none}
-.sp-cta{display:none;margin:22px auto 0 auto;padding:14px 28px;background:var(--sp-cta-bg,#1a73e8);color:var(--sp-cta-text,#fff);text-decoration:none;border:0;outline:none;box-shadow:none;border-radius:var(--sp-cta-radius,999px);font-weight:700;text-align:center;min-width:220px;width:fit-content;-webkit-appearance:none;appearance:none;transition:filter .18s ease,transform .18s ease,opacity .28s ease}
+.sp-cta{display:none;margin:22px auto 0 auto;padding:var(--sp-cta-pad-y,14px) var(--sp-cta-pad-x,28px);background:var(--sp-cta-bg,#1a73e8);color:var(--sp-cta-text,#fff);text-decoration:none;border:0;outline:none;box-shadow:none;border-radius:var(--sp-cta-radius,999px);font-weight:700;font-family:var(--sp-cta-font,Inter,Arial,sans-serif);font-size:var(--sp-cta-size,20px);line-height:1.1;text-align:center;min-width:220px;width:fit-content;-webkit-appearance:none;appearance:none;transition:filter .18s ease,transform .18s ease,opacity .28s ease}
 .sp-cta:hover,.sp-cta:focus-visible{color:var(--sp-cta-text,#fff);text-decoration:none;filter:brightness(.93);transform:translateY(-1px)}
 .sp-cta:active{color:var(--sp-cta-text,#fff);filter:brightness(.88);transform:translateY(0)}
 .sp-cta:visited{color:var(--sp-cta-text,#fff)}
@@ -118,6 +118,8 @@
         buttonRounded:true,
         buttonNewTab:false,
         buttonRevealEffect:'fade', // none | fade | pulse
+        buttonFontFamily:'sans', // sans | serif | mono
+        buttonFontSize:20, // 16 | 20 | 24
         teaserProgressDurationSeconds:240, // menor = barra anda mais rápido
         teaserProgressCurve:0.58, // <1 acelera mais o começo
         teaserPlaybackRate:2,
@@ -149,6 +151,8 @@
       if (typeof cfg.ctaRounded !== 'undefined') cfg.buttonRounded = cfg.ctaRounded;
       if (typeof cfg.ctaNewTab !== 'undefined') cfg.buttonNewTab = cfg.ctaNewTab;
       if (cfg.ctaEffect) cfg.buttonRevealEffect = cfg.ctaEffect;
+      if (cfg.ctaFontFamily) cfg.buttonFontFamily = cfg.ctaFontFamily;
+      if (typeof cfg.ctaFontSize !== 'undefined') cfg.buttonFontSize = cfg.ctaFontSize;
       if (typeof cfg.fakeDurationSeconds !== 'undefined') cfg.teaserProgressDurationSeconds = cfg.fakeDurationSeconds;
       if (typeof cfg.fakeCurve !== 'undefined') cfg.teaserProgressCurve = cfg.fakeCurve;
       if (typeof cfg.fakePlaybackRate !== 'undefined') cfg.teaserPlaybackRate = cfg.fakePlaybackRate;
@@ -222,6 +226,20 @@
       host.style.setProperty('--sp-cta-bg', btnBg);
       host.style.setProperty('--sp-cta-text', contrastText(btnBg));
       host.style.setProperty('--sp-cta-radius', cfg.buttonRounded ? '999px' : '10px');
+      const ff = String(cfg.buttonFontFamily || 'sans').toLowerCase();
+      const fontMap = {
+        sans: 'Inter, Arial, sans-serif',
+        serif: 'Georgia, "Times New Roman", serif',
+        mono: '"Roboto Mono", "Courier New", monospace'
+      };
+      host.style.setProperty('--sp-cta-font', fontMap[ff] || fontMap.sans);
+      const fs = Number(cfg.buttonFontSize || 20);
+      const ctaSize = fs <= 17 ? 16 : fs >= 23 ? 24 : 20;
+      host.style.setProperty('--sp-cta-size', `${ctaSize}px`);
+      const padMap = {16:['12px','22px'],20:['14px','28px'],24:['16px','34px']};
+      const pads = padMap[ctaSize] || padMap[20];
+      host.style.setProperty('--sp-cta-pad-y', pads[0]);
+      host.style.setProperty('--sp-cta-pad-x', pads[1]);
 
       host.innerHTML = `
         <div class="sp-shell"><div class="sp-ratio" style="padding-top:${pad}%">

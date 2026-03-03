@@ -19,7 +19,7 @@
   const formSavedOnLoad = localStorage.getItem('playvsl_lead_sent') === '1';
   if(formSavedOnLoad || App.params.get('unlock') === '1') App.unlockFlow();
 
-  ['youtubeUrl','primaryColor','buttonUrl','buttonText','buttonShowAtSeconds','buttonBg','buttonRevealEffect'].forEach((id)=>{
+  ['youtubeUrl','primaryColor','buttonUrl','buttonText','buttonShowAtSeconds','buttonBg','buttonRevealEffect','buttonFontFamily','buttonFontSize'].forEach((id)=>{
     const el=$(id); if(!el) return;
     el.addEventListener('input', App.quickUpdate);
     el.addEventListener('change', App.quickUpdate);
