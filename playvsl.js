@@ -320,19 +320,7 @@
       const timeEl = host.querySelector('#sp-time');
       if(!state.started) host.classList.add('sp-prestart');
       const poster = host.querySelector('#sp-poster');
-      // começa com hqdefault (sempre disponível) e só promove para maxres se existir
-      (function ensurePosterQuality(){
-        if(!poster) return;
-        const maxres = `https://img.youtube.com/vi/${vid}/maxresdefault.jpg`;
-        const img = new Image();
-        img.onload = ()=>{
-          if(img.naturalWidth && img.naturalWidth >= 720){
-            poster.style.backgroundImage = `url('${maxres}')`;
-          }
-        };
-        img.onerror = ()=>{};
-        img.src = maxres;
-      })();
+      // teaser sempre com hqdefault para carregamento mais leve e previsível
       const firstAudio = host.querySelector('#sp-first-audio');
       if(!state.started && firstAudio) firstAudio.style.display = 'block';
       const pausePlay = host.querySelector('#sp-pause-play');
