@@ -17,15 +17,21 @@
 
   function send(webhookUrl, payload, debug){
     if(!webhookUrl) return;
-    const body = JSON.stringify(payload);
 
-    // Evita CORS com credentials implícitos do sendBeacon em cenários cross-domain.
-    // Mantemos fetch no-cors para máxima compatibilidade em embeds externos.
+    // Form-urlencoded evita preflight CORS e facilita parsing em n8n (body.event, body.videoId, ...)
+    const params = new URLSearchParams();
+    Object.entries(payload || {}).forEach(([k,v])=>{
+      if(v === undefined) return;
+      if(v === null) { params.set(k, ''); return; }
+      if(typeof v === 'object') params.set(k, JSON.stringify(v));
+      else params.set(k, String(v));
+    });
+
     fetch(webhookUrl, {
       method:'POST',
-      body,
+      body: params,
       keepalive:true,
-      mode:'no-cors',
+      mode:'cors',
       credentials:'omit'
     }).catch((e)=>{ if(debug) console.warn('[PlayVSLStats] fetch failed', e); });
   }
