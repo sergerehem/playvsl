@@ -17,19 +17,13 @@
 
   function send(webhookUrl, payload, debug){
     if(!webhookUrl) return;
+    const body = JSON.stringify(payload || {});
 
-    // Form-urlencoded evita preflight CORS e facilita parsing em n8n (body.event, body.videoId, ...)
-    const params = new URLSearchParams();
-    Object.entries(payload || {}).forEach(([k,v])=>{
-      if(v === undefined) return;
-      if(v === null) { params.set(k, ''); return; }
-      if(typeof v === 'object') params.set(k, JSON.stringify(v));
-      else params.set(k, String(v));
-    });
-
+    // Sem sendBeacon para evitar conflitos de credentials/CORS em embeds externos.
     fetch(webhookUrl, {
       method:'POST',
-      body: params,
+      headers:{'Content-Type':'application/json'},
+      body,
       keepalive:true,
       mode:'cors',
       credentials:'omit'
