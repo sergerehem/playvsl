@@ -296,8 +296,8 @@
         return Object.assign({
           event: extra.event || null,
           videoId: vid,
-          sessionId,
-          visitorId,
+          sessionId: String(sessionId || '').replace(/^=+/, ''),
+          visitorId: String(visitorId || '').replace(/^=+/, ''),
           pageUrl: location.href,
           pageOrigin: location.origin,
           pageHost: location.host,
