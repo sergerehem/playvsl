@@ -417,6 +417,8 @@
       }
 
       let player, timer, fitTimer;
+      let playerReady = false;
+      let pendingStart = null;
       let destroyed = false;
       function update(){
         if(destroyed) return;
@@ -474,7 +476,16 @@
         return true;
       }
 
+      function can(method){ return !!(player && typeof player[method] === 'function'); }
+      function currentSec(){
+        try{ return can('getCurrentTime') ? Math.max(0, Number(player.getCurrentTime() || 0)) : 0; }catch(e){ return 0; }
+      }
+
       function startAt(sec, unmute=true){
+        if(!playerReady || !can('playVideo')){
+          pendingStart = { sec:Number(sec||0), unmute: !!unmute };
+          return;
+        }
         poster.style.display='none';
         if(playerHost){
           playerHost.classList.remove('sp-ended');
@@ -495,22 +506,22 @@
           host.classList.remove('sp-prestart');
           emit('play', { firstPlay:firstRealPlay });
           emit(firstRealPlay ? 'firstPlay' : 'resume', {});
-          player.unMute();
-          try { player.setPlaybackRate(Number(cfg.playbackRate) || 1); } catch(e) {}
+          if(can('unMute')) player.unMute();
+          try { if(can('setPlaybackRate')) player.setPlaybackRate(Number(cfg.playbackRate) || 1); } catch(e) {}
 
           if(firstRealPlay){
-            try { player.seekTo(0, true); } catch(e) {}
+            try { if(can('seekTo')) player.seekTo(0, true); } catch(e) {}
           } else if(sec > 0){
-            try { player.seekTo(sec, true); } catch(e) {}
+            try { if(can('seekTo')) player.seekTo(sec, true); } catch(e) {}
           }
         } else {
           host.classList.add('sp-prestart');
-          player.mute();
-          try { player.setPlaybackRate(Number(cfg.teaserPlaybackRate) || 2); } catch(e) {}
-          if(sec>0){ try { player.seekTo(sec,true); } catch(e) {} }
+          if(can('mute')) player.mute();
+          try { if(can('setPlaybackRate')) player.setPlaybackRate(Number(cfg.teaserPlaybackRate) || 2); } catch(e) {}
+          if(sec>0){ try { if(can('seekTo')) player.seekTo(sec,true); } catch(e) {} }
         }
 
-        player.playVideo();
+        if(can('playVideo')) player.playVideo();
       }
 
       function bindResumeButtons(){
@@ -526,6 +537,7 @@
 
       function destroy(){
         destroyed = true;
+        playerReady = false;
         try{ if(timer) clearInterval(timer); }catch(e){}
         try{ if(fitTimer) clearInterval(fitTimer); }catch(e){}
         try{ window.removeEventListener('resize', fitIframe16x9); }catch(e){}
@@ -552,10 +564,11 @@
       function createPlayer(){
         player = new YT.Player(host.querySelector('#sp-player-target'), {
           videoId: vid,
-          playerVars: {autoplay:0,controls:0,rel:0,modestbranding:1,iv_load_policy:3,playsinline:1,origin:location.origin},
+          playerVars: {autoplay:0,controls:0,rel:0,modestbranding:1,iv_load_policy:3,playsinline:1},
           events: {
             onReady: ()=>{
               if(destroyed) return;
+              playerReady = true;
               timer=setInterval(update,500);
               emit('ready', {});
               if(state.cta) showCTA();
@@ -567,6 +580,13 @@
               let tries = 0;
               fitTimer = setInterval(()=>{ tries++; const ok = fitIframe16x9(); if(ok && tries>8) clearInterval(fitTimer); if(tries>20) clearInterval(fitTimer); }, 200);
               window.addEventListener('resize', fitIframe16x9);
+
+              if(pendingStart){
+                const ps = pendingStart;
+                pendingStart = null;
+                startAt(ps.sec, ps.unmute);
+                return;
+              }
 
               const resumed = showResumeOnLoadIfNeeded();
               if(!resumed) startFirstMutedOverlay();
@@ -619,7 +639,7 @@
 
       poster.addEventListener('click', ()=>{
         if(playerHost && playerHost.classList.contains('sp-paused')){
-          startAt(Math.max(0, player.getCurrentTime ? player.getCurrentTime() : 0), true);
+          startAt(currentSec(), true);
           return;
         }
         askResumeAndPlay();
@@ -628,7 +648,7 @@
         firstAudio.style.display='none';
         // no primeiro play real, começa do zero (evita "pulinho" do teaser)
         if(!state.started) startAt(0, true);
-        else startAt(Math.max(0, player.getCurrentTime ? player.getCurrentTime() : 0), true);
+        else startAt(currentSec(), true);
       });
       pausePlay.addEventListener('click', ()=>{
         const ended = host.dataset.spEnded === '1';
@@ -641,7 +661,7 @@
           startAt(0, true);
           return;
         }
-        startAt(Math.max(0, player.getCurrentTime ? player.getCurrentTime() : 0), true);
+        startAt(currentSec(), true);
       });
 
       // Intercepta cliques para impedir menu nativo do YouTube
@@ -654,7 +674,7 @@
           if(firstAudio && firstAudio.style.display==='block') return; // mantém fluxo do primeiro clique
           const st = player.getPlayerState();
           if(st===1) player.pauseVideo();
-          else startAt(Math.max(0, player.getCurrentTime ? player.getCurrentTime() : 0), true);
+          else startAt(currentSec(), true);
         });
       }
     }
