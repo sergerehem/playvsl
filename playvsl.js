@@ -546,7 +546,8 @@
             playerHost.classList.remove('sp-ended');
             playerHost.classList.remove('sp-paused');
           }
-          if(poster) poster.style.display='none';
+          // mantém poster por cima até o player confirmar PLAY (evita flash de tela preta)
+          if(poster) poster.style.display='block';
           if(firstAudio) firstAudio.style.display='none';
           if(pausePlay) pausePlay.style.display='none';
           host.classList.remove('sp-prestart');
