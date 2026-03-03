@@ -28,10 +28,9 @@
 
     fetch(webhookUrl, {
       method:'POST',
-      headers:{'Content-Type':'application/json'},
       body,
       keepalive:true,
-      mode:'cors',
+      mode:'no-cors',
       credentials:'omit'
     }).catch((e)=>{ if(debug) console.warn('[PlayVSLStats] fetch failed', e); });
   }
