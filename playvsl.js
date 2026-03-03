@@ -1,15 +1,14 @@
 (function(){
   const SMARTPLAYER_CSS = `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700&family=Open+Sans:wght@400;700&family=Poppins:wght@400;700&family=Roboto:wght@400;500;700&display=swap');
-.sp-wrap{max-width:980px;margin:24px auto;padding:0;font-family:Inter,Arial,sans-serif;color:#e8edf2}
-.sp-shell{position:relative;width:100%;background:#000;border-radius:0;overflow:hidden;box-shadow:none;border:0;box-sizing:border-box}
+.sp-wrap{max-width:980px;margin:24px auto;padding:0 16px;font-family:Inter,Arial,sans-serif;color:#e8edf2}
+.sp-shell{position:relative;background:#000;border-radius:0;overflow:hidden;box-shadow:none}
 .sp-ratio{position:relative;padding-top:56.25%}
-.sp-player{position:absolute;inset:0;background:#000;overflow:hidden;z-index:1}
-.sp-player::after{content:"";position:absolute;top:0;right:0;width:3px;height:100%;background:#000;z-index:3;pointer-events:none}
+.sp-player{position:absolute;inset:0;background:#000;overflow:hidden}
 .sp-player iframe{transition:opacity .78s ease}
 .sp-player.sp-ended iframe,.sp-player.sp-paused iframe{opacity:0;pointer-events:none}
 #sp-player-target{position:absolute;inset:0}
 #sp-click-shield{position:absolute;inset:0;z-index:4;background:transparent;cursor:pointer}
-.sp-player iframe{position:absolute;left:-4px;top:-3px;width:calc(100% + 12px);height:calc(100% + 3px);border:0}
+.sp-player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .sp-overlay-top,.sp-overlay-bottom{display:none}
 .sp-poster{position:absolute;inset:0;background:#000 center/cover no-repeat;display:grid;place-items:center;cursor:pointer;z-index:5}
 .sp-play{width:90px;height:90px;border-radius:999px;border:0;background:rgba(255,255,255,.9);font-size:30px;cursor:pointer}
@@ -28,9 +27,8 @@
 .sp-pause-play svg{width:74%;height:74%;display:block}
 .sp-play-triangle path{fill:var(--sp-contrast,#fff);stroke:var(--sp-contrast,#fff);stroke-width:3;stroke-linejoin:round}
 @media (max-width:900px){.sp-pause-play{width:120px;height:120px}.sp-pause-play svg{width:70%;height:70%}}
-.sp-bar{position:relative;height:6px;margin-top:-1px;background:var(--sp-progress-track,rgba(255,255,255,.2));z-index:30;isolation:isolate;transform:translateZ(0);backface-visibility:hidden}
-.sp-bar::before{content:"";position:absolute;inset:0;background:var(--sp-progress-track,rgba(255,255,255,.2));z-index:1}
-.sp-bar-fill{position:relative;z-index:2;height:100%;width:0;background:var(--sp-primary,#c62116);transition:width .35s linear;transform:translateZ(0);backface-visibility:hidden}
+.sp-bar{position:relative;height:6px;background:var(--sp-progress-track,rgba(255,255,255,.2));z-index:6}
+.sp-bar-fill{height:100%;width:0;background:var(--sp-primary,#c62116);transition:width .35s linear}
 .sp-time{display:none!important}
 .sp-prestart .sp-bar,.sp-prestart .sp-time,.sp-prestart .sp-pause-play{display:none}
 .sp-cta{display:none;margin:22px auto 0 auto;padding:var(--sp-cta-pad-y,14px) var(--sp-cta-pad-x,28px);background:var(--sp-cta-bg,#1a73e8);color:var(--sp-cta-text,#fff);text-decoration:none;border:0;outline:none;box-shadow:none;border-radius:var(--sp-cta-radius,999px);font-weight:var(--sp-cta-weight,700);font-family:var(--sp-cta-font,Inter,Arial,sans-serif);font-size:var(--sp-cta-size,20px);line-height:1.1;text-align:center;min-width:220px;width:fit-content;-webkit-appearance:none;appearance:none;transition:filter .18s ease,transform .18s ease,opacity .28s ease}
@@ -469,10 +467,9 @@
         if(!box || !ifr) return false;
         // força o iframe interno a acompanhar exatamente o container responsivo
         ifr.style.setProperty('position','absolute','important');
-        ifr.style.setProperty('left','-4px','important');
-        ifr.style.setProperty('top','-3px','important');
-        ifr.style.setProperty('width','calc(100% + 12px)','important');
-        ifr.style.setProperty('height','calc(100% + 3px)','important');
+        ifr.style.setProperty('inset','0','important');
+        ifr.style.setProperty('width','100%','important');
+        ifr.style.setProperty('height','100%','important');
         ifr.style.setProperty('transform','none','important');
         ifr.style.setProperty('maxWidth','100%','important');
         ifr.style.setProperty('maxHeight','100%','important');
