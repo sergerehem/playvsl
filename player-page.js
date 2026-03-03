@@ -8,6 +8,21 @@
   };
   App.handlePreviewPause = function(){ document.body.classList.remove('preview-played-locked'); };
 
+  App.trackLandingEvent = function(payload){
+    try{
+      if(!App.isConfiguratorClosed()) return;
+      const evt = payload && payload.event;
+      if(!['firstPlay','ctaView','ctaClick'].includes(evt)) return;
+      if(!App.EVENTS_WEBHOOK) return;
+      fetch(App.EVENTS_WEBHOOK, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(payload),
+        keepalive:true
+      }).catch(()=>{});
+    }catch(e){}
+  };
+
   const BUILDER_KEY = 'playvsl_builder_cfg';
 
   App.saveBuilderPrefs = function(){
@@ -46,7 +61,7 @@
     return {
       container:'#playvsl-preview', youtubeUrl:'https://youtu.be/wqGiHRWeTR0', primaryColor:'#C62116',
       buttonUrl:'https://playvsl.digi6.com.br/', buttonText:App.t('defaultButton'),
-      buttonShowAtSeconds:10, buttonNewTab:true, buttonRounded:true, buttonBg:'#C62116', lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause
+      buttonShowAtSeconds:10, buttonNewTab:true, buttonRounded:true, buttonBg:'#C62116', lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause, onEvent: App.trackLandingEvent
     };
   };
 
@@ -55,7 +70,7 @@
       container:'#playvsl-preview', youtubeUrl:$('youtubeUrl').value.trim(), primaryColor:$('primaryColor').value,
       buttonUrl:$('buttonUrl').value.trim(), buttonText:$('buttonText').value,
       buttonShowAtSeconds:Number($('buttonShowAtSeconds').value||10), buttonNewTab:$('buttonNewTab').checked,
-      buttonRounded:$('buttonRounded').checked, buttonBg:$('buttonBg').value, lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause
+      buttonRounded:$('buttonRounded').checked, buttonBg:$('buttonBg').value, lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause, onEvent: App.trackLandingEvent
     };
   };
 
