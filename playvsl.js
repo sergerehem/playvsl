@@ -539,8 +539,19 @@
       }
 
       function bindResumeButtons(){
-        host.querySelector('#sp-restart').onclick = ()=>{ modal.style.display='none'; state.max=0; state.engaged=0; state.anchorSec=0; save(); emit('restart',{}); startAt(0,true); };
-        host.querySelector('#sp-resume').onclick = ()=>{ modal.style.display='none'; startAt(Math.max(0,state.max-2), true); };
+        host.querySelector('#sp-restart').onclick = ()=>{
+          hadTrustedInteraction = true;
+          modal.style.display='none';
+          state.max=0; state.engaged=0; state.anchorSec=0;
+          save();
+          emit('restart',{});
+          startAt(0,true);
+        };
+        host.querySelector('#sp-resume').onclick = ()=>{
+          hadTrustedInteraction = true;
+          modal.style.display='none';
+          startAt(Math.max(0,state.max-2), true);
+        };
       }
 
       function startFirstMutedOverlay(){
