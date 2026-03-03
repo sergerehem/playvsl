@@ -31,7 +31,9 @@
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify(payload),
-        keepalive:true
+        keepalive:true,
+        mode:'cors',
+        credentials:'omit'
       }).catch(()=>{});
     }catch(e){}
   };
@@ -49,7 +51,9 @@
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify(payload),
-        keepalive:true
+        keepalive:true,
+        mode:'cors',
+        credentials:'omit'
       }).catch(()=>{});
     }catch(e){}
   };

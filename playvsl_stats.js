@@ -31,7 +31,8 @@
       headers:{'Content-Type':'application/json'},
       body,
       keepalive:true,
-      mode:'cors'
+      mode:'cors',
+      credentials:'omit'
     }).catch((e)=>{ if(debug) console.warn('[PlayVSLStats] fetch failed', e); });
   }
 
