@@ -1,5 +1,6 @@
 (function(){
-  const SMARTPLAYER_CSS = `.sp-wrap{max-width:980px;margin:24px auto;padding:0 16px;font-family:Inter,Arial,sans-serif;color:#e8edf2}
+  const SMARTPLAYER_CSS = `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@600;700&family=Lato:wght@700&family=Montserrat:wght@700&family=Open+Sans:wght@700&family=Poppins:wght@700&family=Roboto:wght@700&display=swap');
+.sp-wrap{max-width:980px;margin:24px auto;padding:0 16px;font-family:Inter,Arial,sans-serif;color:#e8edf2}
 .sp-shell{position:relative;background:#000;border-radius:0;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.35)}
 .sp-ratio{position:relative;padding-top:56.25%}
 .sp-player{position:absolute;inset:0;background:#000;overflow:hidden}
@@ -118,7 +119,7 @@
         buttonRounded:true,
         buttonNewTab:false,
         buttonRevealEffect:'fade', // none | fade | pulse
-        buttonFontFamily:'sans', // sans | serif | mono
+        buttonFontFamily:'arial', // arial | roboto | poppins | inter | montserrat | open_sans | lato
         buttonFontSize:20, // 16 | 20 | 24
         teaserProgressDurationSeconds:240, // menor = barra anda mais rápido
         teaserProgressCurve:0.58, // <1 acelera mais o começo
@@ -226,13 +227,21 @@
       host.style.setProperty('--sp-cta-bg', btnBg);
       host.style.setProperty('--sp-cta-text', contrastText(btnBg));
       host.style.setProperty('--sp-cta-radius', cfg.buttonRounded ? '999px' : '10px');
-      const ff = String(cfg.buttonFontFamily || 'sans').toLowerCase();
+      const ff = String(cfg.buttonFontFamily || 'arial').toLowerCase();
       const fontMap = {
+        arial: 'Arial, Helvetica, sans-serif',
+        roboto: 'Roboto, Arial, sans-serif',
+        poppins: 'Poppins, Arial, sans-serif',
+        inter: 'Inter, Arial, sans-serif',
+        montserrat: 'Montserrat, Arial, sans-serif',
+        open_sans: '"Open Sans", Arial, sans-serif',
+        lato: 'Lato, Arial, sans-serif',
+        // compat legado
         sans: 'Inter, Arial, sans-serif',
         serif: 'Georgia, "Times New Roman", serif',
         mono: '"Roboto Mono", "Courier New", monospace'
       };
-      host.style.setProperty('--sp-cta-font', fontMap[ff] || fontMap.sans);
+      host.style.setProperty('--sp-cta-font', fontMap[ff] || fontMap.arial);
       const fs = Number(cfg.buttonFontSize || 20);
       const ctaSize = fs <= 17 ? 16 : fs >= 23 ? 24 : 20;
       host.style.setProperty('--sp-cta-size', `${ctaSize}px`);

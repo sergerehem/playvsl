@@ -76,7 +76,7 @@
         buttonRounded: !!$('buttonRounded')?.checked,
         buttonBg: $('buttonBg')?.value || '#C62116',
         buttonRevealEffect: $('buttonRevealEffect')?.value || 'fade',
-        buttonFontFamily: $('buttonFontFamily')?.value || 'sans',
+        buttonFontFamily: $('buttonFontFamily')?.value || 'arial',
         buttonFontSize: Number($('buttonFontSize')?.value || 20)
       };
       localStorage.setItem(BUILDER_KEY, JSON.stringify(data));
@@ -106,7 +106,7 @@
     return {
       container:'#playvsl-preview', youtubeUrl:'https://youtu.be/wqGiHRWeTR0', primaryColor:'#C62116',
       buttonUrl:'https://playvsl.digi6.com.br/', buttonText:App.t('defaultButton'),
-      buttonShowAtSeconds:10, buttonNewTab:true, buttonRounded:true, buttonBg:'#C62116', buttonRevealEffect:'fade', buttonFontFamily:'sans', buttonFontSize:20, lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause, onEvent: App.trackLandingEvent
+      buttonShowAtSeconds:10, buttonNewTab:true, buttonRounded:true, buttonBg:'#C62116', buttonRevealEffect:'fade', buttonFontFamily:'arial', buttonFontSize:20, lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause, onEvent: App.trackLandingEvent
     };
   };
 
@@ -121,7 +121,7 @@
 
   App.snippet = function(c){
     const closeScript = '</scr' + 'ipt>';
-    return `<div id="playvsl"></div>\n<script src="https://playvsl.digi6.com.br/playvsl.js">${closeScript}\n<script>\n  PlayVSL.init({\n    container:'#playvsl',\n    youtubeUrl:'${c.youtubeUrl}',\n    primaryColor:'${c.primaryColor}',\n    buttonUrl:'${c.buttonUrl}',\n    buttonText:'${c.buttonText.replace(/'/g,"\\'")}',\n    buttonShowAtSeconds:${c.buttonShowAtSeconds},\n    buttonNewTab:${c.buttonNewTab},\n    buttonRounded:${!!c.buttonRounded},\n    buttonBg:'${c.buttonBg}',\n    buttonRevealEffect:'${c.buttonRevealEffect || 'fade'}',\n    buttonFontFamily:'${c.buttonFontFamily || 'sans'}',\n    buttonFontSize:${Number(c.buttonFontSize || 20)},\n    lang:'${c.lang || App.LANG}'\n  });\n${closeScript}`;
+    return `<div id="playvsl"></div>\n<script src="https://playvsl.digi6.com.br/playvsl.js">${closeScript}\n<script>\n  PlayVSL.init({\n    container:'#playvsl',\n    youtubeUrl:'${c.youtubeUrl}',\n    primaryColor:'${c.primaryColor}',\n    buttonUrl:'${c.buttonUrl}',\n    buttonText:'${c.buttonText.replace(/'/g,"\\'")}',\n    buttonShowAtSeconds:${c.buttonShowAtSeconds},\n    buttonNewTab:${c.buttonNewTab},\n    buttonRounded:${!!c.buttonRounded},\n    buttonBg:'${c.buttonBg}',\n    buttonRevealEffect:'${c.buttonRevealEffect || 'fade'}',\n    buttonFontFamily:'${c.buttonFontFamily || 'arial'}',\n    buttonFontSize:${Number(c.buttonFontSize || 20)},\n    lang:'${c.lang || App.LANG}'\n  });\n${closeScript}`;
   };
 
   App.extractYouTubeId = function(input){
