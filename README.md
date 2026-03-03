@@ -19,6 +19,15 @@ python3 -m http.server 8080
 ```
 Abra `http://localhost:8080`.
 
+## Ambientes (prod x testes)
+- **Produção:** `index.html` + snippets apontando para `playvsl.v1.0.1.min.js`.
+- **Testes:** `index-dev.html` + snippets apontando para `playvsl.dev.js`.
+
+Fluxo recomendado:
+1. Testar mudanças em `playvsl.dev.js` via `index-dev.html`.
+2. Após aprovação, gerar release minificada versionada (`playvsl.vX.Y.Z.min.js`).
+3. Atualizar `App.RUNTIME_SCRIPT_URL` / `App.SNIPPET_SCRIPT_URL` de produção somente no momento da release.
+
 ## Embed básico
 ```html
 <div id="playvsl"></div>

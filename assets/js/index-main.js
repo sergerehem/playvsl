@@ -12,9 +12,12 @@
         return;
       }
       const q = new URLSearchParams(location.search);
-      const v = q.get('pv') || String(Date.now());
+      const pv = q.get('pv');
+      const baseUrl = App.RUNTIME_SCRIPT_URL || 'https://playvsl.com/playvsl.v1.0.1.min.js';
+      const sep = baseUrl.includes('?') ? '&' : '?';
+      const src = pv ? `${baseUrl}${sep}pv=${encodeURIComponent(pv)}` : baseUrl;
       const s = document.createElement('script');
-      s.src = `https://playvsl.com/playvsl.js?v=${encodeURIComponent(v)}`;
+      s.src = src;
       s.async = true;
       s.setAttribute('data-playvsl-lp', '1');
       s.onload = ()=>resolve();
