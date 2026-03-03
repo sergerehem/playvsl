@@ -616,6 +616,17 @@
                 }
                 if(poster) poster.style.display='none';
                 if(pausePlay) pausePlay.style.display='none';
+
+                // fallback robusto para embeds (Bubble etc): se entrou em play com áudio,
+                // marca início humano mesmo que algum handler de clique não tenha disparado.
+                try{
+                  const isMuted = can('isMuted') ? !!player.isMuted() : false;
+                  if(!isMuted && state.humanStart !== true){
+                    state.started = true;
+                    state.humanStart = true;
+                    save();
+                  }
+                }catch(e){}
               } else if(st===2){
                 if(firstAudio && firstAudio.style.display==='block') return;
                 if(modal && modal.style.display==='flex') return;
