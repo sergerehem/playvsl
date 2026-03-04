@@ -260,7 +260,7 @@
         <div class="sp-shell"><div class="sp-ratio" style="padding-top:${pad}%">
           <div class="sp-player" id="sp-player-host"><div id="sp-player-target"></div><div id="sp-click-shield" aria-hidden="true"></div></div>
           <div class="sp-overlay-top"></div><div class="sp-overlay-bottom"></div>
-          <div class="sp-poster" id="sp-poster" style="background-image:url('https://img.youtube.com/vi/${vid}/sddefault.jpg')"></div>
+          <div class="sp-poster" id="sp-poster" style="background-image:url('https://img.youtube.com/vi/${vid}/maxresdefault.jpg')"></div>
           <button class="sp-first-audio" id="sp-first-audio">
             <div class="t1">${t.audioStarted}</div>
             <div class="ico" aria-hidden="true">
