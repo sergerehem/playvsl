@@ -86,6 +86,11 @@
 
   App.loadBuilderPrefs = function(){
     try{
+      // Enquanto a configuração estiver bloqueada, preserva defaults da LP
+      // (evita que preferências antigas sobrescrevam o vídeo/tempo padrão inicial).
+      const unlocked = localStorage.getItem('playvsl_lead_sent') === '1';
+      if(!unlocked) return;
+
       const raw = localStorage.getItem(BUILDER_KEY);
       if(!raw) return;
       const c = JSON.parse(raw);
