@@ -260,7 +260,7 @@
         <div class="sp-shell"><div class="sp-ratio" style="padding-top:${pad}%">
           <div class="sp-player" id="sp-player-host"><div id="sp-player-target"></div><div id="sp-click-shield" aria-hidden="true"></div></div>
           <div class="sp-overlay-top"></div><div class="sp-overlay-bottom"></div>
-          <div class="sp-poster" id="sp-poster" style="background-image:url('https://img.youtube.com/vi/${vid}/hqdefault.jpg')"></div>
+          <div class="sp-poster" id="sp-poster" style="background-image:url('https://img.youtube.com/vi/${vid}/sddefault.jpg')"></div>
           <button class="sp-first-audio" id="sp-first-audio">
             <div class="t1">${t.audioStarted}</div>
             <div class="ico" aria-hidden="true">
@@ -320,7 +320,7 @@
       const timeEl = host.querySelector('#sp-time');
       if(!state.started) host.classList.add('sp-prestart');
       const poster = host.querySelector('#sp-poster');
-      // teaser sempre com hqdefault para carregamento mais leve e previsível
+      // teaser em qualidade intermediária (sddefault) para melhor nitidez no desktop
       const firstAudio = host.querySelector('#sp-first-audio');
       if(!state.started && firstAudio) firstAudio.style.display = 'block';
       const pausePlay = host.querySelector('#sp-pause-play');
