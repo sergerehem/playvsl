@@ -47,7 +47,7 @@
 .sp-modal-actions{display:flex;gap:22px;margin-top:10px;justify-content:center;flex-wrap:wrap}
 .sp-btn{background:transparent;color:var(--sp-contrast,#fff);border:0;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:30px;display:flex;align-items:center;gap:10px}
 .sp-btn .option-text{font-size:24px;font-weight:700;line-height:1.1;white-space:nowrap}
-.sp-icon{width:42px;height:42px;border:3px solid var(--sp-contrast,#fff);border-radius:50%;display:inline-grid;place-items:center;font-size:20px;font-weight:700}
+.sp-icon{width:42px;height:42px;min-width:42px;min-height:42px;aspect-ratio:1/1;flex:0 0 auto;border:3px solid var(--sp-contrast,#fff);border-radius:50%;display:inline-grid;place-items:center;font-size:20px;font-weight:700;box-sizing:border-box}
 .sp-icon svg{width:60%;height:60%;display:block;overflow:visible}
 .sp-icon svg path{fill:var(--sp-contrast,#fff)}
 .sp-resume-icon{transform:none;transform-origin:50% 50%;width:78%!important;height:78%!important}
@@ -66,7 +66,7 @@
 .sp-resume-title{font-size:18px;line-height:1.15;padding:0 4px 8px}
 .sp-modal-actions{gap:8px;margin-top:4px}
 .sp-btn{padding:2px 4px;gap:8px}
-.sp-icon{width:30px;height:30px;border-width:2px}
+.sp-icon{width:30px;height:30px;min-width:30px;min-height:30px;border-width:2px}
 .sp-btn .option-text{font-size:14px;line-height:1.2;white-space:normal;text-align:center}
 }`;
 
