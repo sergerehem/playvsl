@@ -1,5 +1,22 @@
 # Changelog
 
+## v1.0.4 - 2026-03-04
+
+Release focused on visual polish and conversion tracking readiness.
+
+### Highlights
+- Progress area polish across resolutions:
+  - unified frame/progress seam gray tone
+  - reduced seam thickness to a cleaner 4px
+  - improved iframe seam rendering (`display:block`)
+- Resume modal readability on small screens:
+  - reduced title/option font sizes and spacing
+  - preserved icon proportions with perfect circular rendering
+- Google Ads tracking setup improvements on LP:
+  - base Google tag installation
+  - lead conversion event wiring after form success
+- Production defaults moved to stable build `playvsl.v1.0.4.min.js`.
+
 ## v1.0.3 - 2026-03-03
 
 Patch release focused on builder UX consistency.

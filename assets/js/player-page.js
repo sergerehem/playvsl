@@ -158,7 +158,7 @@
       lang:c.lang || App.LANG
     };
 
-    const scriptUrl = (App.SNIPPET_SCRIPT_URL || 'https://playvsl.com/playvsl.v1.0.3.min.js');
+    const scriptUrl = (App.SNIPPET_SCRIPT_URL || 'https://playvsl.com/playvsl.v1.0.4.min.js');
     return `<div id="playvsl"></div>\n<script src="${scriptUrl}" defer>${closeScript}\n<script>\n  window.addEventListener('load', function () {\n    if (!window.PlayVSL || typeof window.PlayVSL.init !== 'function') return;\n\n    PlayVSL.init({\n      container: '${cfg.container}',\n      youtubeUrl: '${cfg.youtubeUrl}',\n      primaryColor: '${cfg.primaryColor}',\n      buttonUrl: '${cfg.buttonUrl}',\n      buttonText: '${cfg.buttonText}',\n      buttonShowAtSeconds: ${cfg.buttonShowAtSeconds},\n      buttonNewTab: ${cfg.buttonNewTab},\n      buttonRounded: ${cfg.buttonRounded},\n      buttonBg: '${cfg.buttonBg}',\n      buttonRevealEffect: '${cfg.buttonRevealEffect}',\n      buttonFontFamily: '${cfg.buttonFontFamily}',\n      buttonFontSize: ${cfg.buttonFontSize},\n      buttonBold: ${cfg.buttonBold},\n      lang: '${cfg.lang}'\n    });\n  });\n${closeScript}`;
   };
 
