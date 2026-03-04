@@ -57,6 +57,12 @@
     localStorage.setItem('playvsl_lead_sent','1');
     localStorage.setItem('playvsl_lead_name',name);
     localStorage.setItem('playvsl_lead_email',email);
+
+    // Google Ads conversion (optional, only if PLAYVSL_GOOGLE_ADS_ID and PLAYVSL_GOOGLE_ADS_LABEL are configured)
+    try{
+      await App.trackLeadConversion({ name, email, value: 1, currency: 'BRL' });
+    }catch(_e){}
+
     $('leadStep').classList.add('hidden'); $('builderStep').classList.remove('hidden');
     const c = App.builderCfg();
     $('out').textContent = App.snippet(c);
