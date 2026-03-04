@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.0.2 - 2026-03-03
+
+Release focused on stability, polish, and workflow separation.
+
+### Highlights
+- Added dev/prod workflow split:
+  - `index-dev.html` + `playvsl.dev.js` for safe testing
+  - production snippets default to stable versioned build
+- FAQ improvements (updated examples, ordering, payload explanations).
+- Resume/restart modal reliability fixes in embedded environments.
+- Reduced black-screen flashes around teaser/resume/restart transitions.
+- Poster quality standardized to `maxresdefault`.
+- Stable minified build published as `playvsl.v1.0.2.min.js`.
+
 ## v1.0.1 - 2026-03-03
 
 Stability and UX polish release.

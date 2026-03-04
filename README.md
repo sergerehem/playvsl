@@ -5,7 +5,7 @@ O player que transforma seu vídeo do YouTube em VSL de alta conversão.
 ## Estrutura do projeto
 - `playvsl.js` — script principal (fonte, legível)
 - `playvsl.min.js` — build minificado (latest)
-- `playvsl.v1.0.1.min.js` — build versionado estável
+- `playvsl.v1.0.2.min.js` — build versionado estável
 - `index.html` — landing + fluxo de unlock + builder embutido
 - `faq.html` — documentação pública
 - `assets/css/index.css` — estilos da landing
@@ -20,7 +20,7 @@ python3 -m http.server 8080
 Abra `http://localhost:8080`.
 
 ## Ambientes (prod x testes)
-- **Produção:** `index.html` + snippets apontando para `playvsl.v1.0.1.min.js`.
+- **Produção:** `index.html` + snippets apontando para `playvsl.v1.0.2.min.js`.
 - **Testes:** `index-dev.html` + snippets apontando para `playvsl.dev.js`.
 
 Fluxo recomendado:
