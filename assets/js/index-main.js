@@ -13,7 +13,7 @@
       }
       const q = new URLSearchParams(location.search);
       const pv = q.get('pv');
-      const baseUrl = App.RUNTIME_SCRIPT_URL || 'https://playvsl.com/playvsl.v1.0.1.min.js';
+      const baseUrl = App.RUNTIME_SCRIPT_URL || 'https://playvsl.com/playvsl.v1.0.3.min.js';
       const sep = baseUrl.includes('?') ? '&' : '?';
       const src = pv ? `${baseUrl}${sep}pv=${encodeURIComponent(pv)}` : baseUrl;
       const s = document.createElement('script');
@@ -71,6 +71,7 @@
 
     if($('copy')) $('copy').addEventListener('click', async()=>{
       await navigator.clipboard.writeText($('out').textContent);
+      try{ App.sendLandingMetric('copySnippet', { source:'landing_builder' }); }catch(e){}
       $('copy').textContent='Copiado!';
       setTimeout(()=>$('copy').textContent=App.t('copy'),1200);
     });
