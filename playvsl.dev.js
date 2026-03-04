@@ -3,7 +3,7 @@
 .sp-wrap{max-width:980px;margin:24px auto;padding:0 16px;font-family:Inter,Arial,sans-serif;color:#e8edf2}
 .sp-shell{position:relative;background:#000;border-radius:0;overflow:hidden;box-shadow:none;border:1px solid #d1d5db;box-sizing:border-box}
 .sp-ratio{position:relative;padding-top:56.25%}
-.sp-player{position:absolute;inset:0;background:#000;overflow:hidden;box-shadow:inset 0 -1px #d1d5db}
+.sp-player{position:absolute;inset:0;background:#000;overflow:hidden}
 .sp-player::after{display:none}
 .sp-player iframe{transition:opacity .78s ease}
 .sp-player.sp-ended iframe,.sp-player.sp-paused iframe{opacity:0;pointer-events:none}
@@ -28,7 +28,7 @@
 .sp-pause-play svg{width:74%;height:74%;display:block}
 .sp-play-triangle path{fill:var(--sp-contrast,#fff);stroke:var(--sp-contrast,#fff);stroke-width:3;stroke-linejoin:round}
 @media (max-width:900px){.sp-pause-play{width:120px;height:120px}.sp-pause-play svg{width:70%;height:70%}}
-.sp-bar-wrap{position:relative;z-index:6;height:4px;margin-top:0;background:#d1d5db;overflow:hidden}
+.sp-bar-wrap{position:relative;z-index:6;height:3px;margin-top:0;background:#d1d5db;overflow:hidden}
 .sp-bar{position:relative;height:100%;margin-top:0;background:transparent}
 .sp-bar-fill{height:100%;width:0;background:var(--sp-primary,#c62116);transition:width .35s linear}
 .sp-time{display:none!important}
