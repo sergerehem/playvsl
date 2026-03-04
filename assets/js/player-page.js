@@ -71,7 +71,7 @@
         primaryColor: $('primaryColor')?.value || '#C62116',
         buttonUrl: $('buttonUrl')?.value?.trim() || '',
         buttonText: $('buttonText')?.value || '',
-        buttonShowAtSeconds: Number($('buttonShowAtSeconds')?.value || 10),
+        buttonShowAtSeconds: Number($('buttonShowAtSeconds')?.value || 240),
         buttonNewTab: !!$('buttonNewTab')?.checked,
         buttonRounded: !!$('buttonRounded')?.checked,
         buttonBg: $('buttonBg')?.value || '#C62116',
@@ -114,9 +114,9 @@
 
   App.baseCfg = function(){
     return {
-      container:'#playvsl-preview', youtubeUrl:'https://youtu.be/wqGiHRWeTR0', primaryColor:'#C62116',
+      container:'#playvsl-preview', youtubeUrl:'https://youtu.be/4YjmqZPMyLE', primaryColor:'#C62116',
       buttonUrl:'https://playvsl.com/', buttonText:App.t('defaultButton'),
-      buttonShowAtSeconds:10, buttonNewTab:true, buttonRounded:true, buttonBg:'#C62116', buttonRevealEffect:'fade', buttonFontFamily:'arial', buttonFontSize:20, buttonBold:true, lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause, onEvent: App.trackLandingEvent
+      buttonShowAtSeconds:240, buttonNewTab:true, buttonRounded:true, buttonBg:'#C62116', buttonRevealEffect:'fade', buttonFontFamily:'arial', buttonFontSize:20, buttonBold:true, lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause, onEvent: App.trackLandingEvent
     };
   };
 
@@ -124,7 +124,7 @@
     return {
       container:'#playvsl-preview', youtubeUrl:$('youtubeUrl').value.trim(), primaryColor:$('primaryColor').value,
       buttonUrl:$('buttonUrl').value.trim(), buttonText:$('buttonText').value,
-      buttonShowAtSeconds:Number($('buttonShowAtSeconds').value||10), buttonNewTab:$('buttonNewTab').checked,
+      buttonShowAtSeconds:Number($('buttonShowAtSeconds').value||240), buttonNewTab:$('buttonNewTab').checked,
       buttonRounded:$('buttonRounded').checked, buttonBg:$('buttonBg').value, buttonRevealEffect:$('buttonRevealEffect').value, buttonFontFamily:$('buttonFontFamily').value, buttonFontSize:Number($('buttonFontSize').value||20), buttonBold:$('buttonBoldBtn').classList.contains('active'), lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause, onEvent: App.trackLandingEvent
     };
   };
@@ -148,7 +148,7 @@
       lang:c.lang || App.LANG
     };
 
-    const scriptUrl = (App.SNIPPET_SCRIPT_URL || 'https://playvsl.com/playvsl.v1.0.1.min.js');
+    const scriptUrl = (App.SNIPPET_SCRIPT_URL || 'https://playvsl.com/playvsl.v1.0.3.min.js');
     return `<div id="playvsl"></div>\n<script src="${scriptUrl}" defer>${closeScript}\n<script>\n  window.addEventListener('load', function () {\n    if (!window.PlayVSL || typeof window.PlayVSL.init !== 'function') return;\n\n    PlayVSL.init({\n      container: '${cfg.container}',\n      youtubeUrl: '${cfg.youtubeUrl}',\n      primaryColor: '${cfg.primaryColor}',\n      buttonUrl: '${cfg.buttonUrl}',\n      buttonText: '${cfg.buttonText}',\n      buttonShowAtSeconds: ${cfg.buttonShowAtSeconds},\n      buttonNewTab: ${cfg.buttonNewTab},\n      buttonRounded: ${cfg.buttonRounded},\n      buttonBg: '${cfg.buttonBg}',\n      buttonRevealEffect: '${cfg.buttonRevealEffect}',\n      buttonFontFamily: '${cfg.buttonFontFamily}',\n      buttonFontSize: ${cfg.buttonFontSize},\n      buttonBold: ${cfg.buttonBold},\n      lang: '${cfg.lang}'\n    });\n  });\n${closeScript}`;
   };
 
