@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.0.3 - 2026-03-03
+
+Patch release focused on builder UX consistency.
+
+### Highlights
+- Fixed color picker swatches not reflecting restored saved values after page refresh.
+- No breaking API changes.
+
 ## v1.0.2 - 2026-03-03
 
 Release focused on stability, polish, and workflow separation.
