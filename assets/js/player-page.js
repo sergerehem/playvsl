@@ -90,13 +90,21 @@
       if(!raw) return;
       const c = JSON.parse(raw);
       if($('youtubeUrl') && c.youtubeUrl) $('youtubeUrl').value = c.youtubeUrl;
-      if($('primaryColor') && c.primaryColor) $('primaryColor').value = c.primaryColor;
+      if($('primaryColor') && c.primaryColor){
+        $('primaryColor').value = c.primaryColor;
+        $('primaryColor').dispatchEvent(new Event('input', { bubbles:true }));
+        $('primaryColor').dispatchEvent(new Event('change', { bubbles:true }));
+      }
       if($('buttonUrl') && c.buttonUrl) $('buttonUrl').value = c.buttonUrl;
       if($('buttonText') && c.buttonText){ $('buttonText').value = c.buttonText; $('buttonText').dataset.touched='1'; }
       if($('buttonShowAtSeconds') && typeof c.buttonShowAtSeconds !== 'undefined') $('buttonShowAtSeconds').value = String(c.buttonShowAtSeconds);
       if($('buttonNewTab')) $('buttonNewTab').checked = !!c.buttonNewTab;
       if($('buttonRounded')) $('buttonRounded').checked = !!c.buttonRounded;
-      if($('buttonBg') && c.buttonBg) $('buttonBg').value = c.buttonBg;
+      if($('buttonBg') && c.buttonBg){
+        $('buttonBg').value = c.buttonBg;
+        $('buttonBg').dispatchEvent(new Event('input', { bubbles:true }));
+        $('buttonBg').dispatchEvent(new Event('change', { bubbles:true }));
+      }
       if($('buttonRevealEffect') && c.buttonRevealEffect) $('buttonRevealEffect').value = c.buttonRevealEffect;
       if($('buttonFontFamily') && c.buttonFontFamily) $('buttonFontFamily').value = c.buttonFontFamily;
       if($('buttonFontSize') && c.buttonFontSize) $('buttonFontSize').value = String(c.buttonFontSize);
