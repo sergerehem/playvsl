@@ -18,6 +18,8 @@
         videoId: App.extractYouTubeId(App.builderCfg().youtubeUrl || App.baseCfg().youtubeUrl),
         sessionId: sessionStorage.getItem('playvsl_session_id') || null,
         visitorId: localStorage.getItem('playvsl_visitor_id') || null,
+        leadEmail: localStorage.getItem('playvsl_lead_email') || null,
+        leadName: localStorage.getItem('playvsl_lead_name') || null,
         pageUrl: location.href,
         pageOrigin: location.origin,
         pageHost: location.host,
@@ -50,7 +52,10 @@
       if(!closedNow) return;
 
       const params = new URLSearchParams();
-      Object.entries(payload || {}).forEach(([k,v])=>{ if(v!==undefined && v!==null) params.set(k, String(v)); });
+      const leadEmail = localStorage.getItem('playvsl_lead_email') || null;
+      const leadName = localStorage.getItem('playvsl_lead_name') || null;
+      const enriched = Object.assign({}, payload || {}, { leadEmail, leadName });
+      Object.entries(enriched).forEach(([k,v])=>{ if(v!==undefined && v!==null) params.set(k, String(v)); });
       fetch(App.EVENTS_WEBHOOK, {
         method:'POST',
         headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},
