@@ -124,7 +124,7 @@
 
   App.baseCfg = function(){
     return {
-      container:'#playvsl-preview', youtubeUrl:'https://youtu.be/4YjmqZPMyLE', primaryColor:'#C62116',
+      container:'#playvsl-preview', youtubeUrl:'https://www.youtube.com/watch?v=MhtN6Zi6l1c', primaryColor:'#C62116',
       buttonUrl:'https://playvsl.com/', buttonText:App.t('defaultButton'),
       buttonShowAtSeconds:240, buttonNewTab:true, buttonRounded:true, buttonBg:'#C62116', buttonRevealEffect:'fade', buttonFontFamily:'arial', buttonFontSize:20, buttonBold:true, lang: App.LANG, onPlay: App.handlePreviewPlay, onPause: App.handlePreviewPause, onEvent: App.trackLandingEvent
     };
