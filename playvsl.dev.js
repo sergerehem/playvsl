@@ -60,6 +60,14 @@
 .sp-btn{padding:4px 6px;gap:10px;justify-content:center}
 .sp-icon{width:34px;height:34px;border-width:2px}
 .sp-btn .option-text{font-size:18px;white-space:normal;text-align:center}
+}
+@media (max-width: 520px){
+.sp-modal-card{padding:16px}
+.sp-resume-title{font-size:18px;line-height:1.15;padding:0 4px 8px}
+.sp-modal-actions{gap:8px;margin-top:4px}
+.sp-btn{padding:2px 4px;gap:8px}
+.sp-icon{width:30px;height:30px;border-width:2px}
+.sp-btn .option-text{font-size:14px;line-height:1.2;white-space:normal;text-align:center}
 }`;
 
   function ensureSmartPlayerCss(){
