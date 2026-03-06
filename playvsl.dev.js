@@ -193,7 +193,36 @@
       const t = i18n[lang];
 
       const host = document.querySelector(cfg.container);
-      if(!host) throw new Error('container não encontrado');
+      if(!host){
+        const attempt = Number(cfg.__retryAttempt || 0);
+        const maxAttempts = Number(cfg.__retryMax || 80);
+        const retryMs = Number(cfg.__retryMs || 150);
+        const pendingKey = String(cfg.container || '#smart-vsl');
+        window.__playvslPendingInit = window.__playvslPendingInit || {};
+
+        if(attempt < maxAttempts){
+          if(window.__playvslPendingInit[pendingKey]) return;
+          window.__playvslPendingInit[pendingKey] = true;
+          setTimeout(()=>{
+            window.__playvslPendingInit[pendingKey] = false;
+            try{
+              const nextOpts = Object.assign({}, opts || {}, {
+                __retryAttempt: attempt + 1,
+                __retryMax: maxAttempts,
+                __retryMs: retryMs
+              });
+              window.PlayVSL.init(nextOpts);
+            }catch(e){}
+          }, retryMs);
+          return;
+        }
+
+        try{
+          if(typeof cfg.onError === 'function') cfg.onError({ code: 'CONTAINER_NOT_FOUND', message: 'container não encontrado' });
+        }catch(e){}
+        console.warn('[PlayVSL] container não encontrado após retries:', cfg.container);
+        return;
+      }
       // cleanup de instância anterior no mesmo container (evita erros/repetições no console)
       if(typeof host.__playvslDestroy === 'function'){
         try{ host.__playvslDestroy(); }catch(e){}
