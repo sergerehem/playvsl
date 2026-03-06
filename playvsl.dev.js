@@ -116,6 +116,44 @@
     return window.__playvslYtReadyPromise;
   }
 
+  function parseBool(v, def){
+    if(typeof v === 'undefined' || v === null || v === '') return def;
+    const s = String(v).toLowerCase();
+    if(['1','true','yes','on'].includes(s)) return true;
+    if(['0','false','no','off'].includes(s)) return false;
+    return def;
+  }
+
+  function parseNum(v, def){
+    const n = Number(v);
+    return Number.isFinite(n) ? n : def;
+  }
+
+  function buildOptsFromDataset(el){
+    const d = el.dataset || {};
+    const raw = {
+      container: d.container || ('#' + el.id),
+      youtubeUrl: d.youtubeUrl,
+      primaryColor: d.primaryColor,
+      buttonUrl: d.buttonUrl,
+      buttonText: d.buttonText,
+      buttonShowAtSeconds: parseNum(d.buttonShowAtSeconds, undefined),
+      buttonNewTab: parseBool(d.buttonNewTab, undefined),
+      buttonRounded: parseBool(d.buttonRounded, undefined),
+      buttonBg: d.buttonBg,
+      askResume: parseBool(d.askResume, undefined),
+      playbackRate: parseNum(d.playbackRate, undefined),
+      teaserPlaybackRate: parseNum(d.teaserPlaybackRate, undefined),
+      teaserProgressDurationSeconds: parseNum(d.teaserProgressDurationSeconds, undefined),
+      teaserProgressCurve: parseNum(d.teaserProgressCurve, undefined),
+      aspect: d.aspect,
+      lang: d.lang
+    };
+    const out = {};
+    Object.keys(raw).forEach((k)=>{ if(typeof raw[k] !== 'undefined' && raw[k] !== null && raw[k] !== '') out[k] = raw[k]; });
+    return out;
+  }
+
   window.PlayVSL = {
     init(opts){
       ensureSmartPlayerCss();
@@ -782,7 +820,46 @@
           else startAt(currentSec(), true);
         });
       }
+    },
+
+    autoInit(root){
+      const scope = root && root.querySelectorAll ? root : document;
+      const nodes = scope.querySelectorAll('[data-playvsl], [data-playvsl-autoinit]');
+      nodes.forEach((el)=>{
+        if(el.__playvslAutoInited) return;
+        if(!el.id){
+          el.id = 'playvsl-auto-' + Math.random().toString(36).slice(2,9);
+        }
+        const opts = buildOptsFromDataset(el);
+        if(!opts.youtubeUrl) return;
+        el.__playvslAutoInited = true;
+        try{ window.PlayVSL.init(opts); }catch(e){ el.__playvslAutoInited = false; }
+      });
     }
   };
+
+  function bootAutoInit(){
+    try{ window.PlayVSL.autoInit(document); }catch(e){}
+
+    if(window.__playvslAutoObserver) return;
+    window.__playvslAutoObserver = new MutationObserver((muts)=>{
+      for(const m of muts){
+        for(const n of m.addedNodes || []){
+          if(!n || n.nodeType !== 1) continue;
+          try{ window.PlayVSL.autoInit(n); }catch(e){}
+        }
+      }
+    });
+    try{
+      window.__playvslAutoObserver.observe(document.documentElement || document.body, { childList:true, subtree:true });
+    }catch(e){}
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', bootAutoInit);
+  } else {
+    bootAutoInit();
+  }
+
   // alias antigo removido
 })();
