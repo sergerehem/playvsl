@@ -135,7 +135,7 @@
       container: d.container || ('#' + el.id),
       youtubeUrl: d.youtubeUrl,
       primaryColor: d.primaryColor,
-      // new declarative naming (cta-*) + legacy aliases (button-*)
+      // declarative CTA (cta-*) + aliases (button-*)
       buttonUrl: d.ctaUrl || d.buttonUrl,
       buttonText: d.ctaText || d.buttonText,
       buttonShowAtSeconds: parseNum((typeof d.ctaShowAtSeconds !== 'undefined' ? d.ctaShowAtSeconds : d.buttonShowAtSeconds), undefined),
@@ -146,6 +146,13 @@
       buttonRevealEffect: d.ctaRevealEffect || d.buttonRevealEffect,
       buttonFontFamily: d.ctaFontFamily || d.buttonFontFamily,
       buttonFontSize: parseNum((typeof d.ctaFontSize !== 'undefined' ? d.ctaFontSize : d.buttonFontSize), undefined),
+      // declarative callback hooks
+      onPlayAddClass: d.onPlayAddClass,
+      onPauseRemoveClass: d.onPauseRemoveClass,
+      onEventFunction: d.onEventFunction,
+      onPlayFunction: d.onPlayFunction,
+      onPauseFunction: d.onPauseFunction,
+      dispatchDomEvents: parseBool(d.dispatchDomEvents, true),
       askResume: parseBool(d.askResume, undefined),
       playbackRate: parseNum(d.playbackRate, undefined),
       teaserPlaybackRate: parseNum(d.teaserPlaybackRate, undefined),
@@ -197,6 +204,12 @@
         onCTAClick:null,
         onComplete:null,
         onError:null,
+        onPlayAddClass:null,
+        onPauseRemoveClass:null,
+        onEventFunction:null,
+        onPlayFunction:null,
+        onPauseFunction:null,
+        dispatchDomEvents:true,
         primaryColor:'#c62116',
         progressTrackColor:'rgba(255,255,255,.2)',
         aspect:'16:9'
@@ -452,6 +465,14 @@
           ts: Date.now()
         }, extra);
       }
+      function resolveWindowFn(path){
+        if(!path || typeof path !== 'string') return null;
+        const parts = path.split('.').filter(Boolean);
+        let ref = window;
+        for(const p of parts){ ref = ref && ref[p]; }
+        return (typeof ref === 'function') ? ref : null;
+      }
+
       function emit(name, extra={}){
         const payload = eventPayload(Object.assign({event:name}, extra));
         const map = {
@@ -467,6 +488,29 @@
           const extCb = hostCbs[map[name]];
           if(typeof extCb === 'function'){ try{ extCb(payload); }catch(e){} }
           if(typeof hostCbs.onEvent === 'function'){ try{ hostCbs.onEvent(payload); }catch(e){} }
+        }
+
+        // declarative hooks (no inline JS in snippet)
+        if(name === 'play' && cfg.onPlayAddClass){ try{ document.body.classList.add(String(cfg.onPlayAddClass)); }catch(e){} }
+        if(name === 'pause' && cfg.onPauseRemoveClass){ try{ document.body.classList.remove(String(cfg.onPauseRemoveClass)); }catch(e){} }
+
+        if(name === 'play' && cfg.onPlayFunction){
+          const fn = resolveWindowFn(String(cfg.onPlayFunction));
+          if(fn){ try{ fn(payload); }catch(e){} }
+        }
+        if(name === 'pause' && cfg.onPauseFunction){
+          const fn = resolveWindowFn(String(cfg.onPauseFunction));
+          if(fn){ try{ fn(payload); }catch(e){} }
+        }
+        if(cfg.onEventFunction){
+          const fn = resolveWindowFn(String(cfg.onEventFunction));
+          if(fn){ try{ fn(payload); }catch(e){} }
+        }
+
+        if(cfg.dispatchDomEvents !== false){
+          try{ host.dispatchEvent(new CustomEvent('playvsl:'+name, { detail: payload })); }catch(e){}
+          try{ document.dispatchEvent(new CustomEvent('playvsl:'+name, { detail: payload })); }catch(e){}
+          try{ document.dispatchEvent(new CustomEvent('playvsl:event', { detail: payload })); }catch(e){}
         }
       }
 
