@@ -162,7 +162,24 @@
     const useDeclarative = !!window.PLAYVSL_SNIPPET_DECLARATIVE;
 
     if(useDeclarative){
-      return `<div id="playvsl" data-playvsl data-youtube-url="${cfg.youtubeUrl}" data-primary-color="${cfg.primaryColor}" data-button-url="${cfg.buttonUrl}" data-button-text="${String(c.buttonText || '').replace(/"/g,'&quot;')}" data-button-show-at-seconds="${cfg.buttonShowAtSeconds}" data-button-new-tab="${cfg.buttonNewTab}" data-button-rounded="${cfg.buttonRounded}" data-button-bg="${cfg.buttonBg}" data-button-reveal-effect="${cfg.buttonRevealEffect}" data-button-font-family="${cfg.buttonFontFamily}" data-button-font-size="${cfg.buttonFontSize}" data-button-bold="${cfg.buttonBold}" data-lang="${cfg.lang}"></div>\n<script src="${scriptUrl}">${closeScript}`;
+      return `<div
+  id="playvsl"
+  data-playvsl
+  data-youtube-url="${cfg.youtubeUrl}"
+  data-primary-color="${cfg.primaryColor}"
+  data-button-url="${cfg.buttonUrl}"
+  data-button-text="${String(c.buttonText || '').replace(/"/g,'&quot;')}"
+  data-button-show-at-seconds="${cfg.buttonShowAtSeconds}"
+  data-button-new-tab="${cfg.buttonNewTab}"
+  data-button-rounded="${cfg.buttonRounded}"
+  data-button-bg="${cfg.buttonBg}"
+  data-button-reveal-effect="${cfg.buttonRevealEffect}"
+  data-button-font-family="${cfg.buttonFontFamily}"
+  data-button-font-size="${cfg.buttonFontSize}"
+  data-button-bold="${cfg.buttonBold}"
+  data-lang="${cfg.lang}"
+></div>
+<script src="${scriptUrl}">${closeScript}`;
     }
 
     return `<div id="playvsl"></div>\n<script src="${scriptUrl}" defer>${closeScript}\n<script>\n  window.addEventListener('load', function () {\n    if (!window.PlayVSL || typeof window.PlayVSL.init !== 'function') return;\n    PlayVSL.init({\n      container: '${cfg.container}',\n      youtubeUrl: '${cfg.youtubeUrl}',\n      primaryColor: '${cfg.primaryColor}',\n      buttonUrl: '${cfg.buttonUrl}',\n      buttonText: '${cfg.buttonText}',\n      buttonShowAtSeconds: ${cfg.buttonShowAtSeconds},\n      buttonNewTab: ${cfg.buttonNewTab},\n      buttonRounded: ${cfg.buttonRounded},\n      buttonBg: '${cfg.buttonBg}',\n      buttonRevealEffect: '${cfg.buttonRevealEffect}',\n      buttonFontFamily: '${cfg.buttonFontFamily}',\n      buttonFontSize: ${cfg.buttonFontSize},\n      buttonBold: ${cfg.buttonBold},\n      lang: '${cfg.lang}'\n    });\n  });\n${closeScript}`;
