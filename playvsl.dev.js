@@ -159,6 +159,9 @@
     return out;
   }
 
+  const __prevPlayVSL = window.PlayVSL || null;
+  const __queuedAttach = (__prevPlayVSL && Array.isArray(__prevPlayVSL._q)) ? __prevPlayVSL._q.slice() : [];
+
   window.PlayVSL = {
     init(opts){
       ensureSmartPlayerCss();
@@ -874,8 +877,15 @@
     }
   };
 
+  function flushQueuedAttach(){
+    if(!__queuedAttach.length) return;
+    __queuedAttach.forEach((opts)=>{ try{ window.PlayVSL.attach(opts); }catch(e){} });
+    __queuedAttach.length = 0;
+  }
+
   function bootAutoInit(){
     try{ window.PlayVSL.autoInit(document); }catch(e){}
+    try{ flushQueuedAttach(); }catch(e){}
 
     if(window.__playvslAutoObserver) return;
     window.__playvslAutoObserver = new MutationObserver((muts)=>{
