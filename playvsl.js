@@ -3,7 +3,7 @@
 .sp-wrap{max-width:980px;margin:24px auto;padding:0 16px;font-family:Inter,Arial,sans-serif;color:#e8edf2}
 .sp-shell{position:relative;background:#000;border-radius:0;overflow:hidden;box-shadow:none;border:1px solid #d1d5db;box-sizing:border-box}
 .sp-ratio{position:relative;padding-top:56.25%}
-.sp-player{position:absolute;inset:0;background:#000;overflow:hidden;box-shadow:inset 0 -1px #d1d5db}
+.sp-player{position:absolute;inset:0;background:#000;overflow:hidden}
 .sp-player::after{display:none}
 .sp-player iframe{transition:opacity .78s ease}
 .sp-player.sp-ended iframe,.sp-player.sp-paused iframe{opacity:0;pointer-events:none}
@@ -28,8 +28,8 @@
 .sp-pause-play svg{width:74%;height:74%;display:block}
 .sp-play-triangle path{fill:var(--sp-contrast,#fff);stroke:var(--sp-contrast,#fff);stroke-width:3;stroke-linejoin:round}
 @media (max-width:900px){.sp-pause-play{width:120px;height:120px}.sp-pause-play svg{width:70%;height:70%}}
-.sp-bar-wrap{position:relative;z-index:6;height:4px;margin-top:0;background:#d1d5db;overflow:hidden}
-.sp-bar{position:relative;height:100%;margin-top:0;background:transparent}
+.sp-bar-wrap{position:relative;z-index:6;height:5px;margin-top:0;background:#d1d5db;overflow:hidden}
+.sp-bar{position:relative;height:4px;margin-top:0;background:transparent}
 .sp-bar-fill{height:100%;width:0;background:var(--sp-primary,#c62116);transition:width .35s linear}
 .sp-time{display:none!important}
 .sp-prestart .sp-bar-wrap,.sp-prestart .sp-time,.sp-prestart .sp-pause-play{display:none}
@@ -116,6 +116,45 @@
     return window.__playvslYtReadyPromise;
   }
 
+  function parseBool(v, def){
+    if(typeof v === 'undefined' || v === null || v === '') return def;
+    const s = String(v).toLowerCase();
+    if(['1','true','yes','on'].includes(s)) return true;
+    if(['0','false','no','off'].includes(s)) return false;
+    return def;
+  }
+
+  function parseNum(v, def){
+    const n = Number(v);
+    return Number.isFinite(n) ? n : def;
+  }
+
+  function buildOptsFromDataset(el){
+    const d = el.dataset || {};
+    const raw = {
+      container: d.container || ('#' + el.id),
+      youtubeUrl: d.youtubeUrl,
+      primaryColor: d.primaryColor,
+      buttonUrl: d.buttonUrl,
+      buttonText: d.buttonText,
+      buttonShowAtSeconds: parseNum(d.buttonShowAtSeconds, undefined),
+      buttonNewTab: parseBool(d.buttonNewTab, undefined),
+      buttonRounded: parseBool(d.buttonRounded, undefined),
+      buttonBold: parseBool(d.buttonBold, undefined),
+      buttonBg: d.buttonBg,
+      askResume: parseBool(d.askResume, undefined),
+      playbackRate: parseNum(d.playbackRate, undefined),
+      teaserPlaybackRate: parseNum(d.teaserPlaybackRate, undefined),
+      teaserProgressDurationSeconds: parseNum(d.teaserProgressDurationSeconds, undefined),
+      teaserProgressCurve: parseNum(d.teaserProgressCurve, undefined),
+      aspect: d.aspect,
+      lang: d.lang
+    };
+    const out = {};
+    Object.keys(raw).forEach((k)=>{ if(typeof raw[k] !== 'undefined' && raw[k] !== null && raw[k] !== '') out[k] = raw[k]; });
+    return out;
+  }
+
   window.PlayVSL = {
     init(opts){
       ensureSmartPlayerCss();
@@ -193,7 +232,36 @@
       const t = i18n[lang];
 
       const host = document.querySelector(cfg.container);
-      if(!host) throw new Error('container não encontrado');
+      if(!host){
+        const attempt = Number(cfg.__retryAttempt || 0);
+        const maxAttempts = Number(cfg.__retryMax || 80);
+        const retryMs = Number(cfg.__retryMs || 150);
+        const pendingKey = String(cfg.container || '#smart-vsl');
+        window.__playvslPendingInit = window.__playvslPendingInit || {};
+
+        if(attempt < maxAttempts){
+          if(window.__playvslPendingInit[pendingKey]) return;
+          window.__playvslPendingInit[pendingKey] = true;
+          setTimeout(()=>{
+            window.__playvslPendingInit[pendingKey] = false;
+            try{
+              const nextOpts = Object.assign({}, opts || {}, {
+                __retryAttempt: attempt + 1,
+                __retryMax: maxAttempts,
+                __retryMs: retryMs
+              });
+              window.PlayVSL.init(nextOpts);
+            }catch(e){}
+          }, retryMs);
+          return;
+        }
+
+        try{
+          if(typeof cfg.onError === 'function') cfg.onError({ code: 'CONTAINER_NOT_FOUND', message: 'container não encontrado' });
+        }catch(e){}
+        console.warn('[PlayVSL] container não encontrado após retries:', cfg.container);
+        return;
+      }
       // cleanup de instância anterior no mesmo container (evita erros/repetições no console)
       if(typeof host.__playvslDestroy === 'function'){
         try{ host.__playvslDestroy(); }catch(e){}
@@ -328,7 +396,7 @@
       const timeEl = host.querySelector('#sp-time');
       if(!state.started) host.classList.add('sp-prestart');
       const poster = host.querySelector('#sp-poster');
-      // teaser sempre com hqdefault para carregamento mais leve e previsível
+      // teaser em qualidade intermediária (sddefault) para melhor nitidez no desktop
       const firstAudio = host.querySelector('#sp-first-audio');
       if(!state.started && firstAudio) firstAudio.style.display = 'block';
       const pausePlay = host.querySelector('#sp-pause-play');
@@ -753,7 +821,46 @@
           else startAt(currentSec(), true);
         });
       }
+    },
+
+    autoInit(root){
+      const scope = root && root.querySelectorAll ? root : document;
+      const nodes = scope.querySelectorAll('[data-playvsl], [data-playvsl-autoinit]');
+      nodes.forEach((el)=>{
+        if(el.__playvslAutoInited) return;
+        if(!el.id){
+          el.id = 'playvsl-auto-' + Math.random().toString(36).slice(2,9);
+        }
+        const opts = buildOptsFromDataset(el);
+        if(!opts.youtubeUrl) return;
+        el.__playvslAutoInited = true;
+        try{ window.PlayVSL.init(opts); }catch(e){ el.__playvslAutoInited = false; }
+      });
     }
   };
+
+  function bootAutoInit(){
+    try{ window.PlayVSL.autoInit(document); }catch(e){}
+
+    if(window.__playvslAutoObserver) return;
+    window.__playvslAutoObserver = new MutationObserver((muts)=>{
+      for(const m of muts){
+        for(const n of m.addedNodes || []){
+          if(!n || n.nodeType !== 1) continue;
+          try{ window.PlayVSL.autoInit(n); }catch(e){}
+        }
+      }
+    });
+    try{
+      window.__playvslAutoObserver.observe(document.documentElement || document.body, { childList:true, subtree:true });
+    }catch(e){}
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', bootAutoInit);
+  } else {
+    bootAutoInit();
+  }
+
   // alias antigo removido
 })();

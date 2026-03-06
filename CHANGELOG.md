@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.0.5 - 2026-03-06
+
+Release focused on embed robustness and cleaner snippet generation.
+
+### Highlights
+- New declarative embed mode (`data-playvsl`) for generated snippets.
+- Auto-init in player runtime with DOM observation (`MutationObserver`) to support late-rendered containers (Bubble/mobile).
+- Internal retry in `PlayVSL.init` when target container is not yet available.
+- Snippet output formatting improved (multiline, readable attributes).
+- Builder now defaults to declarative snippet mode for new embeds.
+- Backward compatibility preserved for legacy `PlayVSL.init(...)` snippets already in production.
+
 ## v1.0.4 - 2026-03-04
 
 Release focused on visual polish and conversion tracking readiness.
