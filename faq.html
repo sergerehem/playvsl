@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title id="seo_title">PlayVSL FAQ | Dúvidas frequentes e eventos</title>
-  <meta id="seo_desc" name="description" content="FAQ do PlayVSL com embed rápido, eventos onPlay/onPause/onEvent, integração com n8n e exemplos práticos." />
+  <title id="seo_title">PlayVSL FAQ | Snippet declarativo e eventos</title>
+  <meta id="seo_desc" name="description" content="FAQ do PlayVSL com snippet declarativo (data-playvsl), modo avançado com callbacks e integração de eventos." />
   <link rel="canonical" href="https://playvsl.com/faq.html" />
   <style>
     body{font-family:Inter,Arial,sans-serif;background:#f6f8fc;color:#0f172a;margin:0}
@@ -31,31 +31,24 @@
 
     <div class="card">
       <h2 id="t_s1_h">1) Como embedar o PlayVSL?</h2>
-      <p class="muted" id="t_s1_p">Copie este bloco e cole na sua página. Troque apenas a URL do YouTube e o link do botão.</p>
-      <pre><code>&lt;div id="playvsl"&gt;&lt;/div&gt;
-&lt;script src="https://playvsl.com/playvsl.js?v=1985" defer&gt;&lt;/script&gt;
-&lt;script&gt;
-  window.addEventListener('load', function () {
-    if (!window.PlayVSL || typeof window.PlayVSL.init !== 'function') return;
-
-    PlayVSL.init({
-      container: '#playvsl',
-      youtubeUrl: 'https://www.youtube.com/watch?v=wqGiHRWeTR0',
-      primaryColor: '#c62116',
-      buttonUrl: 'https://tally.so/r/5BzMOE',
-      buttonText: 'PLAY VSL DE ALTA CONVERSÃO',
-      buttonShowAtSeconds: 5,
-      buttonNewTab: true,
-      buttonRounded: true,
-      buttonBg: '#c62116',
-      buttonRevealEffect: 'none',
-      buttonFontFamily: 'roboto',
-      buttonFontSize: 20,
-      buttonBold: true,
-      lang: 'pt'
-    });
-  });
-&lt;/script&gt;</code></pre>
+      <p class="muted" id="t_s1_p">Padrão atual (recomendado): snippet declarativo com <code>data-playvsl</code>. É mais estável em Bubble/mobile e não depende de <code>window.load</code>.</p>
+      <pre><code>&lt;div id="playvsl"
+  data-playvsl
+  data-youtube-url="https://www.youtube.com/watch?v=wqGiHRWeTR0"
+  data-primary-color="#c62116"
+  data-button-url="https://tally.so/r/5BzMOE"
+  data-button-text="PLAY VSL DE ALTA CONVERSÃO"
+  data-button-show-at-seconds="5"
+  data-button-new-tab="true"
+  data-button-rounded="true"
+  data-button-bg="#c62116"
+  data-button-reveal-effect="none"
+  data-button-font-family="roboto"
+  data-button-font-size="20"
+  data-button-bold="true"
+  data-lang="pt"
+&gt;&lt;/div&gt;
+&lt;script src="https://playvsl.com/playvsl.v1.0.5.min.js"&gt;&lt;/script&gt;</code></pre>
       <h3>Parâmetros principais e o que fazem</h3>
       <ul>
         <li><code>container</code>: seletor do elemento onde o player será renderizado.</li>
@@ -71,9 +64,9 @@
     </div>
 
     <div class="card">
-      <h2 id="t_s3_h">2) Como fazer “sumir elementos acima do vídeo no play”?</h2>
-      <p class="muted" id="t_s3_p1">Use este padrão quando quiser focar o usuário no vídeo. No play, você esconde os blocos de cima; no pause, volta a mostrar.</p>
-      <p class="muted" id="t_s3_p2">A forma correta é: classe nos elementos que quer ocultar (ex.: h1 e h3) e uma classe de estado no body (ex.: <code>video-playing</code>).</p>
+      <h2 id="t_s3_h">2) Como usar callbacks (modo avançado)?</h2>
+      <p class="muted" id="t_s3_p1">Se você precisa de callbacks como <code>onPlay</code>/<code>onPause</code>, use o modo programático com <code>PlayVSL.init(...)</code>.</p>
+      <p class="muted" id="t_s3_p2">Exemplo: esconder elementos acima do vídeo no play e reexibir no pause.</p>
       <pre><code>&lt;h1 class="hide-on-play"&gt;Título principal&lt;/h1&gt;
 &lt;h3 class="hide-on-play"&gt;Subtítulo da oferta&lt;/h3&gt;
 
@@ -90,7 +83,7 @@ PlayVSL.init({
 
     <div class="card">
       <h2 id="t_s2_h">3) Quais eventos existem?</h2>
-      <p class="muted" id="t_s2_p">Eventos servem para medir comportamento do usuário (play, pausa, clique no CTA, conclusão etc.). Você pode usar callbacks específicos ou centralizar tudo em <code>onEvent</code>.</p>
+      <p class="muted" id="t_s2_p">Eventos servem para medir comportamento do usuário (play, pausa, clique no CTA, conclusão etc.). Para usar callbacks/eventos, utilize o modo programático com <code>PlayVSL.init(...)</code>. O snippet declarativo é focado em embed rápido.</p>
       <ul>
         <li><code>onReady</code></li><li><code>onPlay</code></li><li><code>onFirstPlay</code></li><li><code>onResume</code></li><li><code>onRestart</code></li><li><code>onPause</code></li><li><code>onProgress</code></li><li><code>onCTAView</code></li><li><code>onCTAClick</code></li><li><code>onComplete</code></li><li><code>onError</code></li>
       </ul>
@@ -195,13 +188,13 @@ PlayVSL.init({
   <script>
     const I18N = {
       pt: {
-        seoTitle:'PlayVSL FAQ | Dúvidas frequentes e eventos',
-        seoDesc:'FAQ do PlayVSL com embed rápido, eventos onPlay/onPause/onEvent, integração com n8n e exemplos práticos.',
+        seoTitle:'PlayVSL FAQ | Snippet declarativo e eventos',
+        seoDesc:'FAQ do PlayVSL com snippet declarativo (data-playvsl), modo avançado com callbacks e integração de eventos.',
         h1:'FAQ PlayVSL', intro:'Guia rápido de embed, eventos e integrações.', back:'Voltar',
-        s1h:'1) Como embedar o PlayVSL?', s1p:'Copie este bloco e cole na sua página. Troque apenas a URL do YouTube e o link do botão.',
-        s2h:'3) Quais eventos existem?', s2p:'Eventos servem para medir comportamento do usuário (play, pausa, clique no CTA, conclusão etc.). Você pode usar callbacks específicos ou centralizar tudo em onEvent.',
-        s3h:'2) Como fazer “sumir elementos acima do vídeo no play”?', s3p1:'Use este padrão quando quiser focar o usuário no vídeo. No play, você esconde os blocos de cima; no pause, volta a mostrar.',
-        s3p2:'A forma correta é: classe nos elementos que quer ocultar (ex.: h1 e h3) e uma classe de estado no body (ex.: video-playing).',
+        s1h:'1) Como embedar o PlayVSL?', s1p:'Padrão recomendado: snippet declarativo com data-playvsl. É mais estável em Bubble/mobile e não depende de window.load.',
+        s2h:'3) Quais eventos existem?', s2p:'Para usar callbacks/eventos, utilize o modo programático com PlayVSL.init(...). O snippet declarativo é focado em embed rápido.',
+        s3h:'2) Como usar callbacks (modo avançado)?', s3p1:'Se você precisa de callbacks como onPlay/onPause, use o modo programático com PlayVSL.init(...).',
+        s3p2:'Exemplo: esconder elementos acima do vídeo no play e reexibir no pause.',
         s4h:'4) Como enviar eventos via webhook?', s4p:'Forma mais simples: enviar onEvent para qualquer webhook (n8n, Make, Zapier ou API própria).', s4events:'Eventos possíveis: ready, play, firstPlay, resume, restart, pause, progress, ctaView, ctaClick, complete, error.', s4ph:'Exemplo de payload',
         s5h:'5) Dúvidas comuns', s5p:'Respostas objetivas para quem está implementando o player pela primeira vez.',
         q1:'O botão de CTA não apareceu. O que pode ser?', a1:'Verifique buttonShowAtSeconds. Para mostrar no início, use 0.',
@@ -210,13 +203,13 @@ PlayVSL.init({
         q4:'Quando o modal “continuar assistindo” aparece?', a4:'Ele só aparece quando há progresso real salvo de uma sessão iniciada por humano (não por teaser autoplay).', contactH:'Ainda com dúvidas ou sugestões?', contactP:'Se precisar de ajuda ou quiser sugerir melhorias, envie um email para', contactP2:'ou fale direto com o criador do PlayVSL pelo'
       },
       en: {
-        seoTitle:'PlayVSL FAQ | Frequently asked questions and events',
-        seoDesc:'PlayVSL FAQ with quick embed, onPlay/onPause/onEvent callbacks, n8n integration and practical examples.',
+        seoTitle:'PlayVSL FAQ | Declarative snippet and events',
+        seoDesc:'PlayVSL FAQ with declarative snippet (data-playvsl), advanced callback mode and event integrations.',
         h1:'PlayVSL FAQ', intro:'Quick guide for embed, events and integrations.', back:'Back',
-        s1h:'1) How to embed PlayVSL?', s1p:'Copy this block and paste it on your page. Replace only the YouTube URL and button link.',
-        s2h:'3) Which events are available?', s2p:'Events help measure user behavior (play, pause, CTA click, completion, etc.). You can use specific callbacks or centralize everything with onEvent.',
-        s3h:'2) How to hide elements above the video on play?', s3p1:'Use this pattern when you want to keep focus on the video. On play, hide top blocks; on pause, show them again.',
-        s3p2:'Correct pattern: class on elements to hide (e.g., h1/h3) and a body state class (e.g., video-playing).',
+        s1h:'1) How to embed PlayVSL?', s1p:'Recommended pattern: declarative snippet with data-playvsl. It is more stable on Bubble/mobile and does not depend on window.load.',
+        s2h:'3) Which events are available?', s2p:'To use callbacks/events, use programmatic mode with PlayVSL.init(...). Declarative snippet focuses on quick embed.',
+        s3h:'2) How to use callbacks (advanced mode)?', s3p1:'If you need callbacks like onPlay/onPause, use programmatic mode with PlayVSL.init(...).',
+        s3p2:'Example: hide elements above the video on play and show them again on pause.',
         s4h:'4) How to send events via webhook?', s4p:'Simplest way: send onEvent to any webhook (n8n, Make, Zapier, or your own API).', s4events:'Available events: ready, play, firstPlay, resume, restart, pause, progress, ctaView, ctaClick, complete, error.', s4ph:'Payload example',
         s5h:'5) Common questions', s5p:'Short answers for first-time implementation.',
         q1:'CTA button did not appear. Why?', a1:'Check buttonShowAtSeconds. To show from the start, use 0.',
