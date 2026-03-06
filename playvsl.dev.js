@@ -162,7 +162,8 @@
   window.PlayVSL = {
     init(opts){
       ensureSmartPlayerCss();
-      const cfg = Object.assign({
+      const initOpts = opts || {};
+      let cfg = Object.assign({
         container:'#smart-vsl',
         youtubeUrl:'https://youtu.be/wqGiHRWeTR0',
         buttonUrl:'#',
@@ -196,7 +197,17 @@
         primaryColor:'#c62116',
         progressTrackColor:'rgba(255,255,255,.2)',
         aspect:'16:9'
-      }, opts||{});
+      }, initOpts);
+
+      // Híbrido oficial: merge de data-* quando o init vier parcial (ex.: só callbacks)
+      try{
+        const sel = String(cfg.container || '#smart-vsl');
+        const el = document.querySelector(sel);
+        if(el){
+          const dsCfg = buildOptsFromDataset(el);
+          cfg = Object.assign({}, cfg, dsCfg, initOpts);
+        }
+      }catch(e){}
 
       // Compatibilidade com nomes antigos
       if (cfg.ctaUrl) cfg.buttonUrl = cfg.ctaUrl;
@@ -266,6 +277,8 @@
         console.warn('[PlayVSL] container não encontrado após retries:', cfg.container);
         return;
       }
+      host.__playvslAutoInited = true;
+      host.__playvslCallbacks = host.__playvslCallbacks || {};
       // cleanup de instância anterior no mesmo container (evita erros/repetições no console)
       if(typeof host.__playvslDestroy === 'function'){
         try{ host.__playvslDestroy(); }catch(e){}
@@ -445,6 +458,13 @@
         const cb = cfg[map[name]];
         if(typeof cb === 'function'){ try{ cb(payload); }catch(e){} }
         if(typeof cfg.onEvent === 'function'){ try{ cfg.onEvent(payload); }catch(e){} }
+
+        const hostCbs = (host && host.__playvslCallbacks) ? host.__playvslCallbacks : null;
+        if(hostCbs){
+          const extCb = hostCbs[map[name]];
+          if(typeof extCb === 'function'){ try{ extCb(payload); }catch(e){} }
+          if(typeof hostCbs.onEvent === 'function'){ try{ hostCbs.onEvent(payload); }catch(e){} }
+        }
       }
 
       function save(){ state.ts=Date.now(); localStorage.setItem(key, JSON.stringify(state)); }
@@ -840,6 +860,17 @@
         el.__playvslAutoInited = true;
         try{ window.PlayVSL.init(opts); }catch(e){ el.__playvslAutoInited = false; }
       });
+    },
+
+    attach(callbackOpts){
+      const o = callbackOpts || {};
+      const sel = String(o.container || '#playvsl');
+      const host = document.querySelector(sel);
+      if(!host) throw new Error('container não encontrado para attach');
+      host.__playvslCallbacks = host.__playvslCallbacks || {};
+      const keys = ['onReady','onPlay','onFirstPlay','onResume','onRestart','onPause','onProgress','onCTAView','onCTAClick','onComplete','onError','onEvent'];
+      keys.forEach((k)=>{ if(typeof o[k] === 'function') host.__playvslCallbacks[k] = o[k]; });
+      return true;
     }
   };
 
