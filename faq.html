@@ -111,6 +111,48 @@
     }
   });
 &lt;/script&gt;</code></pre>
+      <h3>Exemplo híbrido limpo (declarativo + logs)</h3>
+      <p class="muted">Sem usar <code>PlayVSL.init</code> no snippet principal. Você declara no HTML e escuta eventos via funções globais/DOM.</p>
+      <pre><code>&lt;div id="playvsl"
+  data-playvsl
+  data-youtube-url="https://youtu.be/4YjmqZPMyLE"
+  data-primary-color="#C62116"
+  data-button-url="https://playvsl.com/"
+  data-button-text="QUERO MEU SNIPPET AGORA - É GRÁTIS"
+  data-button-show-at-seconds="240"
+  data-button-new-tab="true"
+  data-button-rounded="true"
+  data-button-bg="#C62116"
+  data-button-reveal-effect="none"
+  data-button-font-family="arial"
+  data-button-font-size="20"
+  data-button-bold="true"
+  data-lang="pt"
+  data-on-play-function="PlayVSLHooks.onPlay"
+  data-on-pause-function="PlayVSLHooks.onPause"
+  data-on-event-function="PlayVSLHooks.onEvent"
+  data-dispatch-dom-events="true"
+&gt;&lt;/div&gt;
+
+&lt;script&gt;
+window.PlayVSLHooks = {
+  onPlay:  (p) =&gt; console.log('[PlayVSL][onPlayFunction]', p),
+  onPause: (p) =&gt; console.log('[PlayVSL][onPauseFunction]', p),
+  onEvent: (p) =&gt; console.log('[PlayVSL][onEventFunction]', p.event, p)
+};
+
+['ready','play','firstPlay','resume','restart','pause','progress','ctaView','ctaClick','complete','error']
+  .forEach((evt) =&gt; document.addEventListener('playvsl:' + evt, (e) =&gt; {
+    console.log('[PlayVSL][DOM]', evt, e.detail);
+  }));
+
+document.addEventListener('playvsl:event', (e) =&gt; {
+  console.log('[PlayVSL][DOM][generic]', e.detail.event, e.detail);
+});
+&lt;/script&gt;
+
+&lt;script src="https://playvsl.com/playvsl.dev.js?v=34f354a"&gt;&lt;/script&gt;</code></pre>
+
       <h3>Exemplo de payload do <code>onEvent</code></h3>
       <pre><code>{
   "event": "progress",
