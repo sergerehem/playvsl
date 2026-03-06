@@ -5,6 +5,11 @@
 .sp-ratio{position:relative;padding-top:56.25%}
 .sp-player{position:absolute;inset:0;background:#000;overflow:hidden}
 .sp-player::after{display:none}
+.sp-fs{position:absolute;right:10px;top:10px;z-index:9;width:34px;height:34px;border-radius:999px;border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.35);color:#fff;display:grid;place-items:center;font-size:16px;cursor:pointer;opacity:.85;transition:opacity .2s ease,transform .2s ease}
+.sp-fs:hover{opacity:1;transform:translateY(-1px)}
+.sp-fs svg{width:18px;height:18px;display:block}
+.sp-fs path{stroke:#fff;stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.sp-shell:fullscreen .sp-fs,.sp-shell:-webkit-full-screen .sp-fs{opacity:.95}
 .sp-player iframe{transition:opacity .78s ease}
 .sp-player.sp-ended iframe,.sp-player.sp-paused iframe{opacity:0;pointer-events:none}
 #sp-player-target{position:absolute;inset:0}
@@ -153,6 +158,8 @@
       onPlayFunction: d.onPlayFunction,
       onPauseFunction: d.onPauseFunction,
       dispatchDomEvents: parseBool(d.dispatchDomEvents, true),
+      fullscreenEnabled: parseBool(d.fullscreenEnabled, undefined),
+      fullscreenDoubleTap: parseBool(d.fullscreenDoubleTap, undefined),
       askResume: parseBool(d.askResume, undefined),
       playbackRate: parseNum(d.playbackRate, undefined),
       teaserPlaybackRate: parseNum(d.teaserPlaybackRate, undefined),
@@ -210,6 +217,8 @@
         onPlayFunction:null,
         onPauseFunction:null,
         dispatchDomEvents:true,
+        fullscreenEnabled:true,
+        fullscreenDoubleTap:true,
         primaryColor:'#c62116',
         progressTrackColor:'rgba(255,255,255,.2)',
         aspect:'16:9'
@@ -367,7 +376,7 @@
 
       host.innerHTML = `
         <div class="sp-shell"><div class="sp-ratio" style="padding-top:${pad}%">
-          <div class="sp-player" id="sp-player-host"><div id="sp-player-target"></div><div id="sp-click-shield" aria-hidden="true"></div></div>
+          <div class="sp-player" id="sp-player-host"><div id="sp-player-target"></div><div id="sp-click-shield" aria-hidden="true"></div><button class="sp-fs" id="sp-fs" aria-label="Tela cheia" title="Tela cheia"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H4v4M16 3h4v4M20 16v4h-4M8 21H4v-4"/></svg></button></div>
           <div class="sp-overlay-top"></div><div class="sp-overlay-bottom"></div>
           <div class="sp-poster" id="sp-poster" style="background-image:url('https://img.youtube.com/vi/${vid}/maxresdefault.jpg')"></div>
           <button class="sp-first-audio" id="sp-first-audio">
@@ -435,6 +444,7 @@
       const pausePlay = host.querySelector('#sp-pause-play');
       const playerHost = host.querySelector('#sp-player-host');
       const clickShield = host.querySelector('#sp-click-shield');
+      const fsBtn = host.querySelector('#sp-fs');
       const modal = host.querySelector('#sp-modal');
       const progressMarks = {25:false,50:false,75:false,100:false};
       let lastProgressEmitSec = -1;
@@ -514,6 +524,23 @@
         }
       }
 
+      function isFullscreen(){
+        return !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+      }
+      function requestFs(el){
+        const fn = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+        if(fn) return fn.call(el);
+      }
+      function exitFs(){
+        const fn = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+        if(fn) return fn.call(document);
+      }
+      function toggleFullscreen(){
+        if(cfg.fullscreenEnabled === false) return;
+        const target = host.querySelector('.sp-shell') || host;
+        try{ if(isFullscreen()) exitFs(); else requestFs(target); }catch(e){}
+      }
+
       function save(){ state.ts=Date.now(); localStorage.setItem(key, JSON.stringify(state)); }
       function animateCTA(){
         const fx = String(cfg.buttonRevealEffect || 'none').toLowerCase();
@@ -574,6 +601,7 @@
       let hadTrustedInteraction = false;
       let keepPosterUntilPlay = false;
       let suppressShieldUntil = 0;
+      let lastTapTs = 0;
       function update(){
         if(destroyed) return;
         if(!player || typeof player.getCurrentTime!=='function') return;
@@ -847,6 +875,11 @@
       host.__playvslDestroy = destroy;
       ensureYouTubeAPI().then(()=>{ if(!destroyed) createPlayer(); });
 
+      if(fsBtn){
+        if(cfg.fullscreenEnabled === false) fsBtn.style.display = 'none';
+        fsBtn.addEventListener('click', (e)=>{ e.preventDefault(); e.stopPropagation(); toggleFullscreen(); });
+      }
+
       poster.addEventListener('click', ()=>{
         hadTrustedInteraction = true;
         if(playerHost && playerHost.classList.contains('sp-paused')){
@@ -884,6 +917,14 @@
         clickShield.addEventListener('auxclick', (e)=>e.preventDefault());
         clickShield.addEventListener('click', ()=>{
           if(Date.now() < suppressShieldUntil) return;
+          const nowTap = Date.now();
+          if(cfg.fullscreenEnabled !== false && cfg.fullscreenDoubleTap !== false && (nowTap - lastTapTs) < 320){
+            toggleFullscreen();
+            lastTapTs = 0;
+            return;
+          }
+          lastTapTs = nowTap;
+
           hadTrustedInteraction = true;
           if(!player || !player.getPlayerState) return;
           if(firstAudio && firstAudio.style.display==='block') return; // mantém fluxo do primeiro clique
