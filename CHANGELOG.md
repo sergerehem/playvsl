@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.1.0 - 2026-03-06
+
+Major release focused on declarative embeds and robust hybrid callback integrations.
+
+### Highlights
+- Declarative snippet flow matured as the main embed pattern.
+- Auto-init hardened for late-rendered containers (Bubble/mobile-safe behavior).
+- Official hybrid callback support:
+  - `PlayVSL.attach(...)`
+  - declarative callback hooks (`data-on-play-function`, `data-on-pause-function`, `data-on-event-function`)
+  - declarative class toggles (`data-on-play-add-class`, `data-on-pause-remove-class`)
+  - DOM custom events (`playvsl:*`, `playvsl:event`) for integrations without inline init.
+- Snippet formatting improved for readability.
+- FAQ updated with declarative and advanced/hybrid examples.
+
 ## v1.0.5 - 2026-03-06
 
 Release focused on embed robustness and cleaner snippet generation.

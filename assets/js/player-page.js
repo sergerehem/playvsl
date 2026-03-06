@@ -158,7 +158,7 @@
       lang:c.lang || App.LANG
     };
 
-    const scriptUrl = (App.SNIPPET_SCRIPT_URL || 'https://playvsl.com/playvsl.v1.0.5.min.js');
+    const scriptUrl = (App.SNIPPET_SCRIPT_URL || 'https://playvsl.com/playvsl.v1.1.0.min.js');
     const useDeclarative = (window.PLAYVSL_SNIPPET_DECLARATIVE !== false);
 
     if(useDeclarative){

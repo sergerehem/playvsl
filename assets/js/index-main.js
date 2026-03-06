@@ -13,7 +13,7 @@
       }
       const q = new URLSearchParams(location.search);
       const pv = q.get('pv');
-      const baseUrl = App.RUNTIME_SCRIPT_URL || 'https://playvsl.com/playvsl.v1.0.5.min.js';
+      const baseUrl = App.RUNTIME_SCRIPT_URL || 'https://playvsl.com/playvsl.v1.1.0.min.js';
       const sep = baseUrl.includes('?') ? '&' : '?';
       const src = pv ? `${baseUrl}${sep}pv=${encodeURIComponent(pv)}` : baseUrl;
       const s = document.createElement('script');

@@ -20,7 +20,7 @@ python3 -m http.server 8080
 Abra `http://localhost:8080`.
 
 ## Ambientes (prod x testes)
-- **Produção:** `index.html` + snippets apontando para `playvsl.v1.0.5.min.js`.
+- **Produção:** `index.html` + snippets apontando para `playvsl.v1.1.0.min.js`.
 - **Testes:** `index-dev.html` + snippets apontando para `playvsl.dev.js`.
 
 Fluxo recomendado:
