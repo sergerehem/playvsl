@@ -162,8 +162,7 @@
     const useDeclarative = !!window.PLAYVSL_SNIPPET_DECLARATIVE;
 
     if(useDeclarative){
-      return `<div
-  id="playvsl"
+      return `<div id="playvsl"
   data-playvsl
   data-youtube-url="${cfg.youtubeUrl}"
   data-primary-color="${cfg.primaryColor}"
