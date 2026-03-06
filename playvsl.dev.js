@@ -140,6 +140,7 @@
       buttonShowAtSeconds: parseNum(d.buttonShowAtSeconds, undefined),
       buttonNewTab: parseBool(d.buttonNewTab, undefined),
       buttonRounded: parseBool(d.buttonRounded, undefined),
+      buttonBold: parseBool(d.buttonBold, undefined),
       buttonBg: d.buttonBg,
       askResume: parseBool(d.askResume, undefined),
       playbackRate: parseNum(d.playbackRate, undefined),
