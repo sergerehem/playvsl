@@ -70,11 +70,20 @@
       <pre><code>&lt;h1 class="hide-on-play"&gt;Título principal&lt;/h1&gt;
 &lt;h3 class="hide-on-play"&gt;Subtítulo da oferta&lt;/h3&gt;
 
-PlayVSL.init({
-  ...,
-  onPlay: () =&gt; document.body.classList.add('video-playing'),
-  onPause: () =&gt; document.body.classList.remove('video-playing')
-});
+&lt;div id="playvsl"&gt;&lt;/div&gt;
+&lt;script src="https://playvsl.com/playvsl.v1.0.5.min.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  PlayVSL.init({
+    container: '#playvsl',
+    youtubeUrl: 'https://www.youtube.com/watch?v=wqGiHRWeTR0',
+    primaryColor: '#c62116',
+    buttonUrl: 'https://tally.so/r/5BzMOE',
+    buttonText: 'PLAY VSL DE ALTA CONVERSÃO',
+    buttonShowAtSeconds: 5,
+    onPlay: () =&gt; document.body.classList.add('video-playing'),
+    onPause: () =&gt; document.body.classList.remove('video-playing')
+  });
+&lt;/script&gt;
 
 .video-playing .hide-on-play {
   display:none;
@@ -87,12 +96,21 @@ PlayVSL.init({
       <ul>
         <li><code>onReady</code></li><li><code>onPlay</code></li><li><code>onFirstPlay</code></li><li><code>onResume</code></li><li><code>onRestart</code></li><li><code>onPause</code></li><li><code>onProgress</code></li><li><code>onCTAView</code></li><li><code>onCTAClick</code></li><li><code>onComplete</code></li><li><code>onError</code></li>
       </ul>
-      <pre><code>PlayVSL.init({
-  ...,
-  onEvent: (payload) =&gt; {
-    console.log(payload.event, payload);
-  }
-});</code></pre>
+      <pre><code>&lt;div id="playvsl"&gt;&lt;/div&gt;
+&lt;script src="https://playvsl.com/playvsl.v1.0.5.min.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  PlayVSL.init({
+    container: '#playvsl',
+    youtubeUrl: 'https://www.youtube.com/watch?v=wqGiHRWeTR0',
+    primaryColor: '#c62116',
+    buttonUrl: 'https://tally.so/r/5BzMOE',
+    buttonText: 'PLAY VSL DE ALTA CONVERSÃO',
+    buttonShowAtSeconds: 5,
+    onEvent: (payload) =&gt; {
+      console.log(payload.event, payload);
+    }
+  });
+&lt;/script&gt;</code></pre>
       <h3>Exemplo de payload do <code>onEvent</code></h3>
       <pre><code>{
   "event": "progress",
