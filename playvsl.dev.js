@@ -968,7 +968,7 @@
           const st = player.getPlayerState();
           if(st===1){
             // em play, 1 toque apenas revela painel (não pausa direto)
-            showOverlayControls('pause', 1600);
+            showOverlayControls('pause', 3000);
           } else {
             startAt(currentSec(), true);
           }
