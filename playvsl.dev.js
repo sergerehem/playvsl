@@ -29,11 +29,15 @@
 .sp-blink-3{animation:spBLINK 2s infinite .6s;opacity:0}
 @media (max-width:991px){.sp-first-audio .ico svg{width:30%}}
 @media (max-width:500px){.sp-first-audio .t1,.sp-first-audio .t2{font-size:20px}}
-.sp-pause-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:7;display:none;width:52px;height:52px;border-radius:999px;border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.35);color:#fff;cursor:pointer;place-items:center;box-shadow:none;opacity:.92;transition:opacity .2s ease,transform .2s ease}
+.sp-pause-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:7;display:none;color:#fff;cursor:pointer;place-items:center;transition:opacity .2s ease,transform .2s ease}
 .sp-pause-play:hover{opacity:1;transform:translate(-50%,-50%) translateY(-1px)}
-.sp-pause-play svg{width:64%;height:64%;display:block}
+.sp-pause-play svg{display:block}
+.sp-pause-play.sp-mode-pause{width:52px;height:52px;border-radius:999px;border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.35);box-shadow:none;opacity:.92}
+.sp-pause-play.sp-mode-pause svg{width:64%;height:64%}
+.sp-pause-play.sp-mode-play{width:160px;height:160px;border-radius:50%;border:0;background:var(--sp-primary,#c62116);box-shadow:0 12px 28px rgba(0,0,0,.35);opacity:1}
+.sp-pause-play.sp-mode-play svg{width:74%;height:74%}
 .sp-play-triangle path{fill:var(--sp-contrast,#fff);stroke:var(--sp-contrast,#fff);stroke-width:3;stroke-linejoin:round}
-@media (max-width:900px){.sp-pause-play{width:44px;height:44px}.sp-pause-play svg{width:62%;height:62%}}
+@media (max-width:900px){.sp-pause-play.sp-mode-pause{width:44px;height:44px}.sp-pause-play.sp-mode-pause svg{width:62%;height:62%}.sp-pause-play.sp-mode-play{width:120px;height:120px}.sp-pause-play.sp-mode-play svg{width:70%;height:70%}}
 .sp-bar-wrap{position:relative;z-index:6;height:5px;margin-top:0;background:#d1d5db;overflow:hidden}
 .sp-bar{position:relative;height:4px;margin-top:0;background:transparent}
 .sp-bar-fill{height:100%;width:0;background:var(--sp-primary,#c62116);transition:width .35s linear}
@@ -545,9 +549,12 @@
       function setCenterMode(mode){
         if(!pausePlay) return;
         pausePlay.dataset.mode = mode;
+        pausePlay.classList.remove('sp-mode-play','sp-mode-pause');
         if(mode === 'pause'){
+          pausePlay.classList.add('sp-mode-pause');
           pausePlay.innerHTML = '<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="31" y="20" width="12" height="60" rx="3" fill="var(--sp-contrast,#fff)"/><rect x="57" y="20" width="12" height="60" rx="3" fill="var(--sp-contrast,#fff)"/></svg>';
         } else {
+          pausePlay.classList.add('sp-mode-play');
           pausePlay.innerHTML = '<svg viewBox="0 0 100 100" aria-hidden="true" class="sp-play-triangle"><path d="M34 24 L76 50 L34 76 Z" /></svg>';
         }
       }
