@@ -5,6 +5,11 @@
 .sp-ratio{position:relative;padding-top:56.25%}
 .sp-player{position:absolute;inset:0;background:#000;overflow:hidden}
 .sp-player::after{display:none}
+.sp-fs{position:absolute;right:10px;top:10px;z-index:9;width:34px;height:34px;border-radius:999px;border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.35);color:#fff;display:none;place-items:center;font-size:16px;cursor:pointer;opacity:.85;transition:opacity .2s ease,transform .2s ease}
+.sp-fs:hover{opacity:1;transform:translateY(-1px)}
+.sp-fs svg{width:18px;height:18px;display:block}
+.sp-fs path{stroke:#fff;stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.sp-shell:fullscreen .sp-fs,.sp-shell:-webkit-full-screen .sp-fs{opacity:.95}
 .sp-player iframe{transition:opacity .78s ease}
 .sp-player.sp-ended iframe,.sp-player.sp-paused iframe{opacity:0;pointer-events:none}
 #sp-player-target{position:absolute;inset:0}
@@ -153,6 +158,8 @@
       onPlayFunction: d.onPlayFunction,
       onPauseFunction: d.onPauseFunction,
       dispatchDomEvents: parseBool(d.dispatchDomEvents, true),
+      fullscreenEnabled: parseBool(d.fullscreenEnabled, undefined),
+      fullscreenDoubleTap: parseBool(d.fullscreenDoubleTap, undefined),
       askResume: parseBool(d.askResume, undefined),
       playbackRate: parseNum(d.playbackRate, undefined),
       teaserPlaybackRate: parseNum(d.teaserPlaybackRate, undefined),
@@ -210,6 +217,8 @@
         onPlayFunction:null,
         onPauseFunction:null,
         dispatchDomEvents:true,
+        fullscreenEnabled:true,
+        fullscreenDoubleTap:true,
         primaryColor:'#c62116',
         progressTrackColor:'rgba(255,255,255,.2)',
         aspect:'16:9'
@@ -367,7 +376,7 @@
 
       host.innerHTML = `
         <div class="sp-shell"><div class="sp-ratio" style="padding-top:${pad}%">
-          <div class="sp-player" id="sp-player-host"><div id="sp-player-target"></div><div id="sp-click-shield" aria-hidden="true"></div></div>
+          <div class="sp-player" id="sp-player-host"><div id="sp-player-target"></div><div id="sp-click-shield" aria-hidden="true"></div><button class="sp-fs" id="sp-fs" aria-label="Tela cheia" title="Tela cheia"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H4v4M16 3h4v4M20 16v4h-4M8 21H4v-4"/></svg></button></div>
           <div class="sp-overlay-top"></div><div class="sp-overlay-bottom"></div>
           <div class="sp-poster" id="sp-poster" style="background-image:url('https://img.youtube.com/vi/${vid}/maxresdefault.jpg')"></div>
           <button class="sp-first-audio" id="sp-first-audio">
@@ -389,7 +398,7 @@
             </div>
             <div class="t2">${t.clickToHear}</div>
           </button>
-          <button class="sp-pause-play" id="sp-pause-play" aria-label="${t.resumeAria}">
+          <button class="sp-pause-play" id="sp-pause-play" aria-label="${t.resumeAria}" data-mode="play">
             <svg viewBox="0 0 100 100" aria-hidden="true" class="sp-play-triangle">
               <path d="M34 24 L76 50 L34 76 Z" />
             </svg>
@@ -435,6 +444,7 @@
       const pausePlay = host.querySelector('#sp-pause-play');
       const playerHost = host.querySelector('#sp-player-host');
       const clickShield = host.querySelector('#sp-click-shield');
+      const fsBtn = host.querySelector('#sp-fs');
       const modal = host.querySelector('#sp-modal');
       const progressMarks = {25:false,50:false,75:false,100:false};
       let lastProgressEmitSec = -1;
@@ -514,6 +524,52 @@
         }
       }
 
+      function isFullscreen(){
+        return !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+      }
+      function requestFs(el){
+        const fn = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+        if(fn) return fn.call(el);
+      }
+      function exitFs(){
+        const fn = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+        if(fn) return fn.call(document);
+      }
+      function toggleFullscreen(){
+        if(cfg.fullscreenEnabled === false) return;
+        const target = host.querySelector('.sp-shell') || host;
+        try{ if(isFullscreen()) exitFs(); else requestFs(target); }catch(e){}
+      }
+
+      function setCenterMode(mode){
+        if(!pausePlay) return;
+        pausePlay.dataset.mode = mode;
+        if(mode === 'pause'){
+          pausePlay.innerHTML = '<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="34" y="24" width="10" height="52" rx="3" fill="var(--sp-contrast,#fff)"/><rect x="56" y="24" width="10" height="52" rx="3" fill="var(--sp-contrast,#fff)"/></svg>';
+        } else {
+          pausePlay.innerHTML = '<svg viewBox="0 0 100 100" aria-hidden="true" class="sp-play-triangle"><path d="M34 24 L76 50 L34 76 Z" /></svg>';
+        }
+      }
+      function hideOverlayControls(){
+        if(overlayTimer){ clearTimeout(overlayTimer); overlayTimer = null; }
+        if(pausePlay) pausePlay.style.display = 'none';
+        if(fsBtn) fsBtn.style.display = 'none';
+      }
+      function showOverlayControls(mode, autoHideMs){
+        if(!pausePlay) return;
+        setCenterMode(mode);
+        pausePlay.style.display = 'grid';
+        if(fsBtn && cfg.fullscreenEnabled !== false) fsBtn.style.display = 'grid';
+        if(overlayTimer){ clearTimeout(overlayTimer); overlayTimer = null; }
+        if(autoHideMs && autoHideMs > 0){
+          overlayTimer = setTimeout(()=>{
+            if(player && player.getPlayerState && player.getPlayerState() === 1){
+              hideOverlayControls();
+            }
+          }, autoHideMs);
+        }
+      }
+
       function save(){ state.ts=Date.now(); localStorage.setItem(key, JSON.stringify(state)); }
       function animateCTA(){
         const fx = String(cfg.buttonRevealEffect || 'none').toLowerCase();
@@ -574,6 +630,8 @@
       let hadTrustedInteraction = false;
       let keepPosterUntilPlay = false;
       let suppressShieldUntil = 0;
+      let lastTapTs = 0;
+      let overlayTimer = null;
       function update(){
         if(destroyed) return;
         if(!player || typeof player.getCurrentTime!=='function') return;
@@ -654,7 +712,7 @@
           playerHost.classList.remove('sp-paused');
         }
         if(firstAudio) firstAudio.style.display = unmute ? 'none' : 'block';
-        if(pausePlay) pausePlay.style.display='none';
+        hideOverlayControls();
 
         if(unmute){
           const firstRealPlay = !state.started;
@@ -701,7 +759,7 @@
           suppressShieldUntil = Date.now() + 700;
           if(poster) poster.style.display = 'block';
           if(firstAudio) firstAudio.style.display='none';
-          if(pausePlay) pausePlay.style.display='none';
+          hideOverlayControls();
           host.classList.remove('sp-prestart');
 
           state.started = true;
@@ -800,7 +858,7 @@
                   playerHost.classList.remove('sp-paused');
                 }
                 if(poster) poster.style.display='none';
-                if(pausePlay) pausePlay.style.display='none';
+                hideOverlayControls();
 
                 // fallback robusto para embeds (Bubble etc): se entrou em play com áudio,
                 // marca início humano mesmo que algum handler de clique não tenha disparado.
@@ -817,7 +875,7 @@
                 if(modal && modal.style.display==='flex') return;
                 if(playerHost) playerHost.classList.add('sp-paused');
                 if(poster) poster.style.display='block';
-                if(pausePlay) pausePlay.style.display='grid';
+                showOverlayControls('play', 0);
                 emit('pause', {});
               } else if(st===0){
                 try{ state.engaged = Math.max(Number(state.engaged||0), Number(player.getDuration ? player.getDuration() : 0)); save(); }catch(e){}
@@ -835,7 +893,7 @@
                     playerHost.classList.remove('sp-paused');
                   }
                   if(poster) poster.style.display='none';
-                  if(pausePlay) pausePlay.style.display='grid';
+                  showOverlayControls('play', 0);
                 }
               }
             },
@@ -846,6 +904,11 @@
 
       host.__playvslDestroy = destroy;
       ensureYouTubeAPI().then(()=>{ if(!destroyed) createPlayer(); });
+
+      if(fsBtn){
+        if(cfg.fullscreenEnabled === false) fsBtn.style.display = 'none';
+        fsBtn.addEventListener('click', (e)=>{ e.preventDefault(); e.stopPropagation(); toggleFullscreen(); });
+      }
 
       poster.addEventListener('click', ()=>{
         hadTrustedInteraction = true;
@@ -865,16 +928,22 @@
       pausePlay.addEventListener('click', ()=>{
         hadTrustedInteraction = true;
         const ended = host.dataset.spEnded === '1';
-        if(ended){
-          state.max = 0;
-          state.engaged = 0;
-          state.anchorSec = 0;
-          save();
-          host.dataset.spEnded = '0';
-          startAt(0, true);
+        const mode = pausePlay.dataset.mode || 'play';
+        if(ended || mode === 'play'){
+          if(ended){
+            state.max = 0;
+            state.engaged = 0;
+            state.anchorSec = 0;
+            save();
+            host.dataset.spEnded = '0';
+            startAt(0, true);
+          } else {
+            startAt(currentSec(), true);
+          }
           return;
         }
-        startAt(currentSec(), true);
+        // mode pause => pausa de fato
+        try{ if(player && player.pauseVideo) player.pauseVideo(); }catch(e){}
       });
 
       // Intercepta cliques para impedir menu nativo do YouTube
@@ -884,12 +953,24 @@
         clickShield.addEventListener('auxclick', (e)=>e.preventDefault());
         clickShield.addEventListener('click', ()=>{
           if(Date.now() < suppressShieldUntil) return;
+          const nowTap = Date.now();
+          if(cfg.fullscreenEnabled !== false && cfg.fullscreenDoubleTap !== false && (nowTap - lastTapTs) < 320){
+            toggleFullscreen();
+            lastTapTs = 0;
+            return;
+          }
+          lastTapTs = nowTap;
+
           hadTrustedInteraction = true;
           if(!player || !player.getPlayerState) return;
           if(firstAudio && firstAudio.style.display==='block') return; // mantém fluxo do primeiro clique
           const st = player.getPlayerState();
-          if(st===1) player.pauseVideo();
-          else startAt(currentSec(), true);
+          if(st===1){
+            // em play, 1 toque apenas revela painel (não pausa direto)
+            showOverlayControls('pause', 1600);
+          } else {
+            startAt(currentSec(), true);
+          }
         });
       }
     },

@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.1.1 - 2026-03-06
+
+Patch release focused on mobile interaction UX and fullscreen discoverability.
+
+### Highlights
+- New tap behavior while video is playing:
+  - single tap now reveals a center control panel instead of pausing immediately
+  - center button shows **pause** icon in-play and pauses only when explicitly tapped
+  - when paused/ended, center button shows **play** icon to resume
+- Fullscreen control is now contextual and subtle:
+  - fullscreen button appears only while the center control panel is visible
+  - fullscreen toggle remains available on mobile via double-tap
+- No snippet-generator complexity added; behavior is default in player runtime.
+
 ## v1.1.0 - 2026-03-06
 
 Major release focused on declarative embeds and robust hybrid callback integrations.
