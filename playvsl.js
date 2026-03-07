@@ -5,9 +5,9 @@
 .sp-ratio{position:relative;padding-top:56.25%}
 .sp-player{position:absolute;inset:0;background:#000;overflow:hidden}
 .sp-player::after{display:none}
-.sp-fs{position:absolute;right:10px;top:10px;z-index:9;width:34px;height:34px;border-radius:999px;border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.35);color:#fff;display:none;place-items:center;font-size:16px;cursor:pointer;opacity:.85;transition:opacity .2s ease,transform .2s ease}
+.sp-fs{position:absolute;right:10px;top:10px;z-index:9;width:41px;height:41px;border-radius:999px;border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.35);color:#fff;display:none;place-items:center;font-size:16px;cursor:pointer;opacity:.85;transition:opacity .2s ease,transform .2s ease}
 .sp-fs:hover{opacity:1;transform:translateY(-1px)}
-.sp-fs svg{width:18px;height:18px;display:block}
+.sp-fs svg{width:22px;height:22px;display:block}
 .sp-fs path{stroke:#fff;stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .sp-shell:fullscreen .sp-fs,.sp-shell:-webkit-full-screen .sp-fs{opacity:.95}
 .sp-player iframe{transition:opacity .78s ease}
@@ -29,10 +29,15 @@
 .sp-blink-3{animation:spBLINK 2s infinite .6s;opacity:0}
 @media (max-width:991px){.sp-first-audio .ico svg{width:30%}}
 @media (max-width:500px){.sp-first-audio .t1,.sp-first-audio .t2{font-size:20px}}
-.sp-pause-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:7;display:none;width:160px;height:160px;border-radius:50%;border:0;background:var(--sp-primary,#c62116);color:#fff;cursor:pointer;place-items:center;box-shadow:0 12px 28px rgba(0,0,0,.35)}
-.sp-pause-play svg{width:74%;height:74%;display:block}
+.sp-pause-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:7;display:none;color:#fff;cursor:pointer;place-items:center;transition:opacity .2s ease,transform .2s ease}
+.sp-pause-play:hover{opacity:1;transform:translate(-50%,-50%) translateY(-1px)}
+.sp-pause-play svg{display:block}
+.sp-pause-play.sp-mode-pause{width:62px;height:62px;border-radius:999px;border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.35);box-shadow:none;opacity:.92}
+.sp-pause-play.sp-mode-pause svg{width:68%;height:68%}
+.sp-pause-play.sp-mode-play{width:160px;height:160px;border-radius:50%;border:0;background:var(--sp-primary,#c62116);box-shadow:0 12px 28px rgba(0,0,0,.35);opacity:1}
+.sp-pause-play.sp-mode-play svg{width:74%;height:74%}
 .sp-play-triangle path{fill:var(--sp-contrast,#fff);stroke:var(--sp-contrast,#fff);stroke-width:3;stroke-linejoin:round}
-@media (max-width:900px){.sp-pause-play{width:120px;height:120px}.sp-pause-play svg{width:70%;height:70%}}
+@media (max-width:900px){.sp-pause-play.sp-mode-pause{width:53px;height:53px}.sp-pause-play.sp-mode-pause svg{width:66%;height:66%}.sp-pause-play.sp-mode-play{width:120px;height:120px}.sp-pause-play.sp-mode-play svg{width:70%;height:70%}}
 .sp-bar-wrap{position:relative;z-index:6;height:5px;margin-top:0;background:#d1d5db;overflow:hidden}
 .sp-bar{position:relative;height:4px;margin-top:0;background:transparent}
 .sp-bar-fill{height:100%;width:0;background:var(--sp-primary,#c62116);transition:width .35s linear}
@@ -544,9 +549,12 @@
       function setCenterMode(mode){
         if(!pausePlay) return;
         pausePlay.dataset.mode = mode;
+        pausePlay.classList.remove('sp-mode-play','sp-mode-pause');
         if(mode === 'pause'){
-          pausePlay.innerHTML = '<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="34" y="24" width="10" height="52" rx="3" fill="var(--sp-contrast,#fff)"/><rect x="56" y="24" width="10" height="52" rx="3" fill="var(--sp-contrast,#fff)"/></svg>';
+          pausePlay.classList.add('sp-mode-pause');
+          pausePlay.innerHTML = '<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="31" y="20" width="12" height="60" rx="3" fill="var(--sp-contrast,#fff)"/><rect x="57" y="20" width="12" height="60" rx="3" fill="var(--sp-contrast,#fff)"/></svg>';
         } else {
+          pausePlay.classList.add('sp-mode-play');
           pausePlay.innerHTML = '<svg viewBox="0 0 100 100" aria-hidden="true" class="sp-play-triangle"><path d="M34 24 L76 50 L34 76 Z" /></svg>';
         }
       }
@@ -967,7 +975,7 @@
           const st = player.getPlayerState();
           if(st===1){
             // em play, 1 toque apenas revela painel (não pausa direto)
-            showOverlayControls('pause', 1600);
+            showOverlayControls('pause', 3000);
           } else {
             startAt(currentSec(), true);
           }

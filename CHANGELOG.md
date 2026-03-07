@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.1.2 - 2026-03-07
+
+Patch release focused on mobile playback controls polish.
+
+### Highlights
+- While video is playing, single tap reveals contextual controls without immediate pause.
+- Center **pause** overlay refined for mobile:
+  - transparent style (matching fullscreen control visual language)
+  - larger internal pause bars for better readability on phones
+  - auto-hide after 3 seconds of inactivity
+- Center **play** state restored to classic large primary button style.
+- Fullscreen button kept contextual and resized (~20% larger) for easier touch interaction.
+
 ## v1.1.1 - 2026-03-06
 
 Patch release focused on mobile interaction UX and fullscreen discoverability.
